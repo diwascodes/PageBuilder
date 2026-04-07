@@ -1,0 +1,135 @@
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#fff;color:#111;}
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* Navbar */
+.b-navbar{background:#fff;border-bottom:1px solid #e8e8e4;padding:18px 40px;display:flex;align-items:center;justify-content:space-between}
+.b-navbar .nav-logo{font-weight:600;font-size:18px}
+.b-navbar .nav-links{display:flex;gap:24px;font-size:14px;color:#666}
+.b-navbar .nav-cta{padding:8px 18px;background:#111;color:#fff;border-radius:6px;font-size:13px;text-decoration:none}
+
+/* Hero */
+.b-hero{padding:100px 40px;text-align:center;color:#fff}
+.b-hero h1{font-size:48px;font-weight:500;margin-bottom:16px;line-height:1.1;letter-spacing:-0.02em}
+.b-hero p{font-size:18px;opacity:.8;margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto;}
+.b-hero .hero-btn{padding:14px 32px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;color:#fff;font-size:15px;cursor:pointer;backdrop-filter:blur(8px)}
+
+/* TextBanner */
+.b-textbanner{padding:80px 40px;text-align:center}
+.b-textbanner h2{font-size:36px;font-weight:500;margin-bottom:16px}
+.b-textbanner p{font-size:18px;opacity:.8;margin-bottom:32px;max-width:700px;margin-left:auto;margin-right:auto;line-height:1.6}
+.b-textbanner .tb-actions{display:flex;gap:14px;justify-content:center}
+.b-textbanner .btn-primary{padding:12px 28px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:6px;font-size:15px;cursor:pointer}
+.b-textbanner .btn-secondary{padding:12px 28px;background:transparent;border:1px solid rgba(0,0,0,.2);border-radius:6px;font-size:15px;cursor:pointer}
+
+/* Text */
+.b-text{padding:60px 40px;max-width:800px;margin:0 auto}
+.b-text h2{font-size:32px;font-weight:500;margin-bottom:20px}
+.b-text p{font-size:16px;color:#444;line-height:1.8;margin-bottom:16px}
+
+/* ImageText */
+.b-imgtext{display:flex;min-height:500px}
+.b-imgtext.img-right{flex-direction:row-reverse}
+.b-imgtext.img-top{flex-direction:column}
+.b-imgtext.img-bottom{flex-direction:column-reverse}
+.imgtext-img{flex:1;background:#f0ede8;position:relative}
+.imgtext-img img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;}
+.b-imgtext.img-top .imgtext-img, .b-imgtext.img-bottom .imgtext-img{min-height:400px;position:relative}
+.imgtext-img.placeholder{display:flex;align-items:center;justify-content:center;color:#aaa;font-size:16px}
+.imgtext-body{flex:1;padding:80px 60px;display:flex;flex-direction:column;justify-content:center}
+.imgtext-body .it-tag{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:#5b4fff;margin-bottom:12px}
+.imgtext-body h2{font-size:38px;font-weight:500;margin-bottom:20px;line-height:1.2}
+.imgtext-body p{font-size:17px;color:#555;line-height:1.7;margin-bottom:30px}
+.imgtext-body .it-btn{align-self:flex-start;padding:12px 28px;background:#111;color:#fff;border-radius:6px;font-size:14px;border:none;cursor:pointer}
+
+/* Grid Cards (GridImageText) */
+.b-gridimgtext{padding:80px 40px}
+.git-header{text-align:center;max-width:600px;margin:0 auto 50px}
+.git-header h2{font-size:34px;font-weight:500;margin-bottom:12px}
+.git-header p{font-size:17px;color:#666;line-height:1.6}
+.git-grid{display:grid;gap:24px;max-width:1200px;margin:0 auto}
+.git-grid.cols-2{grid-template-columns:repeat(2,1fr)}
+.git-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+.git-grid.cols-4{grid-template-columns:repeat(4,1fr)}
+.git-card{border:1px solid #e8e8e4;border-radius:12px;overflow:hidden;background:#fff;transition:transform 0.2s, box-shadow 0.2s;}
+.git-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,0.06)}
+.git-card-img{height:220px;background:#f0ede8;position:relative}
+.git-card-img img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.git-card-body{padding:24px}
+.git-tag{display:inline-block;font-size:11px;padding:4px 10px;border-radius:4px;background:#f0ede8;color:#555;margin-bottom:12px;font-weight:500}
+.git-card-body h3{font-size:18px;font-weight:500;margin-bottom:8px}
+.git-card-body p{font-size:14px;color:#666;line-height:1.6}
+
+/* Grid Image + Text Rows */
+.b-gridimgtextrow{padding:80px 40px}
+.gitrow-grid{display:grid;gap:40px;max-width:1200px;margin:0 auto}
+.gitrow-grid.cols-2{grid-template-columns:repeat(2,1fr)}
+.gitrow-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+.gitrow-card{display:flex;border:1px solid #e8e8e4;border-radius:16px;overflow:hidden;background:#fff}
+.gitrow-card.img-right{flex-direction:row-reverse}
+.gitrow-card.img-top{flex-direction:column}
+.gitrow-card.img-bottom{flex-direction:column-reverse}
+.gitrow-card-img{flex:0 0 45%;background:#f0ede8;position:relative;min-height:300px}
+.gitrow-card.img-top .gitrow-card-img, .gitrow-card.img-bottom .gitrow-card-img{flex:auto;height:240px;min-height:auto}
+.gitrow-card-img img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.gitrow-card-body{flex:1;padding:40px;display:flex;flex-direction:column;justify-content:center}
+.gr-tag{display:inline-block;font-size:11px;padding:4px 10px;border-radius:4px;background:#f0effa;color:#5b4fff;margin-bottom:12px;font-weight:500;align-self:flex-start}
+.gitrow-card-body h3{font-size:24px;font-weight:500;margin-bottom:12px}
+.gitrow-card-body p{font-size:15px;color:#666;line-height:1.7;margin-bottom:20px}
+.gr-btn{align-self:flex-start;padding:10px 20px;background:#111;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer}
+
+/* Features */
+.b-features{padding:80px 40px;background:#f9f9f7}
+.b-features h2{text-align:center;font-size:32px;font-weight:500;margin-bottom:50px}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;max-width:1100px;margin:0 auto}
+.feat-card{padding:30px;background:#fff;border:1px solid #e8e8e4;border-radius:12px}
+.feat-icon{font-size:36px;margin-bottom:16px}
+.feat-card h3{font-size:18px;font-weight:500;margin-bottom:8px}
+.feat-card p{font-size:15px;color:#666;line-height:1.6}
+
+/* CTA */
+.b-cta{padding:100px 40px;text-align:center;color:#fff}
+.b-cta h2{font-size:38px;font-weight:500;margin-bottom:16px}
+.b-cta p{font-size:18px;opacity:.8;margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto;}
+.b-cta button{padding:14px 34px;background:#fff;border:none;border-radius:8px;font-size:15px;color:#111;font-weight:500;cursor:pointer}
+
+/* Testimonial */
+.b-testimonial{padding:80px 40px;max-width:800px;margin:0 auto;text-align:center}
+.b-testimonial blockquote{font-size:24px;color:#111;line-height:1.6;font-style:italic;margin-bottom:30px}
+.author{display:flex;align-items:center;justify-content:center;gap:14px}
+.avatar{width:48px;height:48px;border-radius:50%;background:#eeecff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:#3d34cc}
+.author-info{text-align:left}
+.author-info strong{display:block;font-size:15px;font-weight:500}
+.author-info span{font-size:13px;color:#777}
+
+/* Form */
+.b-form{padding:80px 40px;max-width:600px;margin:0 auto}
+.b-form h2{font-size:28px;font-weight:500;margin-bottom:30px;text-align:center}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.form-field{display:flex;flex-direction:column;gap:8px}
+.form-field label{font-size:13px;color:#666;font-weight:500}
+.form-field input,.form-field textarea{padding:12px 14px;border:1px solid #d4d4d0;border-radius:8px;font-size:15px;background:#fafafa;font-family:inherit;transition:border-color 0.2s}
+.form-field input:focus,.form-field textarea:focus{outline:none;border-color:#5b4fff;background:#fff}
+.submit-btn{margin-top:10px;padding:14px 100%;width:100%;background:#111;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer}
+
+/* Footer */
+.b-footer{background:#f4f4f2;padding:40px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e8e8e4}
+.footer-brand{font-size:16px;font-weight:600}
+.footer-links{display:flex;gap:24px;font-size:14px;color:#666}
+.footer-copy{font-size:13px;color:#999}
+
+@media (max-width: 768px) {
+    .b-imgtext{flex-direction:column !important}
+    .git-grid.cols-3, .git-grid.cols-4{grid-template-columns:repeat(2,1fr)}
+    .gitrow-card.img-right, .gitrow-card.img-top, .gitrow-card.img-bottom {flex-direction:column}
+    .gitrow-grid.cols-2, .gitrow-grid.cols-3 {grid-template-columns:1fr}
+    .feat-grid{grid-template-columns:1fr}
+    .form-row{grid-template-columns:1fr}
+    .b-footer{flex-direction:column;gap:20px;text-align:center}
+}
+@media (max-width: 480px) {
+    .git-grid.cols-2{grid-template-columns:1fr}
+    .b-hero h1{font-size:36px}
+    .b-textbanner h2{font-size:28px}
+    .imgtext-body{padding:40px 20px}
+}

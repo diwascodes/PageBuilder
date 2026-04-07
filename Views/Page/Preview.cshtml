@@ -1,0 +1,209 @@
+@model WebsiteBuilder.Models.Page
+@using System.Text.Json;
+
+@{
+    Layout = null; // Clean preview without ASP.NET layout
+    
+    // Helper to determine text color based on background
+    bool IsLight(string hex)
+    {
+        if (string.IsNullOrEmpty(hex) || hex.Length < 7) return true;
+        try {
+            int r = Convert.ToInt32(hex.Substring(1, 2), 16);
+            int g = Convert.ToInt32(hex.Substring(3, 2), 16);
+            int b = Convert.ToInt32(hex.Substring(5, 2), 16);
+            return (r * 299 + g * 587 + b * 114) / 1000 > 128;
+        } catch { return true; }
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Name - Preview</title>
+    <meta name="description" content="A page built with PageBuilder">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/preview.css" />
+</head>
+<body>
+
+@foreach (var block in Model.Blocks)
+{
+    var d = JsonDocument.Parse(block.DataJson).RootElement;
+    
+    if (block.BlockType == "navbar")
+    {
+        <div class="b-navbar">
+            <div class="nav-logo">@(d.GetProperty("logo").GetString())</div>
+            <div class="nav-links"><span>Home</span><span>About</span><span>Services</span></div>
+            <a href="#" class="nav-cta">@(d.GetProperty("ctaText").GetString())</a>
+        </div>
+    }
+    else if (block.BlockType == "hero")
+    {
+        string bg = d.TryGetProperty("bg", out var el) ? el.GetString() : "#1a1a2e";
+        <div class="b-hero" style="background:@bg">
+            <h1>@(d.GetProperty("heading").GetString())</h1>
+            <p>@(d.GetProperty("subtext").GetString())</p>
+            <button class="hero-btn">@(d.GetProperty("btnText").GetString())</button>
+        </div>
+    }
+    else if (block.BlockType == "textbanner") // Text Banner
+    {
+        string bg = d.TryGetProperty("bg", out var el) ? el.GetString() : "#5b4fff";
+        bool isLight = IsLight(bg);
+        string color = isLight ? "#111" : "#fff";
+        <div class="b-textbanner" style="background:@bg;color:@color">
+            <h2>@(d.GetProperty("heading").GetString())</h2>
+            <p>@(d.GetProperty("subtext").GetString())</p>
+            <div class="tb-actions">
+                <button class="btn-primary" style="color:@color; border-color:@(isLight ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.4)")">@(d.TryGetProperty("btnPrimary", out var b1) ? b1.GetString() : "Start free")</button>
+                <button class="btn-secondary" style="color:@color; border-color:@(isLight ? "rgba(0,0,0,0.15)" : "transparent")">@(d.TryGetProperty("btnSecondary", out var b2) ? b2.GetString() : "Learn more")</button>
+            </div>
+        </div>
+    }
+    else if (block.BlockType == "text")
+    {
+        <div class="b-text">
+            <h2>@(d.GetProperty("heading").GetString())</h2>
+            <p>@(d.GetProperty("body").GetString())</p>
+        </div>
+    }
+    else if (block.BlockType == "imgtext")
+    {
+        string bg = d.TryGetProperty("bg", out var bgEl) ? bgEl.GetString() : "#ffffff";
+        string layout = d.TryGetProperty("layout", out var layEl) ? layEl.GetString() : "left";
+        string textAlign = d.TryGetProperty("textAlign", out var alignEl) ? alignEl.GetString() : "left";
+        string imgPos = d.TryGetProperty("imgPosition", out var posEl) ? posEl.GetString() : "center";
+        string imgSrc = d.TryGetProperty("imgSrc", out var srcEl) ? srcEl.GetString() : "";
+        
+        <div class="b-imgtext img-@layout" style="background:@bg">
+            <div class="imgtext-img">
+                @if(!string.IsNullOrEmpty(imgSrc)){
+                    <img src="@imgSrc" style="object-position:@imgPos" alt="" />
+                } else {
+                    <div class="placeholder">Image Placeholder</div>
+                }
+            </div>
+            <div class="imgtext-body" style="text-align:@textAlign">
+                <div class="it-tag">@(d.TryGetProperty("tag", out var tEl) ? tEl.GetString() : "Featured")</div>
+                <h2>@(d.GetProperty("heading").GetString())</h2>
+                <p>@(d.GetProperty("body").GetString())</p>
+                <button class="it-btn">@(d.GetProperty("btnText").GetString())</button>
+            </div>
+        </div>
+    }
+    else if (block.BlockType == "gridimgtext" || block.BlockType == "gridimgtextrow")
+    {
+        // Both grid types are very similar, we can reuse logic here
+        bool isRow = block.BlockType == "gridimgtextrow";
+        
+        string cols = d.TryGetProperty("cols", out var colsEl) ? colsEl.GetString() : "3";
+        string bg = isRow && d.TryGetProperty("cardBg", out var bgEl) ? bgEl.GetString() : (d.TryGetProperty("cardBg", out var cg) ? cg.GetString() : "#fff");
+        string titleColor = d.TryGetProperty("titleColor", out var tc) ? tc.GetString() : "#111";
+        string descColor = d.TryGetProperty("descColor", out var dc) ? dc.GetString() : "#666";
+        string tagColor = d.TryGetProperty("tagColor", out var gc) ? gc.GetString() : "#888";
+        string textAlign = d.TryGetProperty("textAlign", out var ta) ? ta.GetString() : "left";
+        string layout = d.TryGetProperty("imgLayout", out var il) ? il.GetString() : "top";
+        string imgPos = d.TryGetProperty("imgPosition", out var ip) ? ip.GetString() : "center";
+        
+        <div class="@(isRow ? "b-gridimgtextrow" : "b-gridimgtext")">
+            <div class="git-header">
+                <h2>@(d.GetProperty("heading").GetString())</h2>
+                <p>@(d.GetProperty("subtext").GetString())</p>
+            </div>
+            <div class="@(isRow ? "gitrow-grid" : "git-grid") cols-@cols">
+                @if(d.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
+                {
+                    foreach(var item in items.EnumerateArray())
+                    {
+                        string iSrc = item.TryGetProperty("imgSrc", out var iS) ? iS.GetString() : "";
+                        <div class="@(isRow ? $"gitrow-card img-{layout}" : "git-card")" style="background:@bg">
+                            <div class="@(isRow ? "gitrow-card-img" : "git-card-img")">
+                                @if(!string.IsNullOrEmpty(iSrc)){
+                                    <img src="@iSrc" style="object-position:@imgPos" alt="" />
+                                }
+                            </div>
+                            <div class="@(isRow ? "gitrow-card-body" : "git-card-body")" style="text-align:@textAlign">
+                                <span class="@(isRow ? "gr-tag" : "git-tag")" style="color:@tagColor; background:@(tagColor)18;">@(item.TryGetProperty("tag", out var it) ? it.GetString() : "")</span>
+                                <h3 style="color:@titleColor">@(item.TryGetProperty("title", out var itit) ? itit.GetString() : "")</h3>
+                                <p style="color:@descColor">@(item.TryGetProperty("desc", out var idesc) ? idesc.GetString() : "")</p>
+                                @if(isRow) {
+                                    <button class="gr-btn">@(item.TryGetProperty("btnText", out var bt) ? bt.GetString() : "Learn more")</button>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+    else if (block.BlockType == "features")
+    {
+        <div class="b-features">
+            <h2>@(d.GetProperty("heading").GetString())</h2>
+            <div class="feat-grid">
+                @if(d.TryGetProperty("items", out var feats) && feats.ValueKind == JsonValueKind.Array){
+                    foreach(var f in feats.EnumerateArray()){
+                        <div class="feat-card">
+                            <div class="feat-icon">@(f.TryGetProperty("icon", out var fi) ? fi.GetString() : "✦")</div>
+                            <h3>@(f.TryGetProperty("title", out var ft) ? ft.GetString() : "")</h3>
+                            <p>@(f.TryGetProperty("desc", out var fd) ? fd.GetString() : "")</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+    else if (block.BlockType == "cta")
+    {
+        string bg = d.TryGetProperty("bg", out var el) ? el.GetString() : "#5b4fff";
+        <div class="b-cta" style="background:@bg">
+            <h2>@(d.GetProperty("heading").GetString())</h2>
+            <p>@(d.GetProperty("subtext").GetString())</p>
+            <button style="color:@bg">@(d.GetProperty("btnText").GetString())</button>
+        </div>
+    }
+    else if (block.BlockType == "testimonial")
+    {
+        string author = d.GetProperty("author").GetString() ?? "";
+        string inits = string.Join("", author.Split(' ').Select(s => s.FirstOrDefault())).ToUpper();
+        if (inits.Length > 2) inits = inits.Substring(0, 2);
+        
+        <div class="b-testimonial">
+            <blockquote>"@(d.GetProperty("quote").GetString())"</blockquote>
+            <div class="author">
+                <div class="avatar">@inits</div>
+                <div class="author-info">
+                    <strong>@author</strong>
+                    <span>@(d.GetProperty("role").GetString())</span>
+                </div>
+            </div>
+        </div>
+    }
+    else if (block.BlockType == "form")
+    {
+        <div class="b-form">
+            <h2>@(d.GetProperty("heading").GetString())</h2>
+            <div class="form-row">
+                <div class="form-field"><label>First name</label><input type="text" placeholder="Jane"></div>
+                <div class="form-field"><label>Last name</label><input type="text" placeholder="Smith"></div>
+            </div>
+            <div class="form-field" style="margin-bottom:20px"><label>Email</label><input type="email" placeholder="jane@company.com"></div>
+            <div class="form-field" style="margin-bottom:20px"><label>Message</label><textarea rows="4" placeholder="How can we help?"></textarea></div>
+            <button class="submit-btn">@(d.GetProperty("btnText").GetString())</button>
+        </div>
+    }
+    else if (block.BlockType == "footer")
+    {
+        <div class="b-footer">
+            <div class="footer-brand">@(d.GetProperty("brand").GetString())</div>
+            <div class="footer-links"><span>Privacy</span><span>Terms</span><span>Contact</span></div>
+            <div class="footer-copy">@(d.GetProperty("copy").GetString())</div>
+        </div>
+    }
+}
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+@{ Layout = null; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Builder v2</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/css/builder.css">
+</head>
+<body>
+
+<div id="app">
+
+<!-- ── Topbar ───────────────────────── -->
+<div id="topbar">
+  <div class="logo"><span>P</span> PageBuilder</div>
+  <div class="tb-sep"></div>
+  <div id="page-tabs"></div>
+  <button class="tb-btn" onclick="openPageModal()" title="Add page">+ Page</button>
+  <button class="tb-btn" onclick="deletePage(currentPageId)" title="Delete current page" style="color:var(--red)">✕ Delete</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn" id="block-count-btn">0 blocks</button>
+  <button class="tb-btn" onclick="clearCanvas()">Clear</button>
+  <button class="tb-btn" onclick="previewPage()">Preview ↗</button>
+  <button class="tb-btn primary" onclick="savePageData()">Save to database</button>
+</div>
+
+<!-- ── Sidebar ──────────────────────── -->
+<div id="sidebar">
+  <div class="panel-header">Components</div>
+  <div id="components">
+
+    <div class="comp-group">
+      <div class="comp-group-label">Layout</div>
+      <div class="comp-item" draggable="true" data-type="navbar"><div class="comp-icon">☰</div> Navbar</div>
+      <div class="comp-item" draggable="true" data-type="footer"><div class="comp-icon">▬</div> Footer</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Canvas ────────────────────────── -->
+<div id="canvas-area">
+  <div id="canvas">
+    <div id="canvas-inner">
+      <div class="drop-hint" id="drop-hint">
+        <div class="drop-hint-icon">+</div>
+        <div>Drag components here to build your page</div>
+        <div style="font-size:11px;color:var(--text3)">Click a placed block to edit its properties</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Props Panel ───────────────────── -->
+<div id="props">
+  <div class="panel-header">Properties</div>
+  <div id="props-body"><p class="empty">Select a block to edit its properties and connect data.</p></div>
+</div>
+
+</div>
+
+<!-- ── Data Modal ───────────────────── -->
+<div id="modal-overlay">
+<div id="modal">
+  <div id="modal-header">
+    <div id="modal-icon">⊞</div>
+    <div>
+      <div id="modal-title">Configure component data</div>
+      <div id="modal-subtitle">Set content, layout, colors and backend schema</div>
+    </div>
+    <button id="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div id="modal-body"></div>
+  <div id="modal-footer">
+    <div class="modal-schema-note" id="modal-schema-note">Table: —</div>
+    <div style="display:flex;gap:8px">
+      <button class="m-btn" onclick="closeModal()">Cancel</button>
+      <button class="m-btn primary" onclick="saveModal()">Save data</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── Page Modal ────────────────────── -->
+<div id="page-modal">
+<div id="page-modal-box">
+  <h3>New page</h3>
+  <p>Enter a name for this page. Each page is stored independently.</p>
+  <input class="pm-input" id="pm-name-input" placeholder="e.g. Home, About, Contact" />
+  <div class="pm-row">
+    <button class="m-btn" onclick="document.getElementById('page-modal').classList.remove('open')">Cancel</button>
+    <button class="m-btn primary" onclick="createPage()">Create page</button>
+  </div>
+</div>
+</div>
+
+<script src="~/js/builder.js"></script>
+</body>
+</html>
+
