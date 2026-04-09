@@ -1,5 +1,8 @@
+wwwroot\css\builder.css
+wwwroot\css\preview.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\js\builder.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -61,9 +64,6 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\css\builder.css
-wwwroot\css\preview.css
-wwwroot\js\builder.js
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\site.css
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\favicon.ico
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\js\site.js
@@ -126,6 +126,6 @@ C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquer
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquery.slim.min.js
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquery.slim.min.map
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\LICENSE.txt
-C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\builder.css
-C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\preview.css
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\js\builder.js
+C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\preview.css
+C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\builder.css

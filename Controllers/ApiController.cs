@@ -97,6 +97,9 @@ namespace WebsiteBuilder.Controllers
             _context.PageBlocks.RemoveRange(page.Blocks);
             await _context.SaveChangesAsync();
 
+            string navbarData = null;
+            string footerData = null;
+
             int order = 1;
             foreach (var dto in blocks)
             {
@@ -108,7 +111,22 @@ namespace WebsiteBuilder.Controllers
                     DataJson = dto.Data.ToString()
                 };
 
+                if (dto.Type == "navbar") navbarData = block.DataJson;
+                if (dto.Type == "footer") footerData = block.DataJson;
+
                 _context.PageBlocks.Add(block);
+            }
+
+            // Sync global components
+            if (navbarData != null)
+            {
+                var others = await _context.PageBlocks.Where(b => b.BlockType == "navbar" && b.PageId != id).ToListAsync();
+                foreach (var b in others) b.DataJson = navbarData;
+            }
+            if (footerData != null)
+            {
+                var others = await _context.PageBlocks.Where(b => b.BlockType == "footer" && b.PageId != id).ToListAsync();
+                foreach (var b in others) b.DataJson = footerData;
             }
 
             page.UpdatedAt = DateTime.UtcNow;

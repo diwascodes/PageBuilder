@@ -3,16 +3,46 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#fff;color:#111;}
 .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
 /* Navbar */
-.b-navbar{background:#fff;border-bottom:1px solid #e8e8e4;padding:18px 40px;display:flex;align-items:center;justify-content:space-between}
-.b-navbar .nav-logo{font-weight:600;font-size:18px}
+.b-navbar{background:#fff;border-bottom:1px solid #e8e8e4;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;position:relative;}
+.b-navbar.pos-left{justify-content:flex-start;gap:60px;}
+.b-navbar.pos-center{justify-content:center;gap:60px;}
+.b-navbar.pos-center .nav-logo{position:absolute;left:40px;}
+.b-navbar .nav-logo{font-weight:600;font-size:18px;flex-shrink:0;}
+.b-navbar .nav-toggle{display:none;background:none;border:none;font-size:24px;cursor:pointer;color:inherit;padding:4px;}
 .b-navbar .nav-links{display:flex;gap:24px;font-size:14px;color:#666}
-.b-navbar .nav-cta{padding:8px 18px;background:#111;color:#fff;border-radius:6px;font-size:13px;text-decoration:none}
+
+@media (max-width: 768px) {
+    .b-navbar { justify-content: space-between !important; gap: 0 !important; padding: 12px 24px; }
+    .b-navbar .nav-toggle { display: block; order: 2; }
+    .b-navbar.pos-center .nav-logo { position: static !important; }
+    .b-navbar .nav-links { 
+        display: none; position: absolute; top: 100%; left: 0; right: 0; 
+        background: #fff; border-bottom: 1px solid #e8e8e4;
+        flex-direction: column; padding: 25px; gap: 20px; z-index: 1000;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    }
+    .b-navbar .nav-links.active { display: flex; }
+    .b-navbar .nav-links a { font-size: 16px; width: 100%; }
+}
 
 /* Hero */
-.b-hero{padding:100px 40px;text-align:center;color:#fff}
-.b-hero h1{font-size:48px;font-weight:500;margin-bottom:16px;line-height:1.1;letter-spacing:-0.02em}
-.b-hero p{font-size:18px;opacity:.8;margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto;}
-.b-hero .hero-btn{padding:14px 32px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;color:#fff;font-size:15px;cursor:pointer;backdrop-filter:blur(8px)}
+.b-hero{padding:100px 40px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.b-hero h1, .b-herosplit h1 {font-size:48px;font-weight:500;margin-bottom:16px;line-height:1.1;letter-spacing:-0.02em}
+.b-hero p, .b-herosplit p {font-size:18px;opacity:.8;margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto;}
+.hero-btn{padding:14px 32px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;color:#fff;font-size:15px;cursor:pointer;backdrop-filter:blur(8px);transition:all 0.2s}
+.hero-btn:hover { background: rgba(255,255,255,.25); transform: translateY(-1px); }
+
+/* Hero Split Layout */
+.b-herosplit { display: flex; min-height: 500px; color: #fff; background: #0d252a }
+.herosplit-visual { flex: 1; min-height: 400px; background-size: cover; background-position: center; position: relative }
+.herosplit-visual::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(13,37,42,0.4), transparent) }
+.herosplit-content { flex: 1.1; padding: 80px 60px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left }
+
+@media (max-width: 768px) {
+    .b-herosplit { flex-direction: column }
+    .herosplit-content { padding: 50px 30px; text-align: center; align-items: center }
+    .herosplit-visual { min-height: 300px }
+}
 
 /* TextBanner */
 .b-textbanner{padding:80px 40px;text-align:center}

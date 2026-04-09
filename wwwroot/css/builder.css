@@ -64,14 +64,43 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
 .dragging { opacity: .3 }
 
 /* ── Component renders ─────────────────────────── */
-.b-navbar { background: #fff; border: 1px solid #e8e8e4; border-radius: var(--radius); padding: 14px 22px; display: flex; align-items: center; justify-content: space-between }
-.b-navbar .nav-logo { font-weight: 500; font-size: 15px }
-.b-navbar .nav-links { display: flex; gap: 18px; font-size: 12px; color: #777 }
-.b-navbar .nav-cta { padding: 6px 14px; background: #111; color: #fff; border-radius: 6px; font-size: 12px }
-.b-hero { padding: 52px 36px; border-radius: var(--radius); text-align: center; color: #fff }
-.b-hero h1 { font-size: 34px; font-weight: 500; margin-bottom: 10px; line-height: 1.2 }
-.b-hero p { font-size: 15px; opacity: .72; margin-bottom: 22px }
-.b-hero .hero-btn { padding: 11px 28px; background: rgba(255,255,255,.2); border: 1.5px solid rgba(255,255,255,.4); border-radius: 7px; color: #fff; font-size: 13px; cursor: pointer; backdrop-filter: blur(4px) }
+.b-navbar { background: #fff; border: 1px solid #e8e8e4; border-radius: var(--radius); padding: 14px 22px; display: flex; align-items: center; justify-content: space-between; position: relative; }
+.b-navbar.pos-left { justify-content: flex-start; gap: 40px; }
+.b-navbar.pos-center { justify-content: center; gap: 40px; }
+.b-navbar.pos-center .nav-logo { position: absolute; left: 22px; }
+.b-navbar .nav-logo { font-weight: 500; font-size: 15px; flex-shrink: 0; }
+.b-navbar .nav-toggle { display: none; background: none; border: none; font-size: 20px; cursor: pointer; color: inherit; padding: 4px; }
+.b-navbar .nav-links { display: flex; gap: 18px; font-size: 12px; color: #777; transition: all .2s; }
+
+@media (max-width: 768px) {
+  .b-navbar { justify-content: space-between !important; gap: 0 !important; }
+  .b-navbar .nav-toggle { display: block; order: 2; }
+  .b-navbar.pos-center .nav-logo { position: static !important; }
+  .b-navbar .nav-links { 
+    display: none; position: absolute; top: 100%; left: 0; right: 0; 
+    background: inherit; border: 1px solid var(--border); border-top: none;
+    flex-direction: column; padding: 15px; gap: 15px; z-index: 100;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.05); border-radius: 0 0 8px 8px;
+  }
+  .b-navbar .nav-links.active { display: flex; }
+}
+.b-hero { padding: 52px 36px; border-radius: var(--radius); text-align: center; color: #fff; position: relative; overflow: hidden }
+.b-hero h1, .b-herosplit h1 { font-size: 34px; font-weight: 500; margin-bottom: 10px; line-height: 1.2 }
+.b-hero p, .b-herosplit p { font-size: 15px; opacity: .72; margin-bottom: 22px }
+.hero-btn { padding: 11px 28px; background: rgba(255,255,255,.2); border: 1.5px solid rgba(255,255,255,.4); border-radius: 7px; color: #fff; font-size: 13px; cursor: pointer; backdrop-filter: blur(4px); transition: all 0.2s }
+.hero-btn:hover { background: rgba(255,255,255,.3); transform: translateY(-1px) }
+
+/* Hero Split Layout */
+.b-herosplit { display: flex; border-radius: var(--radius); overflow: hidden; min-height: 400px; color: #fff; background: #0d252a }
+.herosplit-visual { flex: 1; min-height: 300px; background-size: cover; background-position: center; position: relative }
+.herosplit-visual::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(13,37,42,0.4), transparent) }
+.herosplit-content { flex: 1.1; padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left }
+
+@media (max-width: 768px) {
+    .b-herosplit { flex-direction: column }
+    .herosplit-content { padding: 40px 30px; text-align: center; align-items: center }
+    .herosplit-visual { min-height: 250px }
+}
 .b-text { background: #fff; border: 1px solid #e8e8e4; border-radius: var(--radius); padding: 28px 30px }
 .b-text h2 { font-size: 20px; font-weight: 500; margin-bottom: 10px }
 .b-text p { font-size: 14px; color: #555; line-height: 1.75 }

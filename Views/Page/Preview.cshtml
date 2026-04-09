@@ -1,8 +1,10 @@
 @model WebsiteBuilder.Models.Page
 @using System.Text.Json;
+@inject WebsiteBuilder.Data.AppDbContext DbContext
 
 @{
     Layout = null; // Clean preview without ASP.NET layout
+    var allPages = DbContext.Pages.OrderBy(p => p.Id).ToList();
     
     // Helper to determine text color based on background
     bool IsLight(string hex)
@@ -32,12 +34,38 @@
 {
     var d = JsonDocument.Parse(block.DataJson).RootElement;
     
-    if (block.BlockType == "navbar")
+    if (string.Equals(block.BlockType, "navbar", StringComparison.OrdinalIgnoreCase))
     {
-        <div class="b-navbar">
-            <div class="nav-logo">@(d.GetProperty("logo").GetString())</div>
-            <div class="nav-links"><span>Home</span><span>About</span><span>Services</span></div>
-            <a href="#" class="nav-cta">@(d.GetProperty("ctaText").GetString())</a>
+        string bg = d.TryGetProperty("bg", out var b) ? b.GetString() : "#ffffff";
+        string logoImage = d.TryGetProperty("logoImage", out var limg) ? limg.GetString() : "";
+        string logoText = d.TryGetProperty("logo", out var lt) ? lt.GetString() : "Brand";
+        string logoColor = d.TryGetProperty("logoColor", out var lc) ? lc.GetString() : "#111111";
+        string linksPos = d.TryGetProperty("linksPos", out var lp) ? lp.GetString() : "right";
+        string linksColor = d.TryGetProperty("linksColor", out var lcolor) ? lcolor.GetString() : "#777777";
+        int linksSize = d.TryGetProperty("linksSize", out var lsize) ? lsize.GetInt32() : 14;
+        bool linksBold = d.TryGetProperty("linksBold", out var lbold) ? lbold.GetBoolean() : false;
+        bool linksItalic = d.TryGetProperty("linksItalic", out var lital) ? lital.GetBoolean() : false;
+        string linkStyle = $"color:{linksColor}; font-size:{linksSize}px; font-weight:{(linksBold ? "bold" : "normal")}; font-style:{(linksItalic ? "italic" : "normal")};";
+
+        <!-- Navbar v2.1 Responsive -->
+        <div class="b-navbar pos-@linksPos" style="background:@bg">
+            <div class="nav-logo">
+                @if(!string.IsNullOrEmpty(logoImage)) {
+                    <img src="@logoImage" alt="@logoText" style="max-height:40px">
+                } else {
+                    <span style="color:@logoColor">@logoText</span>
+                }
+            </div>
+            <button class="nav-toggle" onclick="this.parentElement.querySelector('.nav-links').classList.toggle('active')">☰</button>
+            <div class="nav-links">
+                @if(allPages.Any()) {
+                    foreach(var p in allPages) {
+                        <a href="/page/@p.Slug" style="color:inherit; text-decoration:none; @linkStyle">@p.Name</a>
+                    }
+                } else {
+                    <span style="@linkStyle">Home</span><span style="@linkStyle">About</span><span style="@linkStyle">Services</span>
+                }
+            </div>
         </div>
     }
     else if (block.BlockType == "hero")
@@ -46,7 +74,29 @@
         <div class="b-hero" style="background:@bg">
             <h1>@(d.GetProperty("heading").GetString())</h1>
             <p>@(d.GetProperty("subtext").GetString())</p>
-            <button class="hero-btn">@(d.GetProperty("btnText").GetString())</button>
+            @{
+                string btnLink = d.TryGetProperty("btnLink", out var bl) ? bl.GetString() : "#";
+                string btnUrl = (btnLink.StartsWith("http") || btnLink.StartsWith("/") || btnLink == "#") ? btnLink : $"/page/{btnLink}";
+            }
+            <a href="@btnUrl" style="text-decoration:none"><button class="hero-btn">@(d.GetProperty("btnText").GetString())</button></a>
+        </div>
+    }
+    else if (block.BlockType == "herosplit")
+    {
+        string bg = d.TryGetProperty("bg", out var el) ? el.GetString() : "#0d252a";
+        string imgSrc = d.TryGetProperty("imgSrc", out var isrc) ? isrc.GetString() : "";
+        string btnLink = d.TryGetProperty("btnLink", out var bl) ? bl.GetString() : "#";
+        string btnUrl = (btnLink.StartsWith("http") || btnLink.StartsWith("/") || btnLink == "#") ? btnLink : $"/page/{btnLink}";
+        
+        <div class="b-herosplit" style="background:@bg">
+            <div class="herosplit-visual" style="@(!string.IsNullOrEmpty(imgSrc) ? $"background-image:linear-gradient(rgba(13,37,42,0.3), rgba(13,37,42,0.3)), url('{imgSrc}');" : "")"></div>
+            <div class="herosplit-content">
+                <h1>@(d.GetProperty("heading").GetString())</h1>
+                <p>@(d.GetProperty("subtext").GetString())</p>
+                <a href="@btnUrl" style="text-decoration:none">
+                    <button class="hero-btn">@(d.GetProperty("btnText").GetString())</button>
+                </a>
+            </div>
         </div>
     }
     else if (block.BlockType == "textbanner") // Text Banner
@@ -58,7 +108,13 @@
             <h2>@(d.GetProperty("heading").GetString())</h2>
             <p>@(d.GetProperty("subtext").GetString())</p>
             <div class="tb-actions">
-                <button class="btn-primary" style="color:@color; border-color:@(isLight ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.4)")">@(d.TryGetProperty("btnPrimary", out var b1) ? b1.GetString() : "Start free")</button>
+                @{
+                    string btnPrimaryLink = d.TryGetProperty("btnLink", out var bl1) ? bl1.GetString() : "#";
+                    string btnPrimaryUrl = (btnPrimaryLink.StartsWith("http") || btnPrimaryLink.StartsWith("/") || btnPrimaryLink == "#") ? btnPrimaryLink : $"/page/{btnPrimaryLink}";
+                }
+                <a href="@btnPrimaryUrl" style="text-decoration:none">
+                    <button class="btn-primary" style="color:@color; border-color:@(isLight ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.4)")">@(d.TryGetProperty("btnPrimary", out var b1) ? b1.GetString() : "Start free")</button>
+                </a>
                 <button class="btn-secondary" style="color:@color; border-color:@(isLight ? "rgba(0,0,0,0.15)" : "transparent")">@(d.TryGetProperty("btnSecondary", out var b2) ? b2.GetString() : "Learn more")</button>
             </div>
         </div>
@@ -90,7 +146,11 @@
                 <div class="it-tag">@(d.TryGetProperty("tag", out var tEl) ? tEl.GetString() : "Featured")</div>
                 <h2>@(d.GetProperty("heading").GetString())</h2>
                 <p>@(d.GetProperty("body").GetString())</p>
-                <button class="it-btn">@(d.GetProperty("btnText").GetString())</button>
+                @{
+                    string itBtnLink = d.TryGetProperty("btnLink", out var bl2) ? bl2.GetString() : "#";
+                    string itBtnUrl = (itBtnLink.StartsWith("http") || itBtnLink.StartsWith("/") || itBtnLink == "#") ? itBtnLink : $"/page/{itBtnLink}";
+                }
+                <a href="@itBtnUrl" style="text-decoration:none"><button class="it-btn">@(d.GetProperty("btnText").GetString())</button></a>
             </div>
         </div>
     }
@@ -130,7 +190,9 @@
                                 <h3 style="color:@titleColor">@(item.TryGetProperty("title", out var itit) ? itit.GetString() : "")</h3>
                                 <p style="color:@descColor">@(item.TryGetProperty("desc", out var idesc) ? idesc.GetString() : "")</p>
                                 @if(isRow) {
-                                    <button class="gr-btn">@(item.TryGetProperty("btnText", out var bt) ? bt.GetString() : "Learn more")</button>
+                                    string itLink = item.TryGetProperty("btnLink", out var bl3) ? bl3.GetString() : "#";
+                                    string itUrl = (itLink.StartsWith("http") || itLink.StartsWith("/") || itLink == "#") ? itLink : $"/page/{itLink}";
+                                    <a href="@itUrl" style="text-decoration:none"><button class="gr-btn">@(item.TryGetProperty("btnText", out var bt) ? bt.GetString() : "Learn more")</button></a>
                                 }
                             </div>
                         </div>
@@ -162,7 +224,11 @@
         <div class="b-cta" style="background:@bg">
             <h2>@(d.GetProperty("heading").GetString())</h2>
             <p>@(d.GetProperty("subtext").GetString())</p>
-            <button style="color:@bg">@(d.GetProperty("btnText").GetString())</button>
+            @{
+                string ctaLink = d.TryGetProperty("btnLink", out var bl4) ? bl4.GetString() : "#";
+                string ctaUrl = (ctaLink.StartsWith("http") || ctaLink.StartsWith("/") || ctaLink == "#") ? ctaLink : $"/page/{ctaLink}";
+            }
+            <a href="@ctaUrl" style="text-decoration:none"><button style="color:@bg">@(d.GetProperty("btnText").GetString())</button></a>
         </div>
     }
     else if (block.BlockType == "testimonial")
@@ -197,10 +263,28 @@
     }
     else if (block.BlockType == "footer")
     {
+        string brand = d.TryGetProperty("brand", out var b) ? b.GetString() : "Brand";
+        string copy = d.TryGetProperty("copy", out var c) ? c.GetString() : "© 2026";
+        
         <div class="b-footer">
-            <div class="footer-brand">@(d.GetProperty("brand").GetString())</div>
-            <div class="footer-links"><span>Privacy</span><span>Terms</span><span>Contact</span></div>
-            <div class="footer-copy">@(d.GetProperty("copy").GetString())</div>
+            <div class="footer-brand">@brand</div>
+            <div class="footer-links">
+                @if(d.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
+                {
+                    foreach(var item in items.EnumerateArray())
+                    {
+                        string label = item.TryGetProperty("label", out var l) ? l.GetString() : "";
+                        string slug = item.TryGetProperty("slug", out var s) ? s.GetString() : "#";
+                        string url = slug.StartsWith("http") || slug.StartsWith("/") || slug == "#" ? slug : $"/page/{slug}";
+                        <a href="@url" style="color:inherit; text-decoration:none;">@label</a>
+                    }
+                }
+                else
+                {
+                    <span>Privacy</span><span>Terms</span><span>Contact</span>
+                }
+            </div>
+            <div class="footer-copy">@copy</div>
         </div>
     }
 }

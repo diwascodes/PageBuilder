@@ -63,21 +63,61 @@ const BG_LABELS = ['Dark Navy','Violet','Forest','Red','Charcoal','Dark Green','
 const TEMPLATES = {
   navbar: {
     label:'Navbar', icon:'☰', table:'Navbar',
-    dataFields:['logo','ctaText'],
-    defaultData:{ logo:'Brand', ctaText:'Get started' },
-    render: d => `<div class="b-navbar"><div class="nav-logo">${d.logo}</div><div class="nav-links"><span>Home</span><span>About</span><span>Services</span></div><div class="nav-cta">${d.ctaText}</div></div>`
+    dataFields:['logo','logoImage','linksPos','bg','logoColor','linksColor','linksSize','linksBold','linksItalic'],
+    defaultData:{ logo:'Brand', logoImage:'', linksPos:'right', bg:'#ffffff', logoColor:'#111111', linksColor:'#777777', linksSize:14, linksBold:false, linksItalic:false },
+    render: d => {
+      const linkStyle = `color:${d.linksColor||'#777777'}; font-size:${d.linksSize||14}px; font-weight:${d.linksBold?'bold':'normal'}; font-style:${d.linksItalic?'italic':'normal'}; text-decoration:none;`;
+      let linksHtml = `<span style="${linkStyle}">Home</span><span style="${linkStyle}">About</span><span style="${linkStyle}">Services</span>`;
+      if (typeof pages !== 'undefined' && pages.length > 0) {
+        linksHtml = pages.map(p => `<span style="${linkStyle}">${p.name}</span>`).join('');
+      }
+      const logoHtml = d.logoImage ? `<img src="${d.logoImage}" alt="${d.logo}" style="max-height:40px">` : `<span style="color:${d.logoColor||'#111111'}">${d.logo}</span>`;
+      const posClass = `pos-${d.linksPos || 'right'}`;
+      return `
+        <div class="b-navbar ${posClass}" style="background:${d.bg||'#ffffff'}">
+          <div class="nav-logo">${logoHtml}</div>
+          <button class="nav-toggle" onclick="this.parentElement.querySelector('.nav-links').classList.toggle('active')">☰</button>
+          <div class="nav-links">${linksHtml}</div>
+        </div>`;
+    }
   },
   hero: {
     label:'Hero', icon:'★', table:'Hero',
-    dataFields:['heading','subtext','btnText','bg'],
-    defaultData:{ heading:'Build something great', subtext:'The fastest way to launch your next idea into the world.', btnText:'Get started free', bg:'#1a1a2e' },
-    render: d => `<div class="b-hero" style="background:${d.bg}"><h1>${d.heading}</h1><p>${d.subtext}</p><button class="hero-btn">${d.btnText}</button></div>`
+    dataFields:['heading','subtext','btnText','btnLink','bg'],
+    defaultData:{ heading:'Build something great', subtext:'The fastest way to launch your next idea into the world.', btnText:'Get started free', btnLink:'#', bg:'#1a1a2e' },
+    render: d => `<div class="b-hero" style="background:${d.bg}"><h1>${d.heading}</h1><p>${d.subtext}</p><a href="${d.btnLink||'#'}" class="hero-btn-link" style="text-decoration:none"><button class="hero-btn">${d.btnText}</button></a></div>`
+  },
+  herosplit: {
+    label:'Hero Split', icon:'◨', table:'HeroSplit',
+    dataFields:['heading','subtext','btnText','btnLink','imgSrc','bg'],
+    defaultData:{ 
+        heading:'Build something great', 
+        subtext:'The fastest way to launch your next idea into the world.', 
+        btnText:'Get started free', 
+        btnLink:'#', 
+        imgSrc:'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1470', 
+        bg:'#0d252a' 
+    },
+    render: d => {
+        const bgStyle = d.imgSrc ? `background-image:linear-gradient(rgba(13,37,42,0.3), rgba(13,37,42,0.3)), url(${d.imgSrc}); background-size:cover; background-position:center` : `background:${d.bg}`;
+        return `
+        <div class="b-herosplit" style="background:${d.bg}">
+            <div class="herosplit-visual" style="${bgStyle}"></div>
+            <div class="herosplit-content">
+                <h1>${d.heading}</h1>
+                <p>${d.subtext}</p>
+                <a href="${d.btnLink||'#'}" style="text-decoration:none">
+                    <button class="hero-btn">${d.btnText}</button>
+                </a>
+            </div>
+        </div>`;
+    }
   },
   textbanner: {
     label:'Text Banner', icon:'◈', table:'TextBanner',
-    dataFields:['heading','subtext','btnPrimary','btnSecondary','bg'],
-    defaultData:{ heading:'We build better products', subtext:'Focused on quality, speed, and real impact for the teams that use us.', btnPrimary:'Start free', btnSecondary:'Learn more', bg:'#5b4fff' },
-    render: d => `<div class="b-textbanner" style="background:${d.bg};color:${isLight(d.bg)?'#111':'#fff'}"><h2>${d.heading}</h2><p>${d.subtext}</p><div class="tb-actions"><button class="btn-primary">${d.btnPrimary}</button><button class="btn-secondary" style="color:${isLight(d.bg)?'#111':'#fff'}">${d.btnSecondary}</button></div></div>`
+    dataFields:['heading','subtext','btnPrimary','btnLink','btnSecondary','bg'],
+    defaultData:{ heading:'We build better products', subtext:'Focused on quality, speed, and real impact for the teams that use us.', btnPrimary:'Start free', btnLink:'#', btnSecondary:'Learn more', bg:'#5b4fff' },
+    render: d => `<div class="b-textbanner" style="background:${d.bg};color:${isLight(d.bg)?'#111':'#fff'}"><h2>${d.heading}</h2><p>${d.subtext}</p><div class="tb-actions"><a href="${d.btnLink||'#'}" style="text-decoration:none"><button class="btn-primary">${d.btnPrimary}</button></a><button class="btn-secondary" style="color:${isLight(d.bg)?'#111':'#fff'}">${d.btnSecondary}</button></div></div>`
   },
   text: {
     label:'Text Block', icon:'¶', table:'TextBlock',
@@ -87,14 +127,14 @@ const TEMPLATES = {
   },
   imgtext: {
     label:'Image + Text', icon:'⬛', table:'ImageText',
-    dataFields:['tag','heading','body','btnText','imgSrc','imgAlt','layout','imgPosition','textAlign','bg'],
-    defaultData:{ tag:'Featured', heading:'A picture is worth a thousand words', body:'Pair rich visuals with compelling copy. Adjust image placement, text alignment, and colors to match your brand perfectly.', btnText:'Learn more', imgSrc:'', imgAlt:'Feature image', layout:'left', imgPosition:'center', textAlign:'left', bg:'#ffffff' },
+    dataFields:['tag','heading','body','btnText','btnLink','imgSrc','imgAlt','layout','imgPosition','textAlign','bg'],
+    defaultData:{ tag:'Featured', heading:'A picture is worth a thousand words', body:'Pair rich visuals with compelling copy. Adjust image placement, text alignment, and colors to match your brand perfectly.', btnText:'Learn more', btnLink:'#', imgSrc:'', imgAlt:'Feature image', layout:'left', imgPosition:'center', textAlign:'left', bg:'#ffffff' },
     render: d => {
       const img = d.imgSrc
         ? `<img src="${d.imgSrc}" alt="${d.imgAlt}" style="width:100%;height:100%;object-fit:cover;object-position:${d.imgPosition}">`
         : `<div class="imgtext-img placeholder"><div class="ph-icon">🖼</div><div>600 × 400</div></div>`;
       const imgWrap = d.imgSrc ? `<div class="imgtext-img" style="overflow:hidden">${img}</div>` : img;
-      return `<div class="b-imgtext img-${d.layout}" style="background:${d.bg}"><div class="imgtext-img" style="flex:0 0 45%;background:#f0ede8;min-height:180px;overflow:hidden">${d.imgSrc?`<img src="${d.imgSrc}" alt="${d.imgAlt}" style="width:100%;height:100%;object-fit:cover;object-position:${d.imgPosition}">`:`<div class="imgtext-img placeholder" style="height:100%;min-height:180px"><div class="ph-icon">🖼</div><div style="font-size:11px">Click to set image</div></div>`}</div><div class="imgtext-body" style="text-align:${d.textAlign}"><div class="it-tag">${d.tag}</div><h2>${d.heading}</h2><p>${d.body}</p><button class="it-btn">${d.btnText}</button></div></div>`;
+      return `<div class="b-imgtext img-${d.layout}" style="background:${d.bg}"><div class="imgtext-img" style="flex:0 0 45%;background:#f0ede8;min-height:180px;overflow:hidden">${d.imgSrc?`<img src="${d.imgSrc}" alt="${d.imgAlt}" style="width:100%;height:100%;object-fit:cover;object-position:${d.imgPosition}">`:`<div class="imgtext-img placeholder" style="height:100%;min-height:180px"><div class="ph-icon">🖼</div><div style="font-size:11px">Click to set image</div></div>`}</div><div class="imgtext-body" style="text-align:${d.textAlign}"><div class="it-tag">${d.tag}</div><h2>${d.heading}</h2><p>${d.body}</p><a href="${d.btnLink||'#'}" style="text-decoration:none"><button class="it-btn">${d.btnText}</button></a></div></div>`;
     }
   },
   gridimgtext: {
@@ -131,10 +171,10 @@ const TEMPLATES = {
       titleColor:'#111111', descColor:'#666666', tagColor:'#5b4fff', btnColor:'#111111',
       textAlign:'left', imgPosition:'center', imgLayout:'left',
       items:[
-        {title:'Design Systems',desc:'Scalable, consistent UI components built for your brand.',tag:'Design',btnText:'Learn more',imgSrc:''},
-        {title:'Development',desc:'Clean, maintainable code that ships fast and scales well.',tag:'Engineering',btnText:'Learn more',imgSrc:''},
-        {title:'Strategy',desc:'Product thinking grounded in real user needs and data.',tag:'Strategy',btnText:'Learn more',imgSrc:''},
-        {title:'Growth',desc:'Marketing and analytics frameworks that drive measurable results.',tag:'Growth',btnText:'Learn more',imgSrc:''},
+        {title:'Design Systems',desc:'Scalable, consistent UI components built for your brand.',tag:'Design',btnText:'Learn more',btnLink:'#',imgSrc:''},
+        {title:'Development',desc:'Clean, maintainable code that ships fast and scales well.',tag:'Engineering',btnText:'Learn more',btnLink:'#',imgSrc:''},
+        {title:'Strategy',desc:'Product thinking grounded in real user needs and data.',tag:'Strategy',btnText:'Learn more',btnLink:'#',imgSrc:''},
+        {title:'Growth',desc:'Marketing and analytics frameworks that drive measurable results.',tag:'Growth',btnText:'Learn more',btnLink:'#',imgSrc:''},
       ]
     },
     render: d => {
@@ -149,7 +189,7 @@ const TEMPLATES = {
         const imgHtml = it.imgSrc
           ? `<img src="${it.imgSrc}" alt="${it.title||''}" style="width:100%;height:100%;object-fit:cover;object-position:${imgPos}">`
           : `<span style="font-size:22px;color:#bbb">&#128444;</span>`;
-        return `<div class="gitrow-card img-${imgLayout}" style="background:${d.cardBg}"><div class="gitrow-card-img" style="background:${d.imgBg}">${imgHtml}</div><div class="gitrow-card-body" style="text-align:${textAlign}"><span class="gr-tag" style="color:${tagColor};background:${tagColor}18">${it.tag||''}</span><h3 style="color:${titleColor}">${it.title||''}</h3><p style="color:${descColor}">${it.desc||''}</p><button class="gr-btn" style="background:${btnColor}">${it.btnText||'Learn more'}</button></div></div>`;
+        return `<div class="gitrow-card img-${imgLayout}" style="background:${d.cardBg}"><div class="gitrow-card-img" style="background:${d.imgBg}">${imgHtml}</div><div class="gitrow-card-body" style="text-align:${textAlign}"><span class="gr-tag" style="color:${tagColor};background:${tagColor}18">${it.tag||''}</span><h3 style="color:${titleColor}">${it.title||''}</h3><p style="color:${descColor}">${it.desc||''}</p><a href="${it.btnLink||'#'}" style="text-decoration:none"><button class="gr-btn" style="background:${btnColor}">${it.btnText||'Learn more'}</button></a></div></div>`;
       }).join('');
       return `<div class="b-gridimgtextrow"><div class="gitrow-header"><h2>${d.heading}</h2><p>${d.subtext}</p></div><div class="gitrow-grid cols-${d.cols}">${cards}</div></div>`;
     }
@@ -165,9 +205,9 @@ const TEMPLATES = {
   },
   cta: {
     label:'CTA Banner', icon:'▶', table:'CTABanner',
-    dataFields:['heading','subtext','btnText','bg'],
-    defaultData:{ heading:'Ready to get started?', subtext:'Join thousands of teams already using our platform.', btnText:'Start for free', bg:'#5b4fff' },
-    render: d => `<div class="b-cta" style="background:${d.bg}"><h2>${d.heading}</h2><p>${d.subtext}</p><button style="color:${d.bg}">${d.btnText}</button></div>`
+    dataFields:['heading','subtext','btnText','btnLink','bg'],
+    defaultData:{ heading:'Ready to get started?', subtext:'Join thousands of teams already using our platform.', btnText:'Start for free', btnLink:'#', bg:'#5b4fff' },
+    render: d => `<div class="b-cta" style="background:${d.bg}"><h2>${d.heading}</h2><p>${d.subtext}</p><a href="${d.btnLink||'#'}" style="text-decoration:none"><button style="color:${d.bg}">${d.btnText}</button></a></div>`
   },
   testimonial: {
     label:'Testimonial', icon:'❝', table:'Testimonial',
@@ -186,9 +226,20 @@ const TEMPLATES = {
   },
   footer: {
     label:'Footer', icon:'▬', table:'Footer',
-    dataFields:['brand','copy'],
-    defaultData:{ brand:'Brand', copy:'© 2026 Brand Inc.' },
-    render: d => `<div class="b-footer"><div class="footer-brand">${d.brand}</div><div class="footer-links"><span>Privacy</span><span>Terms</span><span>Contact</span></div><div class="footer-copy">${d.copy}</div></div>`
+    dataFields:['brand','copy','items'],
+    defaultData:{ 
+      brand:'Brand', 
+      copy:'© 2026 Brand Inc.',
+      items:[
+        {label:'Privacy', slug:'privacy'},
+        {label:'Terms', slug:'terms'},
+        {label:'Contact', slug:'contact'}
+      ]
+    },
+    render: d => {
+      const itemsHtml = (d.items || []).map(it => `<span>${it.label}</span>`).join('');
+      return `<div class="b-footer"><div class="footer-brand">${d.brand}</div><div class="footer-links">${itemsHtml}</div><div class="footer-copy">${d.copy}</div></div>`;
+    }
   }
 };
 
@@ -294,6 +345,7 @@ function render() {
   if(hint) hint.remove(); inner.innerHTML='';
   blocks.forEach(block => {
     const tpl = TEMPLATES[block.type];
+    if (block.type === 'navbar' && tpl) block.html = tpl.render(block.data);
     const wrap = document.createElement('div');
     wrap.className='canvas-block'+(selectedId===block.id?' selected':'');
     wrap.dataset.id = block.id;
@@ -348,50 +400,81 @@ function renderProps(block) {
   const pb = document.getElementById('props-body');
   let html = `<div style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px"><span style="width:20px;height:20px;background:var(--accent-light);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent-text)">${tpl.icon}</span>${block.label}</div>`;
 
-  // simple text fields
-  const textFields = { heading:'Heading', subtext:'Subtext', body:'Body', btnText:'Button', btnPrimary:'Primary btn', btnSecondary:'Secondary btn', logo:'Logo', ctaText:'CTA text', brand:'Brand', copy:'Copyright', quote:'Quote', author:'Author', role:'Role', tag:'Tag label', it_tag:'Tag', imgAlt:'Image alt' };
-  Object.entries(textFields).forEach(([k,label])=>{
-    if(d[k]===undefined) return;
-    html+=`<div class="prop-group"><span class="prop-label">${label}</span><input class="prop-input" value="${String(d[k]).replace(/"/g,'&quot;')}" oninput="updateProp(${block.id},'${k}',this.value)"></div>`;
+  // Field label mapping
+  const FIELD_LABELS = { 
+    heading:'Heading', subtext:'Subtext', body:'Body', btnText:'Button label', 
+    btnPrimary:'Primary btn', btnSecondary:'Secondary btn', logo:'Logo text', 
+    btnLink:'Button URL (Slug or link)',
+    logoImage:'Logo image URL', brand:'Brand name', copy:'Copyright text', 
+    quote:'Quote text', author:'Author name', role:'Author role', 
+    tag:'Section tag', imgSrc:'Image URL', imgAlt:'Image alt text'
+  };
+
+  // Loop through dataFields defined in the template
+  (tpl.dataFields || []).forEach(k => {
+    // Skip fields that have custom complex UI below
+    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'imgPosition', 'imgLayout', 'imgBg'].includes(k)) return;
+
+    const label = FIELD_LABELS[k] || (k.charAt(0).toUpperCase() + k.slice(1));
+    const value = d[k] !== undefined ? String(d[k]).replace(/"/g, '&quot;') : '';
+    
+    html += `<div class="prop-group">
+      <span class="prop-label">${label}</span>
+      <input class="prop-input" value="${value}" oninput="updateProp(${block.id},'${k}',this.value,true)">
+    </div>`;
   });
 
-  // img src
-  if(d.imgSrc!==undefined){
-    html+=`<div class="prop-group"><span class="prop-label">Image URL</span><input class="prop-input" value="${d.imgSrc}" placeholder="https://..." oninput="updateProp(${block.id},'imgSrc',this.value)"></div>`;
-  }
-
-  // layout for imgtext
+  // Specific layout/style controls (if they exist in data)
   if(d.layout!==undefined){
-    html+=`<div class="prop-group"><span class="prop-label">Image position</span><div class="pos-grid">
+    html+=`<div class="prop-group"><span class="prop-label">Layout</span><div class="pos-grid">
       ${['left','right','top','bottom'].map(v=>`<button class="pos-btn${d.layout===v?' active':''}" onclick="updateProp(${block.id},'layout','${v}')">${v.charAt(0).toUpperCase()+v.slice(1)}</button>`).join('')}
     </div></div>`;
   }
-  // textAlign
   if(d.textAlign!==undefined){
     html+=`<div class="prop-group"><span class="prop-label">Text align</span><div class="pos-grid">
       ${['left','center','right'].map(v=>`<button class="pos-btn${d.textAlign===v?' active':''}" onclick="updateProp(${block.id},'textAlign','${v}')">${v.charAt(0).toUpperCase()+v.slice(1)}</button>`).join('')}
     </div></div>`;
   }
-  // cols
   if(d.cols!==undefined){
-    html+=`<div class="prop-group"><span class="prop-label">Columns</span><div class="pos-grid">
+    html+=`<div class="prop-group"><span class="prop-label">Grid columns</span><div class="pos-grid">
       ${['2','3','4'].map(v=>`<button class="pos-btn${d.cols===v?' active':''}" onclick="updateProp(${block.id},'cols','${v}')">${v} cols</button>`).join('')}
     </div></div>`;
   }
 
-  // bg color
+  // Branding & Logo Style (Complex Navbar logic)
+  if(block.type === 'navbar'){
+    html+=`<div class="prop-section">Links & Style</div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Links position</span><div class="pos-grid">
+      ${['left','center','right'].map(v=>`<button class="pos-btn${d.linksPos===v?' active':''}" onclick="updateProp(${block.id},'linksPos','${v}')">${v.charAt(0).toUpperCase()+v.slice(1)}</button>`).join('')}
+    </div></div>`;
+    
+    const logoColors=['#111111','#333333','#5b4fff','#0F6E56','#cc3333','#d97706','#1e3a5f','#ffffff'];
+    html+=`<div class="prop-group"><span class="prop-label">Logo color</span><div class="bg-grid">
+      ${logoColors.map(c=>`<div class="bg-swatch${d.logoColor===c?' active':''}" style="background:${c}; border-color:${d.logoColor===c?'var(--accent)':'#ddd'}" title="${c}" onclick="updateProp(${block.id},'logoColor','${c}')"></div>`).join('')}
+      <input type="color" value="${d.logoColor}" style="width:22px;height:22px;border:none;padding:0;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'logoColor',this.value)">
+    </div></div>`;
+
+    html+=`<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+      <div class="prop-group"><span class="prop-label">Link size (px)</span><input type="number" class="m-input" value="${d.linksSize}" oninput="updateProp(${block.id},'linksSize',parseInt(this.value),true)"></div>
+      <div class="prop-group"><span class="prop-label">Format</span><div style="display:flex;gap:8px;margin-top:6px">
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" ${d.linksBold?'checked':''} onchange="updateProp(${block.id},'linksBold',this.checked)"> B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" ${d.linksItalic?'checked':''} onchange="updateProp(${block.id},'linksItalic',this.checked)"> I</label>
+      </div></div>
+    </div>`;
+  }
+
+  // Background color
   if(d.bg!==undefined){
-    html+=`<div class="prop-group"><span class="prop-label">Background</span><div class="bg-grid">
+    html+=`<div class="prop-group"><span class="prop-label">Background color</span><div class="bg-grid">
       ${BG_COLORS.map(c=>`<div class="bg-swatch${d.bg===c?' active':''}" style="background:${c}" title="${c}" onclick="updateProp(${block.id},'bg','${c}')"></div>`).join('')}
       <div class="bg-swatch" style="background:linear-gradient(135deg,#fff 50%,#eee 50%);border:1px solid #ddd" title="White" onclick="updateProp(${block.id},'bg','#ffffff')"></div>
     </div></div>`;
   }
 
   // data connect button for list types
-  if(['gridimgtext','gridimgtextrow','features'].includes(block.type)){
-    html+=`<div class="prop-section">Backend data</div>`;
-    html+=`<div class="prop-group"><span class="prop-label" style="color:var(--text3);font-size:10px;font-family:var(--mono)">Table: ${tpl.table}</span></div>`;
-    html+=`<button class="data-connect-btn" onclick="openModal(${block.id})">⊞ Edit list data</button>`;
+  if(['gridimgtext','gridimgtextrow','features','footer'].includes(block.type)){
+    html+=`<div class="prop-section">Advanced Data</div>`;
+    html+=`<button class="data-connect-btn" onclick="openModal(${block.id})">⊞ Manage list items</button>`;
   }
 
   // schema note
@@ -406,10 +489,11 @@ function renderProps(block) {
   pb.innerHTML = html;
 }
 
-function updateProp(id, key, value) {
+function updateProp(id, key, value, skipProps = false) {
   const block = get_blocks().find(b=>b.id===id); if(!block) return;
   block.data[key] = value;
-  rebuildBlock(block); render(); renderProps(block);
+  rebuildBlock(block); render();
+  if(!skipProps) renderProps(block);
 }
 
 // ──────────────────────────────────────────────────
@@ -447,6 +531,10 @@ function renderModalBody() {
       body.innerHTML = tabs + renderGridImgTextRowForm(d);
     } else if(type==='features'){
       body.innerHTML = tabs + renderFeatItemsForm(d);
+    } else if(type==='navbar'){
+      body.innerHTML = tabs + renderNavbarForm(d);
+    } else if(type==='footer'){
+      body.innerHTML = tabs + renderFooterLinksForm(d);
     } else {
       body.innerHTML = tabs + '<p style="color:var(--text2);font-size:13px">Use the properties panel on the right to edit this block\'s content.</p>';
     }
@@ -460,9 +548,9 @@ function renderModalBody() {
 function setModalTab(tab){ activeModalTab=tab; renderModalBody(); }
 
 function renderGridItemsForm(d) {
-  let html = `<div class="m-field"><div class="m-label">Section heading</div><input class="m-input" id="m-heading" value="${d.heading}"></div>`;
-  html += `<div class="m-field"><div class="m-label">Subtext</div><input class="m-input" id="m-subtext" value="${d.subtext}"></div>`;
-  html += `<div class="m-field"><div class="m-label">Columns <span class="m-badge">layout</span></div><select class="m-select" id="m-cols"><option${d.cols==='2'?' selected':''}>2</option><option${d.cols==='3'?' selected':''}>3</option><option${d.cols==='4'?' selected':''}>4</option></select></div>`;
+  let html = `<div class="m-field"><div class="m-label">Section heading</div><input class="m-input" id="m-heading" value="${d.heading}" oninput="modalUpdateProp('heading',this.value)"></div>`;
+  html += `<div class="m-field"><div class="m-label">Subtext</div><input class="m-input" id="m-subtext" value="${d.subtext}" oninput="modalUpdateProp('subtext',this.value)"></div>`;
+  html += `<div class="m-field"><div class="m-label">Columns <span class="m-badge">layout</span></div><select class="m-select" id="m-cols" onchange="modalUpdateProp('cols',this.value)"><option${d.cols==='2'?' selected':''}>2</option><option${d.cols==='3'?' selected':''}>3</option><option${d.cols==='4'?' selected':''}>4</option></select></div>`;
   html += `<div class="m-label" style="margin-bottom:8px">Cards <span class="m-badge">list</span></div>`;
   html += `<div class="m-list" id="m-items-list">`;
   (d.items||[]).forEach((it,i) => {
@@ -483,9 +571,9 @@ function renderGridItemsForm(d) {
 }
 
 function renderGridImgTextRowForm(d){
-  let html = `<div class="m-field"><div class="m-label">Section heading</div><input class="m-input" id="m-heading" value="${d.heading}"></div>`;
-  html += `<div class="m-field"><div class="m-label">Subtext</div><input class="m-input" id="m-subtext" value="${d.subtext}"></div>`;
-  html += `<div class="m-field"><div class="m-label">Columns <span class="m-badge">layout</span></div><select class="m-select" id="m-cols"><option${d.cols==='1'?' selected':''}>1</option><option${d.cols==='2'?' selected':''}>2</option><option${d.cols==='3'?' selected':''}>3</option></select></div>`;
+  let html = `<div class="m-field"><div class="m-label">Section heading</div><input class="m-input" id="m-heading" value="${d.heading}" oninput="modalUpdateProp('heading',this.value)"></div>`;
+  html += `<div class="m-field"><div class="m-label">Subtext</div><input class="m-input" id="m-subtext" value="${d.subtext}" oninput="modalUpdateProp('subtext',this.value)"></div>`;
+  html += `<div class="m-field"><div class="m-label">Columns <span class="m-badge">layout</span></div><select class="m-select" id="m-cols" onchange="modalUpdateProp('cols',this.value)"><option${d.cols==='1'?' selected':''}>1</option><option${d.cols==='2'?' selected':''}>2</option><option${d.cols==='3'?' selected':''}>3</option></select></div>`;
   html += `<div class="m-label" style="margin-bottom:8px">Cards <span class="m-badge">list</span></div>`;
   html += `<div class="m-list" id="m-items-list">`;
   (d.items||[]).forEach((it,i) => {
@@ -497,6 +585,7 @@ function renderGridImgTextRowForm(d){
         <input placeholder="Tag" value="${it.tag||''}" oninput="updateListItem('gridimgtextrow',${i},'tag',this.value)">
         <input placeholder="Description" value="${it.desc||''}" oninput="updateListItem('gridimgtextrow',${i},'desc',this.value)" style="grid-column:span 2">
         <input placeholder="Button label" value="${it.btnText||'Learn more'}" oninput="updateListItem('gridimgtextrow',${i},'btnText',this.value)">
+        <input placeholder="Button URL (Slug or link)" value="${it.btnLink||'#'}" oninput="updateListItem('gridimgtextrow',${i},'btnLink',this.value)">
         <input placeholder="Image URL" value="${it.imgSrc||''}" oninput="updateListItem('gridimgtextrow',${i},'imgSrc',this.value);updateImgPreview(this,${i})">
       </div>
       <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">&#x2715;</button>
@@ -507,7 +596,7 @@ function renderGridImgTextRowForm(d){
 }
 
 function renderFeatItemsForm(d){
-  let html=`<div class="m-field"><div class="m-label">Section heading</div><input class="m-input" id="m-heading" value="${d.heading}"></div>`;
+  let html=`<div class="m-field"><div class="m-label">Section heading</div><input class="m-input" id="m-heading" value="${d.heading}" oninput="modalUpdateProp('heading',this.value)"></div>`;
   html+=`<div class="m-label" style="margin-bottom:8px">Features <span class="m-badge">list</span></div><div class="m-list">`;
   (d.items||[]).forEach((it,i)=>{
     html+=`<div class="m-list-item">
@@ -524,12 +613,53 @@ function renderFeatItemsForm(d){
   return html;
 }
 
+function renderFooterLinksForm(d) {
+  let html = `<div class="m-field"><div class="m-label">Footer Brand</div><input class="m-input" id="m-brand" value="${d.brand}" oninput="modalUpdateProp('brand',this.value)"></div>`;
+  html += `<div class="m-field"><div class="m-label">Copyright Text</div><input class="m-input" id="m-copy" value="${d.copy}" oninput="modalUpdateProp('copy',this.value)"></div>`;
+  html += `<div class="m-label" style="margin-bottom:8px">Footer Links <span class="m-badge">list</span></div>`;
+  html += `<div class="m-list" id="m-links-list">`;
+  (d.items || []).forEach((it, i) => {
+    html += `<div class="m-list-item">
+      <div class="item-num">${i + 1}</div>
+      <div class="item-inputs">
+        <input placeholder="Label (e.g. Privacy)" value="${it.label || ''}" oninput="updateListItem('footer',${i},'label',this.value)">
+        <input placeholder="Slug or URL (e.g. privacy)" value="${it.slug || ''}" oninput="updateListItem('footer',${i},'slug',this.value)">
+      </div>
+      <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div><button class="m-add-btn" onclick="addListItem('footer')">+ Add link</button>`;
+  return html;
+}
+
+function renderNavbarForm(d){
+  let html = `<div class="m-field"><div class="m-label">Text Logo</div><input class="m-input" id="m-logo" value="${d.logo}" oninput="modalUpdateProp('logo',this.value)"></div>`;
+  html += `<div class="m-field"><div class="m-label">Image Logo URL (replaces text if set)</div><input class="m-input" id="m-logoImage" value="${d.logoImage||''}" oninput="modalUpdateProp('logoImage',this.value)"></div>`;
+  html += `<div class="m-field"><div class="m-label">Links Position</div>
+    <select class="m-select" id="m-linksPos" onchange="modalUpdateProp('linksPos',this.value)">
+      <option value="left"${d.linksPos==='left'?' selected':''}>Left (Next to Logo)</option>
+      <option value="center"${d.linksPos==='center'?' selected':''}>Center</option>
+      <option value="right"${d.linksPos==='right'?' selected':''}>Right (Default)</option>
+    </select>
+  </div>`;
+  return html;
+}
+
 function renderStyleTab(d, type){
   let html='';
   if(d.bg!==undefined){
     html+=`<div class="m-field"><div class="m-label">Background color</div><div class="bg-grid" style="grid-template-columns:repeat(10,1fr);gap:6px;margin-top:6px">
       ${BG_COLORS.map(c=>`<div class="bg-swatch${d.bg===c?' active':''}" style="background:${c}" onclick="modalUpdateProp('bg','${c}')"></div>`).join('')}
       <div class="bg-swatch" style="background:#fff;border:1px solid #ddd" onclick="modalUpdateProp('bg','#ffffff')"></div>
+    </div></div>`;
+  }
+  if(d.logoColor!==undefined){
+    const logoColors=['#111111','#333333','#5b4fff','#0F6E56','#cc3333','#d97706','#1e3a5f','#ffffff'];
+    html+=`<div class="m-field"><div class="m-label">Logo text color</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+      ${logoColors.map(c=>`<div class="bg-swatch" style="background:${c};border:2px solid ${d.logoColor===c?'var(--accent)':'#ddd'}" title="${c}" onclick="modalUpdateProp('logoColor','${c}')"></div>`).join('')}
+      <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);cursor:pointer">
+        <input type="color" value="${d.logoColor}" style="width:22px;height:22px;border:none;padding:0;cursor:pointer;border-radius:4px" onchange="modalUpdateProp('logoColor',this.value)">custom
+      </label>
     </div></div>`;
   }
   if(d.layout!==undefined){
@@ -602,6 +732,24 @@ function renderStyleTab(d, type){
         <input type="color" value="${d.tagColor}" style="width:22px;height:22px;border:none;padding:0;cursor:pointer;border-radius:4px" onchange="modalUpdateProp('tagColor',this.value)">custom
       </label>
     </div></div>`;
+  }
+  if(type==='navbar'){
+    html+=`<div class="prop-section">Links Styling</div>`;
+    html+=`<div class="m-field"><div class="m-label">Link color</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);cursor:pointer">
+        <input type="color" value="${d.linksColor}" style="width:32px;height:32px;border:none;padding:0;cursor:pointer;border-radius:6px;background:none" onchange="modalUpdateProp('linksColor',this.value)">
+        <span>Choose custom color</span>
+      </label>
+    </div></div>`;
+    html+=`<div class="m-row2"><div class="m-field"><div class="m-label">Font size (px)</div><input type="number" class="m-input" value="${d.linksSize}" oninput="modalUpdateProp('linksSize',parseInt(this.value))"></div>
+    <div class="m-field"><div class="m-label">Formatting</div><div style="display:flex;gap:8px;margin-top:4px">
+      <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer">
+        <input type="checkbox" ${d.linksBold?'checked':''} onchange="modalUpdateProp('linksBold',this.checked)"> Bold
+      </label>
+      <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer">
+        <input type="checkbox" ${d.linksItalic?'checked':''} onchange="modalUpdateProp('linksItalic',this.checked)"> Italic
+      </label>
+    </div></div></div>`;
   }
   if(!html) html='<p style="color:var(--text2);font-size:13px">No style options for this component.</p>';
   return html;
@@ -729,11 +877,24 @@ function getSchemaForType(type){
 );`;
 }
 
-function modalUpdateProp(key, value){
+function modalUpdateProp(key, value, skipModalRender = true){
   if(!activeModalBlock) return;
   activeModalBlock.data[key] = value;
   rebuildBlock(activeModalBlock); render();
-  renderModalBody();
+  if(!skipModalRender) renderModalBody();
+}
+
+function updateImgPreview(input, idx) {
+  const itemImg = input.closest('.m-list-item').querySelector('.item-img');
+  if (!itemImg) return;
+  const val = input.value.trim();
+  if (val) {
+    itemImg.innerHTML = `<img src="${val}">`;
+  } else {
+    // Determine placeholder based on context
+    const isRow = input.closest('.m-list-item').innerHTML.includes('gr-btn') || activeModalBlock.type==='gridimgtextrow';
+    itemImg.innerHTML = isRow ? '&#128444;' : '🖼';
+  }
 }
 
 function updateListItem(type, idx, key, value){
@@ -752,7 +913,7 @@ function addListItem(type){
   if(!activeModalBlock) return;
   if(type==='gridimgtext') activeModalBlock.data.items.push({title:'New card',desc:'Description here.',tag:'Tag',imgSrc:''});
   else if(type==='gridimgtextrow') activeModalBlock.data.items.push({title:'New card',desc:'Description here.',tag:'Tag',btnText:'Learn more',imgSrc:''});
-  else if(type==='features') activeModalBlock.data.items.push({icon:'✦',title:'Feature',desc:'Description.'});
+  else if(type==='footer') activeModalBlock.data.items.push({label:'New link', slug:'#'});
   rebuildBlock(activeModalBlock); render(); renderModalBody();
 }
 
@@ -762,9 +923,21 @@ function saveModal(){
   const headingEl = document.getElementById('m-heading');
   const subtextEl = document.getElementById('m-subtext');
   const colsEl = document.getElementById('m-cols');
+  const logoEl = document.getElementById('m-logo');
+  const logoImageEl = document.getElementById('m-logoImage');
+  const linksPosEl = document.getElementById('m-linksPos');
+  const brandEl = document.getElementById('m-brand');
+  const copyEl = document.getElementById('m-copy');
+
   if(headingEl) activeModalBlock.data.heading = headingEl.value;
   if(subtextEl) activeModalBlock.data.subtext = subtextEl.value;
   if(colsEl) activeModalBlock.data.cols = colsEl.value;
+  if(logoEl) activeModalBlock.data.logo = logoEl.value;
+  if(logoImageEl) activeModalBlock.data.logoImage = logoImageEl.value;
+  if(linksPosEl) activeModalBlock.data.linksPos = linksPosEl.value;
+  if(brandEl) activeModalBlock.data.brand = brandEl.value;
+  if(copyEl) activeModalBlock.data.copy = copyEl.value;
+
   rebuildBlock(activeModalBlock); render();
   if(selectedId===activeModalBlock.id) renderProps(activeModalBlock);
   closeModal();
