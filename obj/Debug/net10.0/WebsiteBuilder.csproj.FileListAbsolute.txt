@@ -536,6 +536,6 @@ C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.A
 C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.CodeAnalysis.Razor.dll
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\WebsiteBuilder.MvcApplicationPartsAssemblyInfo.cs
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\7670ky8twn-{0}-5fbofl504r-5fbofl504r.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-plqe5svjva-plqe5svjva.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8gcogbppib-{0}-89bp6cphv2-89bp6cphv2.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\7670ky8twn-{0}-vlhywv1lnc-vlhywv1lnc.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8gcogbppib-{0}-6jbzmqrxi2-6jbzmqrxi2.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-tw0un8m5yz-tw0un8m5yz.gz

@@ -7,16 +7,20 @@
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:wwwroot\\js\\builder.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\page\\preview.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\page\\preview.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\controllers\\apicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -25,6 +29,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\models\\pageblock.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:models\\pageblock.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,17 +50,16 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Builder\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Builder\\Index.cshtml",
               "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Builder\\Index.cshtml",
               "RelativeToolTip": "Views\\Builder\\Index.cshtml",
-              "ViewState": "AgIAAFoAAAAAAAAAAAAAAG0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAACoAAABlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-07T16:40:19.304Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -58,7 +69,7 @@
               "RelativeDocumentMoniker": "wwwroot\\js\\builder.js",
               "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\wwwroot\\js\\builder.js",
               "RelativeToolTip": "wwwroot\\js\\builder.js",
-              "ViewState": "AgIAAFIAAAAAAAAAAAAgwGcAAAA8AAAAAAAAAA==",
+              "ViewState": "AgIAACgCAAAAAAAAAAAUwB4CAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2026-04-09T18:24:46.085Z",
               "IsPinned": true,
@@ -79,6 +90,42 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-10T19:20:51.204Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Preview.cshtml",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Page\\Preview.cshtml",
+              "RelativeDocumentMoniker": "Views\\Page\\Preview.cshtml",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Page\\Preview.cshtml",
+              "RelativeToolTip": "Views\\Page\\Preview.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-09T18:41:21.442Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\.gitignore",
+              "RelativeDocumentMoniker": ".gitignore",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\.gitignore",
+              "RelativeToolTip": ".gitignore",
+              "ViewState": "AgIAAOIBAAAAAAAAAAAAAOIBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-09T18:31:17.427Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
@@ -86,12 +133,11 @@
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-09T18:24:13.907Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-09T18:24:13.907Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "Privacy.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Home\\Privacy.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Privacy.cshtml",
@@ -99,12 +145,11 @@
               "RelativeToolTip": "Views\\Home\\Privacy.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-09T18:24:11.25Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-09T18:24:11.25Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "PageBlock.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Models\\PageBlock.cs",
               "RelativeDocumentMoniker": "Models\\PageBlock.cs",
@@ -116,16 +161,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "ApiController.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\ApiController.cs",
               "RelativeDocumentMoniker": "Controllers\\ApiController.cs",
               "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\ApiController.cs",
               "RelativeToolTip": "Controllers\\ApiController.cs",
-              "ViewState": "AgIAAE4AAAAAAAAAAAA1wFsAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAIkAAAAAAAAAAAA5wFsAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-07T16:43:59.742Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-07T16:43:59.742Z"
             }
           ]
         },

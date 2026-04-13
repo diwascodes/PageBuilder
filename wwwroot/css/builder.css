@@ -189,6 +189,34 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
 .form-field input, .form-field textarea { padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px; background: #fafafa; font-family: var(--sans) }
 .b-form .submit-btn { margin-top: 8px; padding: 9px 22px; background: #111; color: #fff; border: none; border-radius: 6px; font-size: 12px; cursor: pointer }
 
+/* About / Highlights */
+.b-abouthighlights { border-radius: var(--radius); overflow: hidden; }
+.ah-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 25px; }
+.ah-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.ah-item-text h4 { font-size: 16px; font-weight: 500; margin-bottom: 5px; }
+.ah-item-text p { font-size: 13px; line-height: 1.5; }
+.ah-btn:hover { opacity: 0.9; transform: translateY(-1px); transition: all 0.2s; }
+
+/* Service Grid (What We Offer) */
+.b-servicegrid { padding: 30px 20px; text-align: center; background: #fff; border: 1px solid #e8e8e4; border-radius: var(--radius); }
+.wwo-header { margin-bottom: 25px; display: block; }
+.wwo-header h2 { font-size: 20px; color: #1a1a2e; margin-bottom: 6px; font-weight: 700; display: inline-block; position: relative; }
+.wwo-header h2::after { content: ''; display: block; width: 30px; height: 2px; background: #a6111f; margin: 5px auto 0; }
+.wwo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px; }
+.wwo-card { background: #f8f9fa; padding: 15px 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; border: 1px solid #eee; }
+.wwo-icon-wrap { width: 30px; height: 30px; background: #a6111f; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; margin-bottom: 10px; }
+.wwo-card h3 { font-size: 11px; font-weight: 600; color: #1a1a2e; line-height: 1.3; margin: 0; }
+.wwo-btn { background: #a6111f; color: #fff; border: none; padding: 7px 20px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; }
+
+/* Top Bar (Ticker) */
+.b-topbar { display: flex; justify-content: space-between; align-items: stretch; min-height: 32px; font-size: 11px; overflow: hidden; position: relative; border: 1px dashed #ddd; border-bottom: none; }
+.topbar-left { flex: 1; display: flex; align-items: center; padding: 0 20px; overflow: hidden; white-space: nowrap; }
+.topbar-ticker { display: inline-block; }
+.is-scrolling .topbar-ticker { animation: topbar-marquee 25s linear infinite; padding-left: 100%; }
+.topbar-right { position: relative; padding: 0 20px 0 40px; display: flex; align-items: center; clip-path: polygon(25px 0, 100% 0, 100% 100%, 0% 100%); }
+.topbar-contact { display: flex; gap: 12px; white-space: nowrap; }
+.topbar-contact span { display: flex; align-items: center; gap: 5px; }
+
 /* ── Props panel ─────────────────────────────────── */
 #props { background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden }
 #props-body { padding: 10px; flex: 1; overflow-y: auto }

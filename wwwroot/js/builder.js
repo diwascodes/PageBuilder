@@ -61,10 +61,38 @@ const BG_COLORS = ['#1a1a2e','#5b4fff','#0F6E56','#cc3333','#111','#2d3a2e','#4a
 const BG_LABELS = ['Dark Navy','Violet','Forest','Red','Charcoal','Dark Green','Brown','Navy','Purple','Brown'];
 
 const TEMPLATES = {
+  topbar: {
+    label:'Top Bar', icon:'▔', table:'TopBar',
+    dataFields:['tickerText','isScrolling','email','phone','bg','accentBg','textColor'],
+    defaultData: {
+      tickerText: 'Welcome to Invincible Software Solutions Integrated |',
+      isScrolling: true,
+      email: 'bdindgroup@issi-software.com',
+      phone: '+91 40 2763 2269 / +91 9440501439',
+      bg: '#a6111f',
+      accentBg: '#800d18',
+      textColor: '#ffffff'
+    },
+    render: d => {
+      const scrollClass = d.isScrolling ? 'is-scrolling' : '';
+      return `
+        <div class="b-topbar" style="background:${d.bg}; color:${d.textColor}">
+          <div class="topbar-left ${scrollClass}">
+            <div class="topbar-ticker">${d.tickerText}</div>
+          </div>
+          <div class="topbar-right" style="background:${d.accentBg}">
+            <div class="topbar-contact">
+              <span>✉ ${d.email}</span>
+              <span>📞 ${d.phone}</span>
+            </div>
+          </div>
+        </div>`;
+    }
+  },
   navbar: {
     label:'Navbar', icon:'☰', table:'Navbar',
-    dataFields:['logo','logoImage','linksPos','bg','logoColor','linksColor','linksSize','linksBold','linksItalic'],
-    defaultData:{ logo:'Brand', logoImage:'', linksPos:'right', bg:'#ffffff', logoColor:'#111111', linksColor:'#777777', linksSize:14, linksBold:false, linksItalic:false },
+    dataFields:['logo','logoImage','linksPos','bg','logoColor','linksColor','linksSize','linksBold','linksItalic','paddingV'],
+    defaultData:{ logo:'Brand', logoImage:'', linksPos:'right', bg:'#ffffff', logoColor:'#111111', linksColor:'#777777', linksSize:14, linksBold:false, linksItalic:false, paddingV:18 },
     render: d => {
       const linkStyle = `color:${d.linksColor||'#777777'}; font-size:${d.linksSize||14}px; font-weight:${d.linksBold?'bold':'normal'}; font-style:${d.linksItalic?'italic':'normal'}; text-decoration:none;`;
       let linksHtml = `<span style="${linkStyle}">Home</span><span style="${linkStyle}">About</span><span style="${linkStyle}">Services</span>`;
@@ -72,9 +100,8 @@ const TEMPLATES = {
         linksHtml = pages.map(p => `<span style="${linkStyle}">${p.name}</span>`).join('');
       }
       const logoHtml = d.logoImage ? `<img src="${d.logoImage}" alt="${d.logo}" style="max-height:40px">` : `<span style="color:${d.logoColor||'#111111'}">${d.logo}</span>`;
-      const posClass = `pos-${d.linksPos || 'right'}`;
       return `
-        <div class="b-navbar ${posClass}" style="background:${d.bg||'#ffffff'}">
+        <div class="b-navbar pos-${d.linksPos || 'right'}" style="background:${d.bg||'#ffffff'}; padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px">
           <div class="nav-logo">${logoHtml}</div>
           <button class="nav-toggle" onclick="this.parentElement.querySelector('.nav-links').classList.toggle('active')">☰</button>
           <div class="nav-links">${linksHtml}</div>
@@ -83,27 +110,28 @@ const TEMPLATES = {
   },
   hero: {
     label:'Hero', icon:'★', table:'Hero',
-    dataFields:['heading','subtext','btnText','btnLink','bg'],
-    defaultData:{ heading:'Build something great', subtext:'The fastest way to launch your next idea into the world.', btnText:'Get started free', btnLink:'#', bg:'#1a1a2e' },
-    render: d => `<div class="b-hero" style="background:${d.bg}"><h1>${d.heading}</h1><p>${d.subtext}</p><a href="${d.btnLink||'#'}" class="hero-btn-link" style="text-decoration:none"><button class="hero-btn">${d.btnText}</button></a></div>`
+    dataFields:['heading','subtext','btnText','btnLink','bg','paddingV'],
+    defaultData:{ heading:'Build something great', subtext:'The fastest way to launch your next idea into the world.', btnText:'Get started free', btnLink:'#', bg:'#1a1a2e', paddingV:80 },
+    render: d => `<div class="b-hero" style="background:${d.bg}; padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px"><h1>${d.heading}</h1><p>${d.subtext}</p><a href="${d.btnLink||'#'}" class="hero-btn-link" style="text-decoration:none"><button class="hero-btn">${d.btnText}</button></a></div>`
   },
   herosplit: {
     label:'Hero Split', icon:'◨', table:'HeroSplit',
-    dataFields:['heading','subtext','btnText','btnLink','imgSrc','bg'],
+    dataFields:['heading','subtext','btnText','btnLink','imgSrc','bg','paddingV'],
     defaultData:{ 
         heading:'Build something great', 
         subtext:'The fastest way to launch your next idea into the world.', 
         btnText:'Get started free', 
         btnLink:'#', 
         imgSrc:'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1470', 
-        bg:'#0d252a' 
+        bg:'#0d252a',
+        paddingV:100
     },
     render: d => {
         const bgStyle = d.imgSrc ? `background-image:linear-gradient(rgba(13,37,42,0.3), rgba(13,37,42,0.3)), url(${d.imgSrc}); background-size:cover; background-position:center` : `background:${d.bg}`;
         return `
         <div class="b-herosplit" style="background:${d.bg}">
             <div class="herosplit-visual" style="${bgStyle}"></div>
-            <div class="herosplit-content">
+            <div class="herosplit-content" style="padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px">
                 <h1>${d.heading}</h1>
                 <p>${d.subtext}</p>
                 <a href="${d.btnLink||'#'}" style="text-decoration:none">
@@ -226,10 +254,11 @@ const TEMPLATES = {
   },
   footer: {
     label:'Footer', icon:'▬', table:'Footer',
-    dataFields:['brand','copy','items'],
+    dataFields:['brand','copy','items','paddingV'],
     defaultData:{ 
       brand:'Brand', 
       copy:'© 2026 Brand Inc.',
+      paddingV: 40,
       items:[
         {label:'Privacy', slug:'privacy'},
         {label:'Terms', slug:'terms'},
@@ -238,7 +267,140 @@ const TEMPLATES = {
     },
     render: d => {
       const itemsHtml = (d.items || []).map(it => `<span>${it.label}</span>`).join('');
-      return `<div class="b-footer"><div class="footer-brand">${d.brand}</div><div class="footer-links">${itemsHtml}</div><div class="footer-copy">${d.copy}</div></div>`;
+      return `<div class="b-footer" style="padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px"><div class="footer-brand">${d.brand}</div><div class="footer-links">${itemsHtml}</div><div class="footer-copy">${d.copy}</div></div>`;
+    },
+  },
+  abouthighlights: {
+      label:'Info + Highlights', icon:'ℹ', table:'AboutHighlights',
+      dataFields:['heading','subheading','body','btnText','btnLink','leftBg','rightBg','textColorLeft','textColorRight','btnBg','btnTextColor','iconColor','colWidth','alignItems','paddingV'],
+      defaultData: {
+        heading: 'Welcome To ISSI.',
+        subheading: 'Invincible Software solutions Integrated (ISSI), is an award-winning software development and IT support services company.',
+        body: 'Welcome To ISSI. ISSI is CMMI Level 3 appraised, ISO 9001:2015, and ISO 27001:2013 certified company. harnessing a suite of Software Development Life Cycle (SDLC) capabilities to accomplish client needs.',
+        btnText: 'Know More',
+        btnLink: '#',
+        leftBg: '#ffffff',
+        rightBg: '#a6111f',
+        textColorLeft: '#a6111f',
+        textColorRight: '#ffffff',
+        btnBg: '#a6111f',
+        btnTextColor: '#ffffff',
+        iconColor: '#a6111f',
+        colWidth: '50-50',
+        alignItems: 'center',
+        paddingV: 0,
+        items: [
+          { icon: '⚙', title: 'Our Purpose', desc: 'To make a qualitative difference in the lives of millions of people and organizations.' },
+          { icon: '👁', title: 'Our Vision', desc: 'To be a dominant and profitable India-centric software company.' },
+          { icon: '🎯', title: 'Our Mission', desc: 'To provide high-quality IT solutions and to help fill the niche requirements.' }
+        ]
+      },
+      render: d => {
+        const [leftW, rightW] = (d.colWidth || '50-50').split('-').map(v => v + '%');
+        const itemsHtml = (d.items || []).map(it => `
+          <div class="ah-item">
+            <div class="ah-icon" style="background:${d.textColorRight}; color:${d.iconColor}">${it.icon}</div>
+            <div class="ah-item-text">
+              <h4 style="color:${d.textColorRight}">${it.title}</h4>
+              <p style="color:${d.textColorRight}; opacity:0.9">${it.desc}</p>
+            </div>
+          </div>
+        `).join('');
+
+        return `
+          <div class="b-abouthighlights" style="display:flex; flex-wrap:wrap; min-height:300px; padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px; align-items:${d.alignItems === 'center' ? 'center' : 'flex-start'}">
+            <div class="ah-left" style="flex: 0 0 ${leftW}; background:${d.leftBg}; color:${d.textColorLeft}; padding:60px 40px">
+              <h1 style="color:${d.textColorLeft}; margin-bottom:15px; font-size:32px">${d.heading}</h1>
+              <h3 style="color:${d.textColorLeft}; margin-bottom:20px; font-size:18px">${d.subheading}</h3>
+              <p style="margin-bottom:30px; line-height:1.6; font-size:14px; color:#444">${d.body}</p>
+              <a href="${d.btnLink || '#'}" style="text-decoration:none">
+                <button class="ah-btn" style="background:${d.btnBg}; color:${d.btnTextColor}; border:none; padding:12px 30px; border-radius:30px; cursor:pointer; font-weight:500">${d.btnText}</button>
+              </a>
+            </div>
+            <div class="ah-right" style="flex: 0 0 ${rightW}; background:${d.rightBg}; color:${d.textColorRight}; padding:60px 40px">
+              <div class="ah-items-list">${itemsHtml}</div>
+            </div>
+          </div>`;
+    }
+  },
+  servicegrid: {
+    label:'Service Grid', icon:'▦', table:'ServiceGrid',
+    dataFields:['heading','btnText','btnLink','items','paddingV','bg','accentColor','titleColor','headerColor'],
+    defaultData: {
+      heading: 'What We Offer',
+      btnText: 'Know More',
+      btnLink: '#',
+      paddingV: 80,
+      bg: '#ffffff',
+      accentColor: '#a6111f',
+      titleColor: '#1a1a2e',
+      headerColor: '#a6111f',
+      items: [
+        { icon: '📋', title: 'Program & Project Management' },
+        { icon: '💻', title: 'Software Development' },
+        { icon: '🤝', title: 'Professional Services' },
+        { icon: '🛠️', title: 'Managed IT Services' },
+        { icon: '🏢', title: 'Enterprise Products' },
+        { icon: '🛡️', title: 'Cyber Security/IT Infrastructure' },
+        { icon: '🎧', title: 'Call Center/Help Desk Support' },
+        { icon: '☁️', title: 'Cloud Computing' }
+      ]
+    },
+    render: d => {
+      const cards = (d.items || []).map(it => `
+        <div class="wwo-card" style="border-color:${d.accentColor}22">
+          <div class="wwo-icon-wrap" style="background:${d.accentColor}">${it.icon}</div>
+          <h3 style="color:${d.titleColor || '#1a1a2e'}">${it.title}</h3>
+        </div>
+      `).join('');
+      return `
+        <div class="b-servicegrid" style="background:${d.bg || '#ffffff'}; padding-top:${d.paddingV || 80}px; padding-bottom:${d.paddingV || 80}px">
+          <div class="wwo-header"><h2 style="color:${d.titleColor || '#1a1a2e'}">${d.heading}<span style="background:${d.headerColor || '#a6111f'}; display:block; width:60px; height:3px; margin:10px auto 0"></span></h2></div>
+          <div class="wwo-grid">${cards}</div>
+          <button class="wwo-btn" style="background:${d.accentColor || '#a6111f'}">${d.btnText}</button>
+        </div>`;
+    }
+  },
+  logoslider: {
+    label:'Logo Slider', icon:'▤', table:'LogoSlider',
+    dataFields:['heading','btnText','btnLink','items','paddingV','bg'],
+    defaultData: {
+      heading: 'Our Trusted Partners',
+      btnText: 'View All Partners',
+      btnLink: '#',
+      paddingV: 80,
+      bg: '#ffffff',
+      items: [
+        { name: 'Google', imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg', link: '#' },
+        { name: 'Microsoft', imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg', link: '#' },
+        { name: 'Apple', imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg', link: '#' },
+        { name: 'Amazon', imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg', link: '#' },
+        { name: 'Netflix', imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg', link: '#' },
+        { name: 'Meta', imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg', link: '#' }
+      ]
+    },
+    render: (d, id) => {
+      const itemsHtml = (d.items || []).map(it => `
+        <div class="ls-item">
+          <img src="${it.imgSrc}" alt="${it.name}">
+          <span>${it.name}</span>
+        </div>
+      `).join('');
+      const dotsHtml = (d.items || []).map((_, i) => `<div class="ls-dot${i===0?' active':''}" data-index="${i}"></div>`).join('');
+      
+      return `
+        <div class="b-logoslider" id="slider-${id}" style="background:${d.bg || '#ffffff'}; padding-top:${d.paddingV || 80}px; padding-bottom:${d.paddingV || 80}px">
+          <div class="ls-header"><h2>${d.heading}</h2></div>
+          <div class="ls-viewport">
+            <button class="ls-ctrl ls-prev" onclick="moveSlider(${id}, -1)">‹</button>
+            <div class="ls-track">${itemsHtml}</div>
+            <button class="ls-ctrl ls-next" onclick="moveSlider(${id}, 1)">›</button>
+          </div>
+          <div class="ls-dots">${dotsHtml}</div>
+          <a href="${d.btnLink || '#'}" style="text-decoration:none">
+            <button class="ls-more-btn">${d.btnText}</button>
+          </a>
+        </div>`;
     }
   }
 };
@@ -358,7 +520,7 @@ function render() {
       <button class="blk-ctrl" title="Move up" onclick="moveBlock(${block.id},-1)">↑</button>
       <button class="blk-ctrl" title="Move down" onclick="moveBlock(${block.id},1)">↓</button>
       <button class="blk-ctrl" title="Duplicate" onclick="duplicateBlock(${block.id})">⧉</button>
-      ${hasListData?`<button class="blk-ctrl data-btn" title="Edit data" onclick="openModal(${block.id})">⊞ data</button>`:''}
+      ${hasListData || block.type === 'abouthighlights' ? `<button class="blk-ctrl data-btn" title="Edit data" onclick="openModal(${block.id})">⊞ data</button>` : ''}
       <button class="blk-ctrl del" title="Delete" onclick="deleteBlock(${block.id})">✕</button>`;
     wrap.appendChild(ctrl);
 
@@ -371,6 +533,7 @@ function render() {
     inner.appendChild(wrap);
   });
   countBtn.textContent = blocks.length+' block'+(blocks.length!==1?'s':'');
+  setTimeout(initSliders, 100);
 }
 
 function selectBlock(id) {
@@ -407,13 +570,14 @@ function renderProps(block) {
     btnLink:'Button URL (Slug or link)',
     logoImage:'Logo image URL', brand:'Brand name', copy:'Copyright text', 
     quote:'Quote text', author:'Author name', role:'Author role', 
-    tag:'Section tag', imgSrc:'Image URL', imgAlt:'Image alt text'
+    tag:'Section tag', imgSrc:'Image URL', imgAlt:'Image alt text',
+    paddingV: 'Vertical Size'
   };
 
   // Loop through dataFields defined in the template
   (tpl.dataFields || []).forEach(k => {
     // Skip fields that have custom complex UI below
-    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'imgPosition', 'imgLayout', 'imgBg'].includes(k)) return;
+    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'imgPosition', 'imgLayout', 'imgBg', 'paddingV', 'leftBg', 'rightBg', 'textColorLeft', 'textColorRight', 'btnBg', 'btnTextColor', 'iconColor', 'colWidth', 'alignItems'].includes(k)) return;
 
     const label = FIELD_LABELS[k] || (k.charAt(0).toUpperCase() + k.slice(1));
     const value = d[k] !== undefined ? String(d[k]).replace(/"/g, '&quot;') : '';
@@ -423,6 +587,17 @@ function renderProps(block) {
       <input class="prop-input" value="${value}" oninput="updateProp(${block.id},'${k}',this.value,true)">
     </div>`;
   });
+
+  // Vertical Resizing (Slider)
+  if(d.paddingV !== undefined){
+    html += `<div class="prop-group">
+      <span class="prop-label">Vertical Size</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <input type="range" min="0" max="250" value="${d.paddingV}" style="flex:1" oninput="this.nextElementSibling.innerText=this.value+'px'; updateProp(${block.id},'paddingV',parseInt(this.value),true)">
+        <span style="font-size:11px;color:var(--text3);min-width:35px">${d.paddingV}px</span>
+      </div>
+    </div>`;
+  }
 
   // Specific layout/style controls (if they exist in data)
   if(d.layout!==undefined){
@@ -439,6 +614,35 @@ function renderProps(block) {
     html+=`<div class="prop-group"><span class="prop-label">Grid columns</span><div class="pos-grid">
       ${['2','3','4'].map(v=>`<button class="pos-btn${d.cols===v?' active':''}" onclick="updateProp(${block.id},'cols','${v}')">${v} cols</button>`).join('')}
     </div></div>`;
+  }
+
+  if(block.type === 'topbar'){
+    html+=`<div class="prop-section">Topbar Content</div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Ticker Text</span>
+      <textarea class="prop-input" style="height:60px" oninput="updateProp(${block.id},'tickerText',this.value)">${d.tickerText}</textarea>
+    </div>`;
+    html+=`<div class="prop-group">
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer">
+        <input type="checkbox" ${d.isScrolling?'checked':''} onchange="updateProp(${block.id},'isScrolling',this.checked)"> Enable Scrolling (Marquee)
+      </label>
+    </div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Email</span>
+      <input class="prop-input" value="${d.email}" oninput="updateProp(${block.id},'email',this.value)">
+    </div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Phone</span>
+      <input class="prop-input" value="${d.phone}" oninput="updateProp(${block.id},'phone',this.value)">
+    </div>`;
+    
+    html+=`<div class="prop-section">Topbar Style</div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Background</span>
+      <input type="color" value="${d.bg}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'bg',this.value)">
+    </div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Accent Background (Right Side)</span>
+      <input type="color" value="${d.accentBg}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'accentBg',this.value)">
+    </div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Text Color</span>
+      <input type="color" value="${d.textColor}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'textColor',this.value)">
+    </div>`;
   }
 
   // Branding & Logo Style (Complex Navbar logic)
@@ -463,6 +667,43 @@ function renderProps(block) {
     </div>`;
   }
 
+  if(block.type === 'servicegrid'){
+    html+=`<div class="prop-section">Style & Colors</div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Accent Color (Icons/Btn)</span>
+      <input type="color" value="${d.accentColor}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'accentColor',this.value)">
+    </div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Title/Text Color</span>
+      <input type="color" value="${d.titleColor}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'titleColor',this.value)">
+    </div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Underline Color</span>
+      <input type="color" value="${d.headerColor}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'headerColor',this.value)">
+    </div>`;
+  }
+
+  if(block.type === 'abouthighlights'){
+    html+=`<div class="prop-section">Left Panel Design</div>`;
+    html+=`<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+      <div class="prop-group"><span class="prop-label">BG Color</span><input type="color" value="${d.leftBg}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'leftBg',this.value)"></div>
+      <div class="prop-group"><span class="prop-label">Text Color</span><input type="color" value="${d.textColorLeft}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'textColorLeft',this.value)"></div>
+    </div>`;
+
+    html+=`<div class="prop-section">Right Panel Design</div>`;
+    html+=`<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+      <div class="prop-group"><span class="prop-label">BG Color</span><input type="color" value="${d.rightBg}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'rightBg',this.value)"></div>
+      <div class="prop-group"><span class="prop-label">Text Color</span><input type="color" value="${d.textColorRight}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'textColorRight',this.value)"></div>
+    </div>`;
+    
+    html+=`<div class="prop-group"><span class="prop-label">Icon/Highlight Color</span>
+      <input type="color" value="${d.iconColor}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'iconColor',this.value)">
+    </div>`;
+
+    html+=`<div class="prop-section">Button Design</div>`;
+    html+=`<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+      <div class="prop-group"><span class="prop-label">BG Color</span><input type="color" value="${d.btnBg}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'btnBg',this.value)"></div>
+      <div class="prop-group"><span class="prop-label">Text Color</span><input type="color" value="${d.btnTextColor}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'btnTextColor',this.value)"></div>
+    </div>`;
+  }
+
   // Background color
   if(d.bg!==undefined){
     html+=`<div class="prop-group"><span class="prop-label">Background color</span><div class="bg-grid">
@@ -472,7 +713,7 @@ function renderProps(block) {
   }
 
   // data connect button for list types
-  if(['gridimgtext','gridimgtextrow','features','footer'].includes(block.type)){
+  if(['gridimgtext','gridimgtextrow','features','footer','abouthighlights','servicegrid','logoslider'].includes(block.type)){
     html+=`<div class="prop-section">Advanced Data</div>`;
     html+=`<button class="data-connect-btn" onclick="openModal(${block.id})">⊞ Manage list items</button>`;
   }
@@ -535,6 +776,12 @@ function renderModalBody() {
       body.innerHTML = tabs + renderNavbarForm(d);
     } else if(type==='footer'){
       body.innerHTML = tabs + renderFooterLinksForm(d);
+    } else if(type==='abouthighlights'){
+      body.innerHTML = tabs + renderAboutHighlightsForm(d);
+    } else if(type==='servicegrid'){
+      body.innerHTML = tabs + renderServiceGridForm(d);
+    } else if(type==='logoslider'){
+      body.innerHTML = tabs + renderLogoSliderForm(d);
     } else {
       body.innerHTML = tabs + '<p style="color:var(--text2);font-size:13px">Use the properties panel on the right to edit this block\'s content.</p>';
     }
@@ -631,6 +878,160 @@ function renderFooterLinksForm(d) {
   html += `</div><button class="m-add-btn" onclick="addListItem('footer')">+ Add link</button>`;
   return html;
 }
+
+function renderAboutHighlightsForm(d) {
+  let html = `<div class="m-field"><div class="m-label">Main Heading</div><input class="m-input" id="m-heading" value="${d.heading}" oninput="modalUpdateProp('heading',this.value)"></div>`;
+  html += `<div class="m-field"><div class="m-label">Subheading</div><input class="m-input" id="m-subheading" value="${d.subheading}" oninput="modalUpdateProp('subheading',this.value)"></div>`;
+  html += `<div class="m-field"><div class="m-label">Description</div><textarea class="m-input" id="m-body" rows="3" oninput="modalUpdateProp('body',this.value)" style="resize:vertical">${d.body}</textarea></div>`;
+  html += `<div class="m-row2">
+    <div class="m-field"><div class="m-label">Button Text</div><input class="m-input" id="m-btnText" value="${d.btnText}" oninput="modalUpdateProp('btnText',this.value)"></div>
+    <div class="m-field"><div class="m-label">Button Link</div><input class="m-input" id="m-btnLink" value="${d.btnLink}" oninput="modalUpdateProp('btnLink',this.value)"></div>
+  </div>`;
+  html += `<div class="m-label" style="margin-bottom:8px">Highlights <span class="m-badge">list</span></div>`;
+  html += `<div class="m-list" id="m-items-list">`;
+  (d.items || []).forEach((it, i) => {
+    html += `<div class="m-list-item">
+      <div class="item-num">${i + 1}</div>
+      <div class="item-inputs" style="grid-template-columns: 50px 1fr;">
+        <input placeholder="Icon" value="${it.icon || ''}" oninput="updateListItem('abouthighlights',${i},'icon',this.value)">
+        <input placeholder="Title" value="${it.title || ''}" oninput="updateListItem('abouthighlights',${i},'title',this.value)">
+        <input placeholder="Description" value="${it.desc || ''}" oninput="updateListItem('abouthighlights',${i},'desc',this.value)" style="grid-column:span 2">
+      </div>
+      <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div><button class="m-add-btn" onclick="addListItem('abouthighlights')">+ Add highlight</button>`;
+  return html;
+}
+
+function renderServiceGridForm(d) {
+  let html = `<div class="m-field"><div class="m-label">Section heading</div><input class="m-input" id="m-heading" value="${d.heading}" oninput="modalUpdateProp('heading',this.value)"></div>`;
+  html += `<div class="m-row2">
+    <div class="m-field"><div class="m-label">Button Text</div><input class="m-input" id="m-btnText" value="${d.btnText}" oninput="modalUpdateProp('btnText',this.value)"></div>
+    <div class="m-field"><div class="m-label">Button Link</div><input class="m-input" id="m-btnLink" value="${d.btnLink}" oninput="modalUpdateProp('btnLink',this.value)"></div>
+  </div>`;
+  html += `<div class="m-label" style="margin-bottom:8px">Service Items <span class="m-badge">list</span></div>`;
+  html += `<div class="m-list" id="m-items-list">`;
+  (d.items || []).forEach((it, i) => {
+    html += `<div class="m-list-item">
+      <div class="item-num">${i + 1}</div>
+      <div class="item-inputs" style="grid-template-columns: 50px 1fr;">
+        <input placeholder="Icon" value="${it.icon || ''}" oninput="updateListItem('servicegrid',${i},'icon',this.value)">
+        <input placeholder="Title" value="${it.title || ''}" oninput="updateListItem('servicegrid',${i},'title',this.value)">
+      </div>
+      <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div><button class="m-add-btn" onclick="addListItem('servicegrid')">+ Add service</button>`;
+  return html;
+}
+
+function renderLogoSliderForm(d) {
+  let html = `<div class="m-field"><div class="m-label">Section heading</div><input class="m-input" id="m-heading" value="${d.heading}" oninput="modalUpdateProp('heading',this.value)"></div>`;
+  html += `<div class="m-row2">
+    <div class="m-field"><div class="m-label">Button Text</div><input class="m-input" id="m-btnText" value="${d.btnText}" oninput="modalUpdateProp('btnText',this.value)"></div>
+    <div class="m-field"><div class="m-label">Button Link</div><input class="m-input" id="m-btnLink" value="${d.btnLink}" oninput="modalUpdateProp('btnLink',this.value)"></div>
+  </div>`;
+  html += `<div class="m-label" style="margin-bottom:8px">Logos <span class="m-badge">list</span></div>`;
+  html += `<div class="m-list" id="m-items-list">`;
+  (d.items || []).forEach((it, i) => {
+    html += `<div class="m-list-item">
+      <div class="item-num">${i + 1}</div>
+      <div class="item-img">${it.imgSrc ? `<img src="${it.imgSrc}">` : '🖼'}</div>
+      <div class="item-inputs">
+        <input placeholder="Name" value="${it.name || ''}" oninput="updateListItem('logoslider',${i},'name',this.value)">
+        <input placeholder="Logo URL" value="${it.imgSrc || ''}" oninput="updateListItem('logoslider',${i},'imgSrc',this.value);updateImgPreview(this,${i})">
+        <input placeholder="Link" value="${it.link || '#'}" oninput="updateListItem('logoslider',${i},'link',this.value)" style="grid-column:span 2">
+      </div>
+      <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div><button class="m-add-btn" onclick="addListItem('logoslider')">+ Add logo</button>`;
+  return html;
+}
+
+// ──────────────────────────────────────────────────
+//  SLIDER LOGIC
+// ──────────────────────────────────────────────────
+let sliderStates = {};
+
+function initSliders() {
+    document.querySelectorAll('.b-logoslider').forEach(slider => {
+        const id = slider.id.replace('slider-', '');
+        if (!sliderStates[id]) {
+            sliderStates[id] = { current: 0, interval: null, count: 0 };
+        }
+        updateSliderView(id);
+        startSliderAuto(id);
+        
+        slider.onmouseenter = () => stopSliderAuto(id);
+        slider.onmouseleave = () => startSliderAuto(id);
+    });
+}
+
+function moveSlider(id, dir) {
+    const block = get_blocks().find(b => b.id == id);
+    if (!block) return;
+    const items = block.data.items || [];
+    const visibleCount = getVisibleCount();
+    const max = Math.max(0, items.length - visibleCount);
+    
+    if (!sliderStates[id]) sliderStates[id] = { current: 0, interval: null };
+    
+    sliderStates[id].current += dir;
+    if (sliderStates[id].current > max) sliderStates[id].current = 0;
+    if (sliderStates[id].current < 0) sliderStates[id].current = max;
+    
+    updateSliderView(id);
+}
+
+function updateSliderView(id) {
+    const slider = document.getElementById(`slider-${id}`);
+    if (!slider) return;
+    const track = slider.querySelector('.ls-track');
+    const dots = slider.querySelectorAll('.ls-dot');
+    const state = sliderStates[id];
+    
+    const item = track.querySelector('.ls-item');
+    if (!item) return;
+    
+    const gap = 40;
+    const itemWidth = item.offsetWidth;
+    const moveX = state.current * (itemWidth + gap);
+    
+    track.style.transform = `translateX(-${moveX}px)`;
+    
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === state.current);
+        dot.onclick = () => {
+            state.current = i;
+            updateSliderView(id);
+        };
+    });
+}
+
+function startSliderAuto(id) {
+    stopSliderAuto(id);
+    sliderStates[id].interval = setInterval(() => moveSlider(id, 1), 4000);
+}
+
+function stopSliderAuto(id) {
+    if (sliderStates[id] && sliderStates[id].interval) {
+        clearInterval(sliderStates[id].interval);
+    }
+}
+
+function getVisibleCount() {
+    const w = window.innerWidth;
+    if (w > 992) return 4;
+    if (w > 768) return 3;
+    if (w > 480) return 2;
+    return 1;
+}
+
+window.addEventListener('resize', () => {
+    Object.keys(sliderStates).forEach(id => updateSliderView(id));
+});
 
 function renderNavbarForm(d){
   let html = `<div class="m-field"><div class="m-label">Text Logo</div><input class="m-input" id="m-logo" value="${d.logo}" oninput="modalUpdateProp('logo',this.value)"></div>`;
@@ -750,6 +1151,34 @@ function renderStyleTab(d, type){
         <input type="checkbox" ${d.linksItalic?'checked':''} onchange="modalUpdateProp('linksItalic',this.checked)"> Italic
       </label>
     </div></div></div>`;
+  }
+  if(type==='abouthighlights'){
+    html+=`<div class="prop-section">Layout & Columns</div>`;
+    html+=`<div class="m-field"><div class="m-label">Column Ratio</div><div style="display:flex;gap:6px;margin-top:4px">
+      ${['50-50','60-40','40-60','70-30','30-70'].map(v=>`<button class="pos-btn${d.colWidth===v?' active':''}" onclick="modalUpdateProp('colWidth','${v}')" style="padding:6px 14px">${v}</button>`).join('')}
+    </div></div>`;
+    html+=`<div class="m-field"><div class="m-label">Vertical Alignment</div><div style="display:flex;gap:6px;margin-top:4px">
+      ${['top','center'].map(v=>`<button class="pos-btn${d.alignItems===v?' active':''}" onclick="modalUpdateProp('alignItems','${v}')" style="padding:6px 14px">${v.charAt(0).toUpperCase()+v.slice(1)}</button>`).join('')}
+    </div></div>`;
+    
+    html+=`<div class="prop-section">Colors (Left Column)</div>`;
+    html+=`<div class="m-row2">
+      <div class="m-field"><div class="m-label">Background</div><input type="color" value="${d.leftBg}" onchange="modalUpdateProp('leftBg',this.value)" style="width:100%;height:35px;border:none;padding:0;background:none;cursor:pointer"></div>
+      <div class="m-field"><div class="m-label">Text Color</div><input type="color" value="${d.textColorLeft}" onchange="modalUpdateProp('textColorLeft',this.value)" style="width:100%;height:35px;border:none;padding:0;background:none;cursor:pointer"></div>
+    </div>`;
+    
+    html+=`<div class="prop-section">Colors (Right Column)</div>`;
+    html+=`<div class="m-row2">
+      <div class="m-field"><div class="m-label">Background</div><input type="color" value="${d.rightBg}" onchange="modalUpdateProp('rightBg',this.value)" style="width:100%;height:35px;border:none;padding:0;background:none;cursor:pointer"></div>
+      <div class="m-field"><div class="m-label">Text Color</div><input type="color" value="${d.textColorRight}" onchange="modalUpdateProp('textColorRight',this.value)" style="width:100%;height:35px;border:none;padding:0;background:none;cursor:pointer"></div>
+    </div>`;
+
+    html+=`<div class="prop-section">Button & Icons</div>`;
+    html+=`<div class="m-row3" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+      <div class="m-field"><div class="m-label">Btn Bg</div><input type="color" value="${d.btnBg}" onchange="modalUpdateProp('btnBg',this.value)" style="width:100%;height:35px;border:none;padding:0;background:none;cursor:pointer"></div>
+      <div class="m-field"><div class="m-label">Btn Text</div><input type="color" value="${d.btnTextColor}" onchange="modalUpdateProp('btnTextColor',this.value)" style="width:100%;height:35px;border:none;padding:0;background:none;cursor:pointer"></div>
+      <div class="m-field"><div class="m-label">Icon</div><input type="color" value="${d.iconColor}" onchange="modalUpdateProp('iconColor',this.value)" style="width:100%;height:35px;border:none;padding:0;background:none;cursor:pointer"></div>
+    </div>`;
   }
   if(!html) html='<p style="color:var(--text2);font-size:13px">No style options for this component.</p>';
   return html;
@@ -914,6 +1343,9 @@ function addListItem(type){
   if(type==='gridimgtext') activeModalBlock.data.items.push({title:'New card',desc:'Description here.',tag:'Tag',imgSrc:''});
   else if(type==='gridimgtextrow') activeModalBlock.data.items.push({title:'New card',desc:'Description here.',tag:'Tag',btnText:'Learn more',imgSrc:''});
   else if(type==='footer') activeModalBlock.data.items.push({label:'New link', slug:'#'});
+  else if(type==='abouthighlights') { if(!activeModalBlock.data.items) activeModalBlock.data.items=[]; activeModalBlock.data.items.push({icon:'★',title:'New highlight',desc:'Description text.'}); }
+  else if(type==='servicegrid') { if(!activeModalBlock.data.items) activeModalBlock.data.items=[]; activeModalBlock.data.items.push({icon:'★',title:'New service'}); }
+  else if(type==='logoslider') { if(!activeModalBlock.data.items) activeModalBlock.data.items=[]; activeModalBlock.data.items.push({name:'New Partner', imgSrc:'https://via.placeholder.com/150x80?text=Logo', link:'#'}); }
   rebuildBlock(activeModalBlock); render(); renderModalBody();
 }
 
@@ -937,6 +1369,15 @@ function saveModal(){
   if(linksPosEl) activeModalBlock.data.linksPos = linksPosEl.value;
   if(brandEl) activeModalBlock.data.brand = brandEl.value;
   if(copyEl) activeModalBlock.data.copy = copyEl.value;
+
+  const ahSubheading = document.getElementById('m-subheading');
+  const ahBody = document.getElementById('m-body');
+  const ahBtnText = document.getElementById('m-btnText');
+  const ahBtnLink = document.getElementById('m-btnLink');
+  if(ahSubheading) activeModalBlock.data.subheading = ahSubheading.value;
+  if(ahBody) activeModalBlock.data.body = ahBody.value;
+  if(ahBtnText) activeModalBlock.data.btnText = ahBtnText.value;
+  if(ahBtnLink) activeModalBlock.data.btnLink = ahBtnLink.value;
 
   rebuildBlock(activeModalBlock); render();
   if(selectedId===activeModalBlock.id) renderProps(activeModalBlock);
