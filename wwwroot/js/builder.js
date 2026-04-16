@@ -238,12 +238,54 @@ const TEMPLATES = {
     render: d => `<div class="b-cta" style="background:${d.bg}"><h2>${d.heading}</h2><p>${d.subtext}</p><a href="${d.btnLink||'#'}" style="text-decoration:none"><button style="color:${d.bg}">${d.btnText}</button></a></div>`
   },
   testimonial: {
-    label:'Testimonial', icon:'❝', table:'Testimonial',
-    dataFields:['quote','author','role'],
-    defaultData:{ quote:'This tool changed the way we work. Our team ships 3x faster and our designs have never looked better.', author:'Sarah Johnson', role:'Head of Design at Acme' },
-    render: d => {
-      const initials = d.author.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-      return `<div class="b-testimonial"><blockquote>"${d.quote}"</blockquote><div class="author"><div class="avatar">${initials}</div><div class="author-info"><strong>${d.author}</strong><span>${d.role}</span></div></div></div>`;
+    label:'Testimonial Slider', icon:'❝', table:'Testimonial',
+    dataFields:['heading','items','paddingV','bg'],
+    defaultData: {
+      heading: 'Testimonials',
+      paddingV: 80,
+      bg: '#f0f7ff',
+      items: [
+        { author: 'Agisol', role: 'Director', quote: 'The staffing resource provided by R&B has done and continues to do a great job on the Drug Safety program for the FDA. She has transitioned from Drug Safety Dashboards to Appian Workflow implementation with ease and she is the GO-TO developer on the...', rating: 5, imgSrc: '' },
+        { author: 'Qlaire Systems Inc.', role: 'CEO', quote: 'R&B Services Inc., are one of our most valuable and excellent strategic partners. We appreciate your services and exceed our expectations every time! This is a great company and we highly recommend them.', rating: 5, imgSrc: '' }
+      ]
+    },
+    render: (d, id) => {
+      const itemsHtml = (d.items || []).map(it => {
+        const initials = it.author ? it.author.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() : '??';
+        const starsHtml = '★'.repeat(it.rating || 5) + '☆'.repeat(5 - (it.rating || 5));
+        return `
+          <div class="ts-item">
+            <div class="ts-card">
+              <div class="ts-author-row">
+                <div class="ts-avatar">${it.imgSrc ? `<img src="${it.imgSrc}">` : initials}</div>
+                <div class="ts-meta">
+                  <div class="ts-name">${it.author}</div>
+                  <div class="ts-stars">${starsHtml}</div>
+                </div>
+              </div>
+              <div class="ts-quote-box">
+                <span class="ts-quote-icon">“</span>
+                <p class="ts-quote-text">${it.quote}</p>
+                <span class="ts-quote-icon ts-quote-end">”</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+      
+      const dotsHtml = (d.items || []).map((_, i) => `<div class="ts-dot${i===0?' active':''}" data-index="${i}" onclick="jumpSlider(${id}, ${i})"></div>`).join('');
+      
+      return `
+        <div class="b-testimonial-slider" id="slider-${id}" style="background:${d.bg || '#f0f7ff'}; padding-top:${d.paddingV || 80}px; padding-bottom:${d.paddingV || 80}px">
+          <div class="ts-header">
+            <div class="ts-line"></div>
+            <h2>${d.heading}</h2>
+            <div class="ts-line"></div>
+          </div>
+          <div class="ts-viewport">
+            <div class="ts-track">${itemsHtml}</div>
+          </div>
+          <div class="ts-dots">${dotsHtml}</div>
+        </div>`;
     }
   },
   form: {
@@ -269,6 +311,92 @@ const TEMPLATES = {
       const itemsHtml = (d.items || []).map(it => `<span>${it.label}</span>`).join('');
       return `<div class="b-footer" style="padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px"><div class="footer-brand">${d.brand}</div><div class="footer-links">${itemsHtml}</div><div class="footer-copy">${d.copy}</div></div>`;
     },
+  },
+  footer2: {
+    label:'Footer Pro', icon:'▬', table:'Footer2',
+    dataFields:['brand','tagline','logoImage','copy','bg','textColor','accentColor','showNewsletter','newsletterPlaceholder','newsletterBtnText','address1','address2','email','phone','colLayout','quickLinks','contactLinks'],
+    defaultData: {
+      brand: 'YourBrand',
+      tagline: 'Building great digital experiences since 2020.',
+      logoImage: '',
+      copy: '© 2026 YourBrand Inc. All rights reserved.',
+      bg: '#12121e',
+      textColor: '#ffffff',
+      accentColor: '#a6111f',
+      showNewsletter: true,
+      newsletterPlaceholder: 'Email Address',
+      newsletterBtnText: 'Join',
+      address1: '3-5-663/202, L.K.R. Arcade, Street #9',
+      address2: 'Hyderabad – 500 029',
+      email: 'hello@yourbrand.com',
+      phone: '+1 (800) 000-0000',
+      colLayout: '4',
+      quickLinks: [
+        { label: 'About Us', slug: 'about' },
+        { label: 'Services', slug: 'services' },
+        { label: 'Contact', slug: 'contact' },
+        { label: 'Privacy Policy', slug: 'privacy' },
+      ],
+      contactLinks: [
+        { label: 'REGISTERED OFFICE', address: '3-6-663/203, L.K.R. Arcade, Street #9, Hyderabad-500 029', email: 'office@essi-software.com', phone: '+91 40 2763 2269' },
+        { label: 'ADMIN OFFICE', address: '5-175/1A, SriRama Nilayam, Visakhapatnam-530 045', email: 'admin@essi-software.com', phone: '+91 9704304540' }
+      ]
+    },
+    render: d => {
+      const bg = d.bg || '#12121e';
+      const textColor = d.textColor || '#ffffff';
+      const accent = d.accentColor || '#a6111f';
+      const colLayout = d.colLayout || '4';
+      const is3Col = colLayout === '3';
+
+      const logoHtml = d.logoImage
+        ? `<img src="${d.logoImage}" alt="${d.brand}" style="max-height:48px;width:auto;object-fit:contain;margin-bottom:14px;display:block">`
+        : `<div class="f2-brand" style="color:${textColor}">${d.brand}</div>`;
+
+      const quickLinksHtml = (d.quickLinks || []).map(l =>
+        `<li><a href="/page/${l.slug}" style="color:${textColor}80;text-decoration:none" class="f2-link">${l.label}</a></li>`
+      ).join('');
+
+      const contactColsHtml = (d.contactLinks || []).map(c => `
+        <div class="f2-contact-col">
+          <div class="f2-col-title" style="color:${textColor};border-color:${accent}">${c.label || 'CONTACT US'}</div>
+          ${c.address ? `<div class="f2-contact-row"><span class="f2-contact-icon" style="color:${accent}">📍</span><span style="color:${textColor}80">${c.address}</span></div>` : ''}
+          ${c.email ? `<div class="f2-contact-row"><span class="f2-contact-icon" style="color:${accent}">✉</span><a href="mailto:${c.email}" style="color:${accent};text-decoration:none">${c.email}</a></div>` : ''}
+          ${c.phone ? `<div class="f2-contact-row"><span class="f2-contact-icon" style="color:${accent}">📞</span><span style="color:${textColor}80">${c.phone}</span></div>` : ''}
+        </div>`
+      ).join('');
+
+      const newsletterHtml = d.showNewsletter ? `
+        <div class="f2-col">
+          <div class="f2-col-title" style="color:${textColor};border-color:${accent}">NEWSLETTER</div>
+          <p style="color:${textColor}80;font-size:13px;line-height:1.6;margin-bottom:16px">Stay updated with our latest news and insights.</p>
+          <div class="f2-newsletter-row">
+            <input type="email" placeholder="${d.newsletterPlaceholder || 'Email Address'}" class="f2-newsletter-input" style="background:${bg === '#ffffff' ? '#f4f4f2' : 'rgba(255,255,255,0.07)'};color:${textColor};border-color:rgba(255,255,255,0.12)">
+            <button class="f2-newsletter-btn" style="background:${accent}">${d.newsletterBtnText || 'Join'}</button>
+          </div>
+        </div>` : '';
+
+      return `
+        <div class="b-footer2" style="background:${bg}">
+          <div class="f2-inner">
+            <div class="f2-grid-${colLayout}">
+              <div class="f2-col">
+                ${logoHtml}
+                <p style="color:${textColor}80;font-size:13px;line-height:1.7;max-width:240px">${d.tagline}</p>
+              </div>
+              <div class="f2-col">
+                <div class="f2-col-title" style="color:${textColor};border-color:${accent}">QUICK LINKS</div>
+                <ul class="f2-links-list">${quickLinksHtml}</ul>
+              </div>
+              <div class="f2-col">${contactColsHtml}</div>
+              ${newsletterHtml}
+            </div>
+          </div>
+          <div class="f2-bottom" style="border-color:rgba(255,255,255,0.08)">
+            <span style="color:${textColor}50;font-size:12px">${d.copy}</span>
+          </div>
+        </div>`;
+    }
   },
   abouthighlights: {
       label:'Info + Highlights', icon:'ℹ', table:'AboutHighlights',
@@ -516,11 +644,12 @@ function render() {
     const ctrl = document.createElement('div');
     ctrl.className='block-controls';
     const hasListData = ['gridimgtext','gridimgtextrow','features'].includes(block.type);
+    const hasModal = hasListData || ['abouthighlights','footer2'].includes(block.type);
     ctrl.innerHTML=`
       <button class="blk-ctrl" title="Move up" onclick="moveBlock(${block.id},-1)">↑</button>
       <button class="blk-ctrl" title="Move down" onclick="moveBlock(${block.id},1)">↓</button>
       <button class="blk-ctrl" title="Duplicate" onclick="duplicateBlock(${block.id})">⧉</button>
-      ${hasListData || block.type === 'abouthighlights' ? `<button class="blk-ctrl data-btn" title="Edit data" onclick="openModal(${block.id})">⊞ data</button>` : ''}
+      ${hasModal ? `<button class="blk-ctrl data-btn" title="Edit data" onclick="openModal(${block.id})">⊞ data</button>` : ''}
       <button class="blk-ctrl del" title="Delete" onclick="deleteBlock(${block.id})">✕</button>`;
     wrap.appendChild(ctrl);
 
@@ -713,7 +842,7 @@ function renderProps(block) {
   }
 
   // data connect button for list types
-  if(['gridimgtext','gridimgtextrow','features','footer','abouthighlights','servicegrid','logoslider'].includes(block.type)){
+  if(['gridimgtext','gridimgtextrow','features','footer','abouthighlights','servicegrid','logoslider','footer2'].includes(block.type)){
     html+=`<div class="prop-section">Advanced Data</div>`;
     html+=`<button class="data-connect-btn" onclick="openModal(${block.id})">⊞ Manage list items</button>`;
   }
@@ -776,12 +905,16 @@ function renderModalBody() {
       body.innerHTML = tabs + renderNavbarForm(d);
     } else if(type==='footer'){
       body.innerHTML = tabs + renderFooterLinksForm(d);
+    } else if(type==='footer2'){
+      body.innerHTML = tabs + renderFooter2Form(d);
     } else if(type==='abouthighlights'){
       body.innerHTML = tabs + renderAboutHighlightsForm(d);
     } else if(type==='servicegrid'){
       body.innerHTML = tabs + renderServiceGridForm(d);
     } else if(type==='logoslider'){
       body.innerHTML = tabs + renderLogoSliderForm(d);
+    } else if(type==='testimonial'){
+      body.innerHTML = tabs + renderTestimonialSliderForm(d);
     } else {
       body.innerHTML = tabs + '<p style="color:var(--text2);font-size:13px">Use the properties panel on the right to edit this block\'s content.</p>';
     }
@@ -879,6 +1012,97 @@ function renderFooterLinksForm(d) {
   return html;
 }
 
+function renderFooter2Form(d) {
+  let html = '';
+  // Brand & copy
+  html += `<div class="m-row2">
+    <div class="m-field"><div class="m-label">Brand Name</div><input class="m-input" value="${d.brand||''}" oninput="modalUpdateProp('brand',this.value)"></div>
+    <div class="m-field"><div class="m-label">Logo Image URL</div><input class="m-input" value="${d.logoImage||''}" placeholder="Leave blank to use text" oninput="modalUpdateProp('logoImage',this.value)"></div>
+  </div>`;
+  html += `<div class="m-field"><div class="m-label">Tagline / Description</div><textarea class="m-input" rows="2" oninput="modalUpdateProp('tagline',this.value)" style="resize:vertical">${d.tagline||''}</textarea></div>`;
+  html += `<div class="m-field"><div class="m-label">Copyright Text</div><input class="m-input" value="${d.copy||''}" oninput="modalUpdateProp('copy',this.value)"></div>`;
+
+  // Column Layout
+  html += `<div class="m-field"><div class="m-label">Column Layout</div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="pos-btn${(d.colLayout||'4')==='4'?' active':''}" onclick="modalUpdateProp('colLayout','4')" style="padding:6px 16px">4 Columns</button>
+      <button class="pos-btn${d.colLayout==='3'?' active':''}" onclick="modalUpdateProp('colLayout','3')" style="padding:6px 16px">3 Columns</button>
+    </div>
+  </div>`;
+
+  // Contact Sections
+  html += `<div class="m-label" style="margin:18px 0 8px">Contact Sections <span class="m-badge">list</span></div>`;
+  html += `<div class="m-list" id="m-f2-contacts">`;
+  (d.contactLinks || []).forEach((it, i) => {
+    html += `<div class="m-list-item">
+      <div class="item-num">${i+1}</div>
+      <div class="item-inputs">
+        <input placeholder="Title (e.g. Admin Office)" value="${it.label||''}" oninput="updateFooter2Contact(${i},'label',this.value)" style="grid-column:span 2">
+        <input placeholder="Address" value="${it.address||''}" oninput="updateFooter2Contact(${i},'address',this.value)" style="grid-column:span 2">
+        <input placeholder="Email" value="${it.email||''}" oninput="updateFooter2Contact(${i},'email',this.value)">
+        <input placeholder="Phone" value="${it.phone||''}" oninput="updateFooter2Contact(${i},'phone',this.value)">
+      </div>
+      <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeFooter2Contact(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div><button class="m-add-btn" onclick="addFooter2Contact()">+ Add contact section</button>`;
+
+  // Quick Links list
+  html += `<div class="m-label" style="margin:18px 0 8px">Quick Links <span class="m-badge">list</span></div>`;
+  html += `<div class="m-list" id="m-f2-links">`;
+  (d.quickLinks || []).forEach((it, i) => {
+    html += `<div class="m-list-item">
+      <div class="item-num">${i+1}</div>
+      <div class="item-inputs">
+        <input placeholder="Label" value="${it.label||''}" oninput="updateFooter2QuickLink(${i},'label',this.value)">
+        <input placeholder="Slug or URL" value="${it.slug||''}" oninput="updateFooter2QuickLink(${i},'slug',this.value)">
+      </div>
+      <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeFooter2QuickLink(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div><button class="m-add-btn" onclick="addFooter2QuickLink()">+ Add link</button>`;
+
+  return html;
+}
+
+function addFooter2Contact() {
+  if (!activeModalBlock) return;
+  activeModalBlock.data.contactLinks = activeModalBlock.data.contactLinks || [];
+  activeModalBlock.data.contactLinks.push({ label: 'Main Office', address: '', email: '', phone: '' });
+  rebuildBlock(activeModalBlock); render();
+  renderModalBody();
+}
+function removeFooter2Contact(i) {
+  if (!activeModalBlock) return;
+  activeModalBlock.data.contactLinks.splice(i, 1);
+  rebuildBlock(activeModalBlock); render();
+  renderModalBody();
+}
+function updateFooter2Contact(i, key, value) {
+  if (!activeModalBlock) return;
+  activeModalBlock.data.contactLinks[i][key] = value;
+  rebuildBlock(activeModalBlock); render();
+}
+
+function addFooter2QuickLink() {
+  if (!activeModalBlock) return;
+  activeModalBlock.data.quickLinks = activeModalBlock.data.quickLinks || [];
+  activeModalBlock.data.quickLinks.push({ label: 'New Link', slug: '#' });
+  rebuildBlock(activeModalBlock); render();
+  renderModalBody();
+}
+function removeFooter2QuickLink(i) {
+  if (!activeModalBlock) return;
+  activeModalBlock.data.quickLinks.splice(i, 1);
+  rebuildBlock(activeModalBlock); render();
+  renderModalBody();
+}
+function updateFooter2QuickLink(i, key, value) {
+  if (!activeModalBlock) return;
+  activeModalBlock.data.quickLinks[i][key] = value;
+  rebuildBlock(activeModalBlock); render();
+}
+
 function renderAboutHighlightsForm(d) {
   let html = `<div class="m-field"><div class="m-label">Main Heading</div><input class="m-input" id="m-heading" value="${d.heading}" oninput="modalUpdateProp('heading',this.value)"></div>`;
   html += `<div class="m-field"><div class="m-label">Subheading</div><input class="m-input" id="m-subheading" value="${d.subheading}" oninput="modalUpdateProp('subheading',this.value)"></div>`;
@@ -950,13 +1174,35 @@ function renderLogoSliderForm(d) {
   return html;
 }
 
+function renderTestimonialSliderForm(d) {
+  let html = `<div class="m-field"><div class="m-label">Section heading</div><input class="m-input" id="m-heading" value="${d.heading}" oninput="modalUpdateProp('heading',this.value)"></div>`;
+  html += `<div class="m-label" style="margin-bottom:8px">Testimonials <span class="m-badge">list</span></div>`;
+  html += `<div class="m-list" id="m-items-list">`;
+  (d.items || []).forEach((it, i) => {
+    html += `<div class="m-list-item">
+      <div class="item-num">${i + 1}</div>
+      <div class="item-img">${it.imgSrc ? `<img src="${it.imgSrc}">` : '👤'}</div>
+      <div class="item-inputs">
+        <input placeholder="Author Name" value="${it.author || ''}" oninput="updateListItem('testimonial',${i},'author',this.value)">
+        <input placeholder="Role / Company" value="${it.role || ''}" oninput="updateListItem('testimonial',${i},'role',this.value)">
+        <input placeholder="Rating (1-5)" type="number" min="1" max="5" value="${it.rating || 5}" oninput="updateListItem('testimonial',${i},'rating',parseInt(this.value))">
+        <input placeholder="Image URL (optional)" value="${it.imgSrc || ''}" oninput="updateListItem('testimonial',${i},'imgSrc',this.value);updateImgPreview(this,${i})">
+        <textarea placeholder="Quote" oninput="updateListItem('testimonial',${i},'quote',this.value)" style="grid-column:span 2; height:60px">${it.quote || ''}</textarea>
+      </div>
+      <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div><button class="m-add-btn" onclick="addListItem('testimonial')">+ Add testimonial</button>`;
+  return html;
+}
+
 // ──────────────────────────────────────────────────
 //  SLIDER LOGIC
 // ──────────────────────────────────────────────────
 let sliderStates = {};
 
 function initSliders() {
-    document.querySelectorAll('.b-logoslider').forEach(slider => {
+    document.querySelectorAll('.b-logoslider, .b-testimonial-slider').forEach(slider => {
         const id = slider.id.replace('slider-', '');
         if (!sliderStates[id]) {
             sliderStates[id] = { current: 0, interval: null, count: 0 };
@@ -969,11 +1215,18 @@ function initSliders() {
     });
 }
 
+function jumpSlider(id, index) {
+    if (!sliderStates[id]) return;
+    sliderStates[id].current = index;
+    updateSliderView(id);
+    startSliderAuto(id); // reset interval
+}
+
 function moveSlider(id, dir) {
     const block = get_blocks().find(b => b.id == id);
     if (!block) return;
     const items = block.data.items || [];
-    const visibleCount = getVisibleCount();
+    const visibleCount = getVisibleCount(block.type);
     const max = Math.max(0, items.length - visibleCount);
     
     if (!sliderStates[id]) sliderStates[id] = { current: 0, interval: null };
@@ -988,14 +1241,17 @@ function moveSlider(id, dir) {
 function updateSliderView(id) {
     const slider = document.getElementById(`slider-${id}`);
     if (!slider) return;
-    const track = slider.querySelector('.ls-track');
-    const dots = slider.querySelectorAll('.ls-dot');
+    const isTestimonial = slider.classList.contains('b-testimonial-slider');
+    const prefix = isTestimonial ? 'ts' : 'ls';
+    
+    const track = slider.querySelector(`.${prefix}-track`);
+    const dots = slider.querySelectorAll(`.${prefix}-dot`);
     const state = sliderStates[id];
     
-    const item = track.querySelector('.ls-item');
+    const item = track.querySelector(`.${prefix}-item`);
     if (!item) return;
     
-    const gap = 40;
+    const gap = isTestimonial ? 30 : 40;
     const itemWidth = item.offsetWidth;
     const moveX = state.current * (itemWidth + gap);
     
@@ -1003,16 +1259,12 @@ function updateSliderView(id) {
     
     dots.forEach((dot, i) => {
         dot.classList.toggle('active', i === state.current);
-        dot.onclick = () => {
-            state.current = i;
-            updateSliderView(id);
-        };
     });
 }
 
 function startSliderAuto(id) {
     stopSliderAuto(id);
-    sliderStates[id].interval = setInterval(() => moveSlider(id, 1), 4000);
+    sliderStates[id].interval = setInterval(() => moveSlider(id, 1), 5000);
 }
 
 function stopSliderAuto(id) {
@@ -1021,8 +1273,13 @@ function stopSliderAuto(id) {
     }
 }
 
-function getVisibleCount() {
+function getVisibleCount(type) {
     const w = window.innerWidth;
+    if (type === 'testimonial') {
+        if (w > 992) return 2;
+        return 1;
+    }
+    // Default (logoslider)
     if (w > 992) return 4;
     if (w > 768) return 3;
     if (w > 480) return 2;
@@ -1346,6 +1603,7 @@ function addListItem(type){
   else if(type==='abouthighlights') { if(!activeModalBlock.data.items) activeModalBlock.data.items=[]; activeModalBlock.data.items.push({icon:'★',title:'New highlight',desc:'Description text.'}); }
   else if(type==='servicegrid') { if(!activeModalBlock.data.items) activeModalBlock.data.items=[]; activeModalBlock.data.items.push({icon:'★',title:'New service'}); }
   else if(type==='logoslider') { if(!activeModalBlock.data.items) activeModalBlock.data.items=[]; activeModalBlock.data.items.push({name:'New Partner', imgSrc:'https://via.placeholder.com/150x80?text=Logo', link:'#'}); }
+  else if(type==='testimonial') { if(!activeModalBlock.data.items) activeModalBlock.data.items=[]; activeModalBlock.data.items.push({author:'New Author', role:'Customer', quote:'Great service!', rating:5, imgSrc:''}); }
   rebuildBlock(activeModalBlock); render(); renderModalBody();
 }
 

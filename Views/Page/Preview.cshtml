@@ -279,18 +279,71 @@
     }
     else if (block.BlockType == "testimonial")
     {
-        string author = d.GetProperty("author").GetString() ?? "";
-        string inits = string.Join("", author.Split(' ').Select(s => s.FirstOrDefault())).ToUpper();
-        if (inits.Length > 2) inits = inits.Substring(0, 2);
-        
-        <div class="b-testimonial">
-            <blockquote>"@(d.GetProperty("quote").GetString())"</blockquote>
-            <div class="author">
-                <div class="avatar">@inits</div>
-                <div class="author-info">
-                    <strong>@author</strong>
-                    <span>@(d.GetProperty("role").GetString())</span>
+        string heading = d.TryGetProperty("heading", out var h) ? h.GetString() : "Testimonials";
+        string bg = d.TryGetProperty("bg", out var b) ? b.GetString() : "#f0f7ff";
+        string paddingVStr = d.TryGetProperty("paddingV", out var pv) ? pv.ToString() : "80";
+        int.TryParse(paddingVStr, out int paddingV);
+        int blockId = block.Id;
+
+        <div class="b-testimonial-slider" id="slider-@(blockId)" style="background:@bg; padding-top:@(paddingV)px; padding-bottom:@(paddingV)px">
+            <div class="ts-header">
+                <div class="ts-line"></div>
+                <h2>@heading</h2>
+                <div class="ts-line"></div>
+            </div>
+            <div class="ts-viewport">
+                <div class="ts-track">
+                    @if (d.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (var item in items.EnumerateArray())
+                        {
+                            string author = item.TryGetProperty("author", out var auth) ? auth.GetString() : "";
+                            string role = item.TryGetProperty("role", out var r) ? r.GetString() : "";
+                            string quote = item.TryGetProperty("quote", out var q) ? q.GetString() : "";
+                            string imgSrc = item.TryGetProperty("imgSrc", out var isrc) ? isrc.GetString() : "";
+                            int rating = item.TryGetProperty("rating", out var rate) ? rate.GetInt32() : 5;
+                            string initials = string.Join("", author.Split(' ').Select(s => s.FirstOrDefault())).ToUpper();
+                            if (initials.Length > 2) initials = initials.Substring(0, 2);
+
+                            <div class="ts-item">
+                                <div class="ts-card">
+                                    <div class="ts-author-row">
+                                        <div class="ts-avatar">
+                                            @if (!string.IsNullOrEmpty(imgSrc)) {
+                                                <img src="@imgSrc" alt="@author">
+                                            } else {
+                                                @initials
+                                            }
+                                        </div>
+                                        <div class="ts-meta">
+                                            <div class="ts-name">@author</div>
+                                            <div class="ts-stars">
+                                                @for (int i = 0; i < 5; i++) {
+                                                    <span style="color:@(i < rating ? "#f1c40f" : "#ddd")">★</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ts-quote-box">
+                                        <span class="ts-quote-icon">“</span>
+                                        <p class="ts-quote-text">@quote</p>
+                                        <span class="ts-quote-icon ts-quote-end">”</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
+            </div>
+            <div class="ts-dots">
+                @if (d.TryGetProperty("items", out var itemsDots) && itemsDots.ValueKind == JsonValueKind.Array)
+                {
+                    int i = 0;
+                    foreach (var item in itemsDots.EnumerateArray())
+                    {
+                        <div class="ts-dot @(i == 0 ? "active" : "")" onclick="jumpSlider(@blockId, @(i++))"></div>
+                    }
+                }
             </div>
         </div>
     }
@@ -425,7 +478,190 @@
             <a href="@btnUrl" class="wwo-btn" style="background:@accentColor">@btnText</a>
         </div>
     }
+    else if (block.BlockType == "footer2")
+    {
+        string brand = d.TryGetProperty("brand", out var b) ? b.GetString() : "Brand";
+        string tagline = d.TryGetProperty("tagline", out var tl) ? tl.GetString() : "";
+        string logoImage = d.TryGetProperty("logoImage", out var limg) ? limg.GetString() : "";
+        string copy = d.TryGetProperty("copy", out var c) ? c.GetString() : "";
+        string bg = d.TryGetProperty("bg", out var bgc) ? bgc.GetString() : "#12121e";
+        string textColor = d.TryGetProperty("textColor", out var tc) ? tc.GetString() : "#ffffff";
+        string accent = d.TryGetProperty("accentColor", out var ac) ? ac.GetString() : "#a6111f";
+        bool showNewsletter = true;
+        if (d.TryGetProperty("showNewsletter", out var sn)) {
+            showNewsletter = sn.ValueKind == JsonValueKind.True || (sn.ValueKind == JsonValueKind.String && sn.GetString() == "true");
+        }
+        string colLayout = d.TryGetProperty("colLayout", out var cl) ? cl.GetString() : "4";
+        
+        <div class="b-footer2" style="background:@bg; color:@textColor">
+            <div class="f2-inner">
+                <div class="f2-grid-@(colLayout)">
+                    <div class="f2-col">
+                        @if (!string.IsNullOrEmpty(logoImage)) {
+                            <img src="@logoImage" alt="@brand" style="max-height:48px; width:auto; object-fit:contain; margin-bottom:14px; display:block">
+                        } else {
+                            <div class="f2-brand" style="color:@textColor">@brand</div>
+                        }
+                        <p style="color:@(textColor)80; font-size:13px; line-height:1.7; max-width:240px">@tagline</p>
+                    </div>
+
+                    <div class="f2-col">
+                        <div class="f2-col-title" style="color:@textColor; border-color:@accent">QUICK LINKS</div>
+                        <ul class="f2-links-list">
+                            @if (d.TryGetProperty("quickLinks", out var ql) && ql.ValueKind == JsonValueKind.Array)
+                            {
+                                foreach (var link in ql.EnumerateArray())
+                                {
+                                    string label = link.TryGetProperty("label", out var lab) ? lab.GetString() : "";
+                                    string lslug = link.TryGetProperty("slug", out var ls) ? ls.GetString() : "#";
+                                    string url = (lslug.StartsWith("http") || lslug.StartsWith("/") || lslug == "#") ? lslug : $"/page/{lslug}";
+                                    <li><a href="@url" style="color:@(textColor)80; text-decoration:none" class="f2-link">@label</a></li>
+                                }
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="f2-col">
+                        @if (d.TryGetProperty("contactLinks", out var clks) && clks.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var contact in clks.EnumerateArray())
+                            {
+                                string cLabel = contact.TryGetProperty("label", out var clab) ? clab.GetString() : "CONTACT US";
+                                string cAddress = contact.TryGetProperty("address", out var caddr) ? caddr.GetString() : "";
+                                string cEmail = contact.TryGetProperty("email", out var cem) ? cem.GetString() : "";
+                                string cPhone = contact.TryGetProperty("phone", out var cph) ? cph.GetString() : "";
+
+                                <div class="f2-contact-col">
+                                    <div class="f2-col-title" style="color:@textColor; border-color:@accent">@cLabel</div>
+                                    @if (!string.IsNullOrEmpty(cAddress)) {
+                                        <div class="f2-contact-row">
+                                            <span class="f2-contact-icon" style="color:@accent">📍</span>
+                                            <span style="color:@(textColor)80">@cAddress</span>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(cEmail)) {
+                                        <div class="f2-contact-row">
+                                            <span class="f2-contact-icon" style="color:@accent">✉</span>
+                                            <a href="mailto:@cEmail" style="color:@accent; text-decoration:none">@cEmail</a>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(cPhone)) {
+                                        <div class="f2-contact-row">
+                                            <span class="f2-contact-icon" style="color:@accent">📞</span>
+                                            <span style="color:@(textColor)80">@cPhone</span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    @if (showNewsletter) {
+                        <div class="f2-col">
+                            <div class="f2-col-title" style="color:@textColor; border-color:@accent">NEWSLETTER</div>
+                            <p style="color:@(textColor)80; font-size:13px; line-height:1.6; margin-bottom:16px">Stay updated with our latest news and insights.</p>
+                            <div class="f2-newsletter-row">
+                                <input type="email" placeholder="@(d.TryGetProperty("newsletterPlaceholder", out var nlp) ? nlp.GetString() : "Email Address")" 
+                                       class="f2-newsletter-input" 
+                                       style="background:@(bg == "#ffffff" ? "#f4f4f2" : "rgba(255,255,255,0.07)"); color:@textColor; border-color:rgba(255,255,255,0.12)">
+                                <button class="f2-newsletter-btn" style="background:@accent">@(d.TryGetProperty("newsletterBtnText", out var nbt) ? nbt.GetString() : "Join")</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="f2-bottom" style="border-color:rgba(255,255,255,0.08)">
+                <span style="color:@(textColor)50; font-size:12px">@copy</span>
+            </div>
+        </div>
+    }
 }
+
+<script>
+    let sliderStates = {};
+
+    function initSliders() {
+        document.querySelectorAll('.b-testimonial-slider').forEach(slider => {
+            const id = slider.id.replace('slider-', '');
+            if (!sliderStates[id]) {
+                sliderStates[id] = { current: 0, interval: null };
+            }
+            updateSliderView(id);
+            startSliderAuto(id);
+            
+            slider.onmouseenter = () => stopSliderAuto(id);
+            slider.onmouseleave = () => startSliderAuto(id);
+        });
+    }
+
+    function jumpSlider(id, index) {
+        if (!sliderStates[id]) return;
+        sliderStates[id].current = index;
+        updateSliderView(id);
+        startSliderAuto(id);
+    }
+
+    function moveSlider(id, dir) {
+        const slider = document.getElementById(`slider-${id}`);
+        if (!slider) return;
+        const items = slider.querySelectorAll('.ts-item');
+        const visibleCount = getVisibleCount();
+        const max = Math.max(0, items.length - visibleCount);
+        
+        if (!sliderStates[id]) sliderStates[id] = { current: 0, interval: null };
+        
+        sliderStates[id].current += dir;
+        if (sliderStates[id].current > max) sliderStates[id].current = 0;
+        if (sliderStates[id].current < 0) sliderStates[id].current = max;
+        
+        updateSliderView(id);
+    }
+
+    function updateSliderView(id) {
+        const slider = document.getElementById(`slider-${id}`);
+        if (!slider) return;
+        
+        const track = slider.querySelector(`.ts-track`);
+        const dots = slider.querySelectorAll(`.ts-dot`);
+        const state = sliderStates[id];
+        
+        const item = track.querySelector(`.ts-item`);
+        if (!item) return;
+        
+        const gap = 30;
+        const itemWidth = item.offsetWidth;
+        const moveX = state.current * (itemWidth + gap);
+        
+        track.style.transform = `translateX(-${moveX}px)`;
+        
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === state.current);
+        });
+    }
+
+    function startSliderAuto(id) {
+        stopSliderAuto(id);
+        sliderStates[id].interval = setInterval(() => moveSlider(id, 1), 5000);
+    }
+
+    function stopSliderAuto(id) {
+        if (sliderStates[id] && sliderStates[id].interval) {
+            clearInterval(sliderStates[id].interval);
+        }
+    }
+
+    function getVisibleCount() {
+        const w = window.innerWidth;
+        if (w > 992) return 2;
+        return 1;
+    }
+
+    window.addEventListener('resize', () => {
+        Object.keys(sliderStates).forEach(id => updateSliderView(id));
+    });
+
+    document.addEventListener('DOMContentLoaded', initSliders);
+</script>
 
 </body>
 </html>

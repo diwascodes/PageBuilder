@@ -7,20 +7,20 @@
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:wwwroot\\js\\builder.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\page\\preview.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\page\\preview.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\controllers\\apicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -50,16 +50,17 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Builder\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Builder\\Index.cshtml",
               "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Builder\\Index.cshtml",
               "RelativeToolTip": "Views\\Builder\\Index.cshtml",
-              "ViewState": "AgIAACQAAAAAAAAAAAAAACoAAABlAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-07T16:40:19.304Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -69,7 +70,7 @@
               "RelativeDocumentMoniker": "wwwroot\\js\\builder.js",
               "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\wwwroot\\js\\builder.js",
               "RelativeToolTip": "wwwroot\\js\\builder.js",
-              "ViewState": "AgIAAKkCAAAAAAAAAAAAAHoCAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAHcCAAAAAAAAAAAAwHkCAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2026-04-09T18:24:46.085Z",
               "IsPinned": true,
@@ -89,7 +90,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
@@ -101,15 +102,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "Preview.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Page\\Preview.cshtml",
               "RelativeDocumentMoniker": "Views\\Page\\Preview.cshtml",
               "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Page\\Preview.cshtml",
               "RelativeToolTip": "Views\\Page\\Preview.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAN4BAAAAAAAAAAAAwOkBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-09T18:41:21.442Z"
+              "WhenOpened": "2026-04-09T18:41:21.442Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -125,7 +127,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
@@ -169,7 +171,8 @@
               "RelativeToolTip": "Controllers\\ApiController.cs",
               "ViewState": "AgIAAIkAAAAAAAAAAAA5wFsAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-07T16:43:59.742Z"
+              "WhenOpened": "2026-04-07T16:43:59.742Z",
+              "EditorCaption": ""
             }
           ]
         },
