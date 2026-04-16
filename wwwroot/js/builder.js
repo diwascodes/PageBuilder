@@ -719,13 +719,13 @@ function renderProps(block) {
   }
 
   // schema note
-  html+=`<div class="prop-section">DB schema</div>`;
-  html+=`<div style="font-size:10px;font-family:var(--mono);color:var(--text3);line-height:1.8">
-    <div>table: <span style="color:var(--accent-text)">${tpl.table}</span></div>
-    <div>pageId: <span style="color:var(--amber)">INT FK</span></div>
-    <div>componentOrder: <span style="color:var(--amber)">INT</span></div>
-    <div>blockId: <span style="color:var(--amber)">VARCHAR</span></div>
-  </div>`;
+  //html+=`<div class="prop-section">DB schema</div>`;
+  //html+=`<div style="font-size:10px;font-family:var(--mono);color:var(--text3);line-height:1.8">
+  //  <div>table: <span style="color:var(--accent-text)">${tpl.table}</span></div>
+  //  <div>pageId: <span style="color:var(--amber)">INT FK</span></div>
+  //  <div>componentOrder: <span style="color:var(--amber)">INT</span></div>
+  //  <div>blockId: <span style="color:var(--amber)">VARCHAR</span></div>
+  //</div>`;
 
   pb.innerHTML = html;
 }

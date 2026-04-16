@@ -538,4 +538,4 @@ C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\WebsiteBuil
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\7670ky8twn-{0}-vlhywv1lnc-vlhywv1lnc.gz
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8gcogbppib-{0}-6jbzmqrxi2-6jbzmqrxi2.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-tw0un8m5yz-tw0un8m5yz.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-38v6dnickn-38v6dnickn.gz
