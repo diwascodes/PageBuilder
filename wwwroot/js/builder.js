@@ -40,6 +40,7 @@ async function loadPages() {
 }
 let selectedId = null;
 let dragType = null;
+let dragNav = null;
 let dragBlockId = null;
 let idCounter = 0;
 let pageIdCounter = 1;
@@ -239,11 +240,14 @@ const TEMPLATES = {
   },
   testimonial: {
     label:'Testimonial Slider', icon:'❝', table:'Testimonial',
-    dataFields:['heading','items','paddingV','bg'],
+    dataFields:['heading','items','paddingV','bg','navType','showRole','italicQuote'],
     defaultData: {
       heading: 'Testimonials',
       paddingV: 80,
       bg: '#f0f7ff',
+      navType: 'both',
+      showRole: true,
+      italicQuote: true,
       items: [
         { author: 'Agisol', role: 'Director', quote: 'The staffing resource provided by R&B has done and continues to do a great job on the Drug Safety program for the FDA. She has transitioned from Drug Safety Dashboards to Appian Workflow implementation with ease and she is the GO-TO developer on the...', rating: 5, imgSrc: '' },
         { author: 'Qlaire Systems Inc.', role: 'CEO', quote: 'R&B Services Inc., are one of our most valuable and excellent strategic partners. We appreciate your services and exceed our expectations every time! This is a great company and we highly recommend them.', rating: 5, imgSrc: '' }
@@ -257,15 +261,16 @@ const TEMPLATES = {
           <div class="ts-item">
             <div class="ts-card">
               <div class="ts-author-row">
-                <div class="ts-avatar">${it.imgSrc ? `<img src="${it.imgSrc}">` : initials}</div>
+                <div class="ts-avatar">${it.imgSrc ? `<img src="${it.imgSrc}">` : '👤'}</div>
                 <div class="ts-meta">
                   <div class="ts-name">${it.author}</div>
+                  ${d.showRole ? `<div class="ts-role">${it.role || ''}</div>` : ''}
                   <div class="ts-stars">${starsHtml}</div>
                 </div>
               </div>
               <div class="ts-quote-box">
                 <span class="ts-quote-icon">“</span>
-                <p class="ts-quote-text">${it.quote}</p>
+                <p class="ts-quote-text" style="${d.italicQuote ? 'font-style:italic' : ''}">${it.quote}</p>
                 <span class="ts-quote-icon ts-quote-end">”</span>
               </div>
             </div>
@@ -273,6 +278,9 @@ const TEMPLATES = {
       }).join('');
       
       const dotsHtml = (d.items || []).map((_, i) => `<div class="ts-dot${i===0?' active':''}" data-index="${i}" onclick="jumpSlider(${id}, ${i})"></div>`).join('');
+      
+      const showArrows = d.navType !== 'dots';
+      const showDots = d.navType !== 'arrows';
       
       return `
         <div class="b-testimonial-slider" id="slider-${id}" style="background:${d.bg || '#f0f7ff'}; padding-top:${d.paddingV || 80}px; padding-bottom:${d.paddingV || 80}px">
@@ -284,7 +292,12 @@ const TEMPLATES = {
           <div class="ts-viewport">
             <div class="ts-track">${itemsHtml}</div>
           </div>
-          <div class="ts-dots">${dotsHtml}</div>
+          ${showArrows ? `
+          <div class="ts-nav">
+            <button class="ts-nav-btn ts-prev" onclick="moveSlider(${id}, -1)">←</button>
+            <button class="ts-nav-btn ts-next" onclick="moveSlider(${id}, 1)">→</button>
+          </div>` : ''}
+          ${showDots ? `<div class="ts-dots">${dotsHtml}</div>` : ''}
         </div>`;
     }
   },
@@ -596,13 +609,13 @@ async function deletePage(id) {
 //  DRAG & DROP
 // ──────────────────────────────────────────────────
 document.querySelectorAll('.comp-item').forEach(el => {
-  el.addEventListener('dragstart', e => { e.stopPropagation(); dragType = el.dataset.type; dragBlockId = null; e.dataTransfer.effectAllowed='copy'; });
-  el.addEventListener('dragend', () => { dragType = null; });
+  el.addEventListener('dragstart', e => { e.stopPropagation(); dragType = el.dataset.type; dragNav = el.dataset.nav || null; dragBlockId = null; e.dataTransfer.effectAllowed='copy'; });
+  el.addEventListener('dragend', () => { dragType = null; dragNav = null; });
 });
 const canvas = document.getElementById('canvas');
 canvas.addEventListener('dragover', e => { e.preventDefault(); canvas.classList.add('drag-over'); });
 canvas.addEventListener('dragleave', e => { if(!canvas.contains(e.relatedTarget)) canvas.classList.remove('drag-over'); });
-canvas.addEventListener('drop', e => { e.preventDefault(); canvas.classList.remove('drag-over'); if(dragType) addBlock(dragType); dragType=null; dragBlockId=null; });
+canvas.addEventListener('drop', e => { e.preventDefault(); canvas.classList.remove('drag-over'); if(dragType) addBlock(dragType, null, dragNav); dragType=null; dragNav=null; dragBlockId=null; });
 
 // Prevent multiple simultaneous drags
 document.addEventListener('dragstart', e => {
@@ -613,12 +626,13 @@ document.addEventListener('dragstart', e => {
 // ──────────────────────────────────────────────────
 //  BLOCKS
 // ──────────────────────────────────────────────────
-function addBlock(type, afterId=null) {
+function addBlock(type, afterId=null, navType=null) {
   const page = currentPage();
   if(!page) { alert("Please select or create a page first."); return; }
   const tpl = TEMPLATES[type]; if(!tpl) return;
   const id = ++idCounter;
   const data = JSON.parse(JSON.stringify(tpl.defaultData));
+  if (navType) data.navType = navType;
   const block = { id, type, label:tpl.label, data, pageId: currentPageId, componentOrder: get_blocks().length+1 };
   block.html = tpl.render(data);
   if(afterId !== null) { const idx = get_blocks().findIndex(b=>b.id===afterId); get_blocks().splice(idx+1,0,block); }
@@ -706,7 +720,7 @@ function renderProps(block) {
   // Loop through dataFields defined in the template
   (tpl.dataFields || []).forEach(k => {
     // Skip fields that have custom complex UI below
-    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'imgPosition', 'imgLayout', 'imgBg', 'paddingV', 'leftBg', 'rightBg', 'textColorLeft', 'textColorRight', 'btnBg', 'btnTextColor', 'iconColor', 'colWidth', 'alignItems'].includes(k)) return;
+    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'imgPosition', 'imgLayout', 'imgBg', 'paddingV', 'leftBg', 'rightBg', 'textColorLeft', 'textColorRight', 'btnBg', 'btnTextColor', 'iconColor', 'colWidth', 'alignItems', 'navType', 'showRole', 'italicQuote'].includes(k)) return;
 
     const label = FIELD_LABELS[k] || (k.charAt(0).toUpperCase() + k.slice(1));
     const value = d[k] !== undefined ? String(d[k]).replace(/"/g, '&quot;') : '';
@@ -842,9 +856,35 @@ function renderProps(block) {
   }
 
   // data connect button for list types
-  if(['gridimgtext','gridimgtextrow','features','footer','abouthighlights','servicegrid','logoslider','footer2'].includes(block.type)){
+  if(['gridimgtext','gridimgtextrow','features','footer','abouthighlights','servicegrid','logoslider','footer2','testimonial'].includes(block.type)){
     html+=`<div class="prop-section">Advanced Data</div>`;
     html+=`<button class="data-connect-btn" onclick="openModal(${block.id})">⊞ Manage list items</button>`;
+  }
+
+  // Testimonial-specific sidebar controls
+  if(block.type === 'testimonial'){
+    html+=`<div class="prop-section">Display Options</div>`;
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="prop-group"><span class="prop-label">Show Role</span>
+        <select class="prop-input" onchange="updateProp(${block.id},'showRole', this.value === 'true')">
+          <option value="true" ${d.showRole !== false ? 'selected' : ''}>Yes (Show)</option>
+          <option value="false" ${d.showRole === false ? 'selected' : ''}>No (Hide)</option>
+        </select>
+      </div>
+      <div class="prop-group"><span class="prop-label">Italic Quotes</span>
+        <select class="prop-input" onchange="updateProp(${block.id},'italicQuote', this.value === 'true')">
+          <option value="true" ${d.italicQuote !== false ? 'selected' : ''}>Yes (Italic)</option>
+          <option value="false" ${d.italicQuote === false ? 'selected' : ''}>No (Normal)</option>
+        </select>
+      </div>
+    </div>`;
+    html+=`<div class="prop-group"><span class="prop-label">Navigation Type</span>
+      <select class="prop-input" onchange="updateProp(${block.id},'navType', this.value)">
+        <option value="both" ${(d.navType||'both')==='both' ? 'selected' : ''}>Both (Arrows &amp; Dots)</option>
+        <option value="dots" ${d.navType==='dots' ? 'selected' : ''}>Dots Only</option>
+        <option value="arrows" ${d.navType==='arrows' ? 'selected' : ''}>Arrows Only</option>
+      </select>
+    </div>`;
   }
 
   // schema note
@@ -1182,12 +1222,29 @@ function renderTestimonialSliderForm(d) {
     html += `<div class="m-list-item">
       <div class="item-num">${i + 1}</div>
       <div class="item-img">${it.imgSrc ? `<img src="${it.imgSrc}">` : '👤'}</div>
-      <div class="item-inputs">
-        <input placeholder="Author Name" value="${it.author || ''}" oninput="updateListItem('testimonial',${i},'author',this.value)">
-        <input placeholder="Role / Company" value="${it.role || ''}" oninput="updateListItem('testimonial',${i},'role',this.value)">
-        <input placeholder="Rating (1-5)" type="number" min="1" max="5" value="${it.rating || 5}" oninput="updateListItem('testimonial',${i},'rating',parseInt(this.value))">
-        <input placeholder="Image URL (optional)" value="${it.imgSrc || ''}" oninput="updateListItem('testimonial',${i},'imgSrc',this.value);updateImgPreview(this,${i})">
-        <textarea placeholder="Quote" oninput="updateListItem('testimonial',${i},'quote',this.value)" style="grid-column:span 2; height:60px">${it.quote || ''}</textarea>
+      <div class="item-inputs" style="grid-template-columns:1fr 1fr">
+        <div class="m-field" style="margin:0">
+          <div class="m-label">Author Name</div>
+          <input class="m-input" placeholder="e.g. Pallavi Ganti" value="${it.author || ''}" oninput="updateListItem('testimonial',${i},'author',this.value)">
+        </div>
+        <div class="m-field" style="margin:0">
+          <div class="m-label">Role / Title</div>
+          <input class="m-input" placeholder="e.g. President &amp; CEO" value="${it.role || ''}" oninput="updateListItem('testimonial',${i},'role',this.value)">
+        </div>
+        <div class="m-field" style="margin:0">
+          <div class="m-label">Star Rating</div>
+          <select class="m-input" onchange="updateListItem('testimonial',${i},'rating',parseInt(this.value))">
+            ${[1,2,3,4,5].map(n=>`<option value="${n}" ${(it.rating||5)===n?'selected':''}>${'★'.repeat(n)} (${n} star${n>1?'s':''})</option>`).join('')}
+          </select>
+        </div>
+        <div class="m-field" style="margin:0">
+          <div class="m-label">Image URL</div>
+          <input class="m-input" placeholder="https://..." value="${it.imgSrc || ''}" oninput="updateListItem('testimonial',${i},'imgSrc',this.value);updateImgPreview(this,${i})">
+        </div>
+        <div class="m-field" style="margin:0;grid-column:span 2">
+          <div class="m-label">Quote / Message</div>
+          <textarea class="m-input" placeholder="What the client said..." oninput="updateListItem('testimonial',${i},'quote',this.value)" style="height:70px;resize:vertical">${it.quote || ''}</textarea>
+        </div>
       </div>
       <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
     </div>`;
@@ -1437,6 +1494,33 @@ function renderStyleTab(d, type){
       <div class="m-field"><div class="m-label">Icon</div><input type="color" value="${d.iconColor}" onchange="modalUpdateProp('iconColor',this.value)" style="width:100%;height:35px;border:none;padding:0;background:none;cursor:pointer"></div>
     </div>`;
   }
+  if(type==='testimonial'){
+    html+=`<div class="prop-section">Display Options</div>`;
+    html+=`<div class="m-row2">
+      <div class="m-field">
+        <div class="m-label">Show Role</div>
+        <select class="m-input" onchange="modalUpdateProp('showRole', this.value === 'true')">
+          <option value="true" ${d.showRole !== false ? 'selected' : ''}>Yes (Show)</option>
+          <option value="false" ${d.showRole === false ? 'selected' : ''}>No (Hide)</option>
+        </select>
+      </div>
+      <div class="m-field">
+        <div class="m-label">Italic Quotes</div>
+        <select class="m-input" onchange="modalUpdateProp('italicQuote', this.value === 'true')">
+          <option value="true" ${d.italicQuote !== false ? 'selected' : ''}>Yes (Italic)</option>
+          <option value="false" ${d.italicQuote === false ? 'selected' : ''}>No (Normal)</option>
+        </select>
+      </div>
+    </div>`;
+    html+=`<div class="prop-section">Navigation Controls</div>`;
+    html+=`<div class="m-field"><div class="m-label">Navigation Type</div>
+      <select class="m-input" onchange="modalUpdateProp('navType', this.value)">
+        <option value="both" ${(d.navType||'both')==='both'?'selected':''}>Both (Arrows & Dots)</option>
+        <option value="dots" ${d.navType==='dots'?'selected':''}>Dots Only</option>
+        <option value="arrows" ${d.navType==='arrows'?'selected':''}>Arrows Only</option>
+      </select>
+    </div>`;
+  }
   if(!html) html='<p style="color:var(--text2);font-size:13px">No style options for this component.</p>';
   return html;
 }
@@ -1551,6 +1635,25 @@ function getSchemaForType(type){
   icon            <span class="sv">VARCHAR(10)</span>,
   title           <span class="sv">VARCHAR(100)</span>,
   description     <span class="sv">TEXT</span>
+);`,
+    testimonial:`<span class="scm">-- Table: TestimonialSection + TestimonialItem</span>
+<span class="sk">CREATE TABLE</span> <span class="sc">TestimonialSection</span> (
+  id              <span class="sv">INT PRIMARY KEY</span>,
+  pageId          <span class="sv">INT NOT NULL</span>,
+  componentOrder  <span class="sv">INT NOT NULL</span>,
+  heading         <span class="sv">VARCHAR(255)</span>,
+  paddingV        <span class="sv">INT DEFAULT 80</span>,
+  bg              <span class="sv">VARCHAR(20)</span>
+);
+<span class="sk">CREATE TABLE</span> <span class="sc">TestimonialItem</span> (
+  id              <span class="sv">INT PRIMARY KEY</span>,
+  sectionId       <span class="sv">INT NOT NULL</span>,
+  itemOrder       <span class="sv">INT NOT NULL</span>,
+  author          <span class="sv">VARCHAR(100)</span>,
+  role            <span class="sv">VARCHAR(100)</span>,
+  quote           <span class="sv">TEXT</span>,
+  rating          <span class="sv">INT DEFAULT 5</span>,
+  imgSrc          <span class="sv">VARCHAR(512)</span>
 );`
   };
   return schemas[type] || `<span class="scm">-- Table: ${TEMPLATES[type].table}</span>

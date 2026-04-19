@@ -305,6 +305,15 @@
                             string initials = string.Join("", author.Split(' ').Select(s => s.FirstOrDefault())).ToUpper();
                             if (initials.Length > 2) initials = initials.Substring(0, 2);
 
+                            bool showRole = true;
+                            if (d.TryGetProperty("showRole", out var sr) && sr.ValueKind != JsonValueKind.Null) {
+                                showRole = sr.ValueKind == JsonValueKind.String ? sr.GetString() != "false" : sr.GetBoolean();
+                            }
+                            bool italicQuote = true;
+                            if (d.TryGetProperty("italicQuote", out var iq) && iq.ValueKind != JsonValueKind.Null) {
+                                italicQuote = iq.ValueKind == JsonValueKind.String ? iq.GetString() != "false" : iq.GetBoolean();
+                            }
+
                             <div class="ts-item">
                                 <div class="ts-card">
                                     <div class="ts-author-row">
@@ -312,11 +321,14 @@
                                             @if (!string.IsNullOrEmpty(imgSrc)) {
                                                 <img src="@imgSrc" alt="@author">
                                             } else {
-                                                @initials
+                                                @:👤
                                             }
                                         </div>
                                         <div class="ts-meta">
                                             <div class="ts-name">@author</div>
+                                            @if (showRole && !string.IsNullOrEmpty(role)) {
+                                                <div class="ts-role">@role</div>
+                                            }
                                             <div class="ts-stars">
                                                 @for (int i = 0; i < 5; i++) {
                                                     <span style="color:@(i < rating ? "#f1c40f" : "#ddd")">★</span>
@@ -326,7 +338,7 @@
                                     </div>
                                     <div class="ts-quote-box">
                                         <span class="ts-quote-icon">“</span>
-                                        <p class="ts-quote-text">@quote</p>
+                                        <p class="ts-quote-text" style="@(italicQuote ? "font-style:italic" : "")">@quote</p>
                                         <span class="ts-quote-icon ts-quote-end">”</span>
                                     </div>
                                 </div>
@@ -335,16 +347,29 @@
                     }
                 </div>
             </div>
-            <div class="ts-dots">
-                @if (d.TryGetProperty("items", out var itemsDots) && itemsDots.ValueKind == JsonValueKind.Array)
-                {
-                    int i = 0;
-                    foreach (var item in itemsDots.EnumerateArray())
+            @{
+                string navType = d.TryGetProperty("navType", out var nt) ? nt.GetString() : "both";
+                bool showArrows = navType != "dots";
+                bool showDots = navType != "arrows";
+            }
+            @if (showArrows) {
+                <div class="ts-nav">
+                    <button class="ts-nav-btn ts-prev" onclick="moveSlider(@blockId, -1)">←</button>
+                    <button class="ts-nav-btn ts-next" onclick="moveSlider(@blockId, 1)">→</button>
+                </div>
+            }
+            @if (showDots) {
+                <div class="ts-dots">
+                    @if (d.TryGetProperty("items", out var itemsDots) && itemsDots.ValueKind == JsonValueKind.Array)
                     {
-                        <div class="ts-dot @(i == 0 ? "active" : "")" onclick="jumpSlider(@blockId, @(i++))"></div>
+                        int i = 0;
+                        foreach (var item in itemsDots.EnumerateArray())
+                        {
+                            <div class="ts-dot @(i == 0 ? "active" : "")" onclick="jumpSlider(@blockId, @(i++))"></div>
+                        }
                     }
-                }
-            </div>
+                </div>
+            }
         </div>
     }
     else if (block.BlockType == "form")
