@@ -537,5 +537,5 @@ C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.C
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\WebsiteBuilder.MvcApplicationPartsAssemblyInfo.cs
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\7670ky8twn-{0}-cxss87j688-cxss87j688.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8gcogbppib-{0}-jlpdw1dmcb-jlpdw1dmcb.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-cu2gg9fp52-cu2gg9fp52.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8gcogbppib-{0}-bq3kwb5wt6-bq3kwb5wt6.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-ydm82va0u0-ydm82va0u0.gz

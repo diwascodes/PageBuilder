@@ -372,45 +372,178 @@
             }
         </div>
     }
+    else if (block.BlockType == "clientslider")
+    {
+        string heading = d.TryGetProperty("heading", out var h) ? h.GetString() : "Our Clients";
+        string bg = d.TryGetProperty("bg", out var bgColor) ? bgColor.GetString() : "#f8f9fa";
+        string textColor = d.TryGetProperty("textColor", out var tc) ? tc.GetString() : "#1a1a2e";
+        string paddingVStr = d.TryGetProperty("paddingV", out var pv) ? pv.ToString() : "100";
+        int.TryParse(paddingVStr, out int paddingV);
+        string cols = d.TryGetProperty("cols", out var c) ? c.GetString() : "4";
+
+        int.TryParse(cols, out int numCols);
+        if (numCols <= 0) numCols = 4;
+
+        int blockId = block.Id;
+        bool isSlider = false;
+        var itemsList = new List<JsonElement>();
+        if (d.TryGetProperty("items", out var itemsProp) && itemsProp.ValueKind == JsonValueKind.Array) {
+            foreach (var item in itemsProp.EnumerateArray()) itemsList.Add(item);
+            isSlider = itemsList.Count > numCols;
+        }
+
+        <div class="b-client-grid @(isSlider ? "b-client-slider" : "")" id="@(isSlider ? "slider-" + blockId : "clients-" + blockId)" data-cols="@numCols" style="background:@bg; padding-top:@(paddingV)px; padding-bottom:@(paddingV)px">
+            <div class="cg-inner">
+                <div class="cg-header" style="text-align:center; width:100%; margin-bottom:60px;">
+                    <h2 style="color:@textColor">@heading</h2>
+                    <div class="cg-divider" style="display:flex; align-items:center; justify-content:center; gap:15px;">
+                        <span class="cg-line" style="width:60px; height:1px; background:#e2e8f0;"></span>
+                        <div class="cg-diamond" style="width:10px; height:10px; background:#a6111f; transform:rotate(45deg);"></div>
+                        <span class="cg-line" style="width:60px; height:1px; background:#e2e8f0;"></span>
+                    </div>
+                </div>
+
+                @if (isSlider) {
+                    <div class="cs-viewport" style="overflow:hidden; position:relative;">
+                        <div class="cs-track" style="display:flex; gap:30px; transition:transform 0.5s ease;">
+                            @foreach (var item in itemsList) {
+                                string imgSrc = item.TryGetProperty("imgSrc", out var isrc) ? isrc.GetString() : "";
+                                <div class="cs-item" style="flex: 0 0 calc((100% - (@(numCols) - 1) * 30px) / @numCols); min-width:0;">
+                                    <div class="cs-logo-card">
+                                        @if (!string.IsNullOrEmpty(imgSrc)) {
+                                            <img src="@imgSrc" alt="Client Logo">
+                                        } else {
+                                            <div class="cs-logo-placeholder">
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color:#cbd5e0">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                                </svg>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="cs-dots" style="display:flex; justify-content:center; gap:10px; margin-top:40px;">
+                        @for (int i = 0; i < itemsList.Count; i++) {
+                            <div class="cs-dot @(i == 0 ? "active" : "")" onclick="jumpSlider(@blockId, @i)"></div>
+                        }
+                    </div>
+                } else {
+                    <div class="cs-grid" style="display:grid; grid-template-columns:repeat(@numCols, 1fr); gap:30px;">
+                        @foreach (var item in itemsList) {
+                            string imgSrc = item.TryGetProperty("imgSrc", out var isrc) ? isrc.GetString() : "";
+                            <div class="cs-grid-item">
+                                <div class="cs-logo-card">
+                                    @if (!string.IsNullOrEmpty(imgSrc)) {
+                                        <img src="@imgSrc" alt="Client Logo">
+                                    } else {
+                                        <div class="cs-logo-placeholder">
+                                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color:#cbd5e0">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                <polyline points="21 15 16 10 5 21"></polyline>
+                                            </svg>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
     else if (block.BlockType == "form")
     {
+        string heading = d.TryGetProperty("heading", out var h) ? h.GetString() : "Get in touch";
+        string btnText = d.TryGetProperty("btnText", out var bt) ? bt.GetString() : "Send message";
+        
         <div class="b-form">
-            <h2>@(d.GetProperty("heading").GetString())</h2>
+            <h2>@heading</h2>
             <div class="form-row">
                 <div class="form-field"><label>First name</label><input type="text" placeholder="Jane"></div>
                 <div class="form-field"><label>Last name</label><input type="text" placeholder="Smith"></div>
             </div>
             <div class="form-field" style="margin-bottom:20px"><label>Email</label><input type="email" placeholder="jane@company.com"></div>
             <div class="form-field" style="margin-bottom:20px"><label>Message</label><textarea rows="4" placeholder="How can we help?"></textarea></div>
-            <button class="submit-btn">@(d.GetProperty("btnText").GetString())</button>
+            <button class="submit-btn">@btnText</button>
         </div>
     }
     else if (block.BlockType == "footer")
     {
         string brand = d.TryGetProperty("brand", out var b) ? b.GetString() : "Brand";
-        string copy = d.TryGetProperty("copy", out var c) ? c.GetString() : "© 2026";
-        string paddingVStr = d.TryGetProperty("paddingV", out var pv1) ? pv1.ToString() : "40";
-        int paddingV_footer = 40; int.TryParse(paddingVStr, out paddingV_footer);
+        string logoImage = d.TryGetProperty("logoImage", out var li) ? li.GetString() : "";
+        string copy = d.TryGetProperty("copy", out var cp) ? cp.GetString() : "© 2026 Brand Inc.";
+        string bg = d.TryGetProperty("bg", out var bgColor) ? bgColor.GetString() : "#ffffff";
+        string textColor = d.TryGetProperty("textColor", out var tc) ? tc.GetString() : "#666666";
+        string linkPos = d.TryGetProperty("linkPosition", out var lp) ? lp.GetString() : "center";
+        
+        bool showBrand = !d.TryGetProperty("showBrand", out var sb) || sb.GetBoolean();
+        bool showLogo = !d.TryGetProperty("showLogo", out var sl) || sl.GetBoolean();
+        bool showItems = !d.TryGetProperty("showItems", out var si) || si.GetBoolean();
 
-        <div class="b-footer" style="padding-top:@(paddingV_footer)px; padding-bottom:@(paddingV_footer)px">
-            <div class="footer-brand">@(brand)</div>
-            <div class="footer-links">
-                @if(d.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
-                {
-                    foreach(var item in items.EnumerateArray())
-                    {
-                        string label = item.TryGetProperty("label", out var l) ? l.GetString() : "";
-                        string slug = item.TryGetProperty("slug", out var s) ? s.GetString() : "#";
-                        string url = slug.StartsWith("http") || slug.StartsWith("/") || slug == "#" ? slug : $"/page/{slug}";
-                        <a href="@url" style="color:inherit; text-decoration:none;">@label</a>
-                    }
+        string paddingVStr = d.TryGetProperty("paddingV", out var pv) ? pv.ToString() : "40";
+        int paddingV = 40; int.TryParse(paddingVStr, out paddingV);
+
+        string copyPos = linkPos == "center" ? "right" : "center";
+
+        <div class="b-footer" style="background:@bg; color:@textColor; padding-top:@(paddingV)px; padding-bottom:@(paddingV)px; width:100%; box-sizing:border-box;">
+            <div class="footer-inner" style="max-width:1200px; margin:0 auto; padding:0 40px; display:flex; align-items:center; justify-content:space-between; position:relative;">
+                
+                <div class="f-left-group" style="display:flex; align-items:center; gap:20px; flex:1;">
+                   @if (showLogo && !string.IsNullOrEmpty(logoImage)) {
+                       <img src="@logoImage" alt="Logo" style="max-height:30px; object-fit:contain;">
+                   }
+                   @if (showBrand) {
+                       <div class="footer-brand" style="margin-bottom:0; font-size:18px;">@brand</div>
+                   }
+                   @if (linkPos == "left" && showItems) {
+                       <div class="footer-links" style="margin-bottom:0; gap:25px; display:flex;">
+                           @if (d.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
+                           {
+                               foreach (var item in items.EnumerateArray())
+                               {
+                                   string label = item.TryGetProperty("label", out var l) ? l.GetString() : "";
+                                   string slug = item.TryGetProperty("slug", out var s) ? s.GetString() : "#";
+                                   string url = slug.StartsWith("http") || slug.StartsWith("/") || slug == "#" ? slug : $"/page/{slug}";
+                                   <a href="@url" style="color:inherit; text-decoration:none;" class="footer-link-item">@label</a>
+                               }
+                           }
+                       </div>
+                   }
+                </div>
+
+                @if (linkPos == "center" && showItems) {
+                   <div class="f-center-group" style="position:absolute; left:50%; transform:translateX(-50%); display:flex; align-items:center; justify-content:center;">
+                       <div class="footer-links" style="margin-bottom:0; gap:25px; display:flex;">
+                           @if (d.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
+                           {
+                               foreach (var item in items.EnumerateArray())
+                               {
+                                   string label = item.TryGetProperty("label", out var l) ? l.GetString() : "";
+                                   string slug = item.TryGetProperty("slug", out var s) ? s.GetString() : "#";
+                                   string url = slug.StartsWith("http") || slug.StartsWith("/") || slug == "#" ? slug : $"/page/{slug}";
+                                   <a href="@url" style="color:inherit; text-decoration:none;" class="footer-link-item">@label</a>
+                               }
+                           }
+                       </div>
+                   </div>
                 }
-                else
-                {
-                    <span>Privacy</span><span>Terms</span><span>Contact</span>
+                
+                @if (copyPos == "center" && linkPos == "left") {
+                   <div class="f-center-group" style="position:absolute; left:50%; transform:translateX(-50%); display:flex; align-items:center; justify-content:center; font-size:12px; opacity:0.7;">@copy</div>
                 }
+
+                <div class="f-right-group" style="display:flex; align-items:center; justify-content:flex-end; flex:1; font-size:12px; opacity:0.7;">
+                   @if (copyPos == "right") {
+                       @copy
+                   }
+                </div>
+
             </div>
-            <div class="footer-copy">@copy</div>
         </div>
     }
     else if (block.BlockType == "abouthighlights")
@@ -439,15 +572,15 @@
         string rightW = (parts.Length > 1 ? parts[1] : "50") + "%";
 
         <div class="b-abouthighlights" style="display:flex; flex-wrap:wrap; min-height:300px; padding-top:@(paddingV)px; padding-bottom:@(paddingV)px; align-items:@(alignItems == "center" ? "center" : "flex-start")">
-            <div class="ah-left" style="flex: 0 0 @leftW; background:@leftBg; color:@textColorLeft; padding:60px 40px">
-                <h1 style="color:@textColorLeft; margin-bottom:15px; font-size:32px">@heading</h1>
-                <h3 style="color:@textColorLeft; margin-bottom:20px; font-size:18px">@subheading</h3>
-                <p style="margin-bottom:30px; line-height:1.6; font-size:14px; color:#444">@body</p>
+            <div class="ah-left" style="flex: 0 0 @leftW; background:@leftBg; color:@textColorLeft; padding:80px 60px">
+                <h1 style="color:@textColorLeft; margin-bottom:18px; font-size:42px; font-weight:700; line-height:1.15; letter-spacing:-0.02em">@heading</h1>
+                <h3 style="color:@textColorLeft; margin-bottom:24px; font-size:22px; font-weight:500">@subheading</h3>
+                <p style="margin-bottom:36px; line-height:1.7; font-size:16px; color:#444">@body</p>
                 <a href="@btnUrl" style="text-decoration:none">
-                    <button class="ah-btn" style="background:@btnBg; color:@btnTextColor; border:none; padding:12px 30px; border-radius:30px; cursor:pointer; font-weight:500">@btnText</button>
+                    <button class="ah-btn" style="background:@btnBg; color:@btnTextColor; border:none; padding:15px 40px; border-radius:32px; cursor:pointer; font-weight:700; font-size:16px; letter-spacing:0.01em">@btnText</button>
                 </a>
             </div>
-            <div class="ah-right" style="flex: 0 0 @rightW; background:@rightBg; color:@textColorRight; padding:60px 40px">
+            <div class="ah-right" style="flex: 0 0 @rightW; background:@rightBg; color:@textColorRight; padding:80px 60px">
                 <div class="ah-items-list">
                     @if (d.TryGetProperty("items", out var highlightItems) && highlightItems.ValueKind == JsonValueKind.Array)
                     {
@@ -606,16 +739,23 @@
     let sliderStates = {};
 
     function initSliders() {
-        document.querySelectorAll('.b-testimonial-slider').forEach(slider => {
+        document.querySelectorAll('.b-testimonial-slider, .b-client-slider').forEach(slider => {
             const id = slider.id.replace('slider-', '');
             if (!sliderStates[id]) {
                 sliderStates[id] = { current: 0, interval: null };
             }
             updateSliderView(id);
-            startSliderAuto(id);
-            
-            slider.onmouseenter = () => stopSliderAuto(id);
-            slider.onmouseleave = () => startSliderAuto(id);
+
+            const autoScrollStr = slider.getAttribute('data-autoscroll');
+            if (autoScrollStr !== 'false') {
+                startSliderAuto(id);
+                slider.onmouseenter = () => stopSliderAuto(id);
+                slider.onmouseleave = () => startSliderAuto(id);
+            } else {
+                stopSliderAuto(id);
+                slider.onmouseenter = null;
+                slider.onmouseleave = null;
+            }
         });
     }
 
@@ -623,14 +763,19 @@
         if (!sliderStates[id]) return;
         sliderStates[id].current = index;
         updateSliderView(id);
-        startSliderAuto(id);
+        const slider = document.getElementById(`slider-${id}`);
+        if(slider && slider.getAttribute('data-autoscroll') !== 'false') {
+            startSliderAuto(id);
+        }
     }
 
     function moveSlider(id, dir) {
         const slider = document.getElementById(`slider-${id}`);
         if (!slider) return;
-        const items = slider.querySelectorAll('.ts-item');
-        const visibleCount = getVisibleCount();
+        const isClient = slider.classList.contains('b-client-slider');
+        const prefix = isClient ? 'cs' : 'ts';
+        const items = slider.querySelectorAll(`.${prefix}-item`);
+        const visibleCount = getVisibleCount(isClient ? 'clientslider' : 'testimonial');
         const max = Math.max(0, items.length - visibleCount);
         
         if (!sliderStates[id]) sliderStates[id] = { current: 0, interval: null };
@@ -645,15 +790,17 @@
     function updateSliderView(id) {
         const slider = document.getElementById(`slider-${id}`);
         if (!slider) return;
+        const isClient = slider.classList.contains('b-client-slider');
+        const prefix = isClient ? 'cs' : 'ts';
         
-        const track = slider.querySelector(`.ts-track`);
-        const dots = slider.querySelectorAll(`.ts-dot`);
+        const track = slider.querySelector(`.${prefix}-track`);
+        const dots = slider.querySelectorAll(`.${prefix}-dot`);
         const state = sliderStates[id];
         
-        const item = track.querySelector(`.ts-item`);
+        const item = track.querySelector(`.${prefix}-item`);
         if (!item) return;
         
-        const gap = 30;
+        const gap = 30; // Standardized gap for all sliders
         const itemWidth = item.offsetWidth;
         const moveX = state.current * (itemWidth + gap);
         
@@ -672,11 +819,22 @@
     function stopSliderAuto(id) {
         if (sliderStates[id] && sliderStates[id].interval) {
             clearInterval(sliderStates[id].interval);
+            sliderStates[id].interval = null;
         }
     }
 
-    function getVisibleCount() {
+    function getVisibleCount(type) {
         const w = window.innerWidth;
+        if (type === 'clientslider') {
+            const slider = document.querySelector(`.b-client-slider`);
+            let dCols = 4;
+            if (slider) dCols = parseInt(slider.getAttribute('data-cols')) || 4;
+
+            if (w > 992) return dCols;
+            if (w > 768) return Math.min(3, dCols);
+            if (w > 480) return Math.min(2, dCols);
+            return 1;
+        }
         if (w > 992) return 2;
         return 1;
     }
