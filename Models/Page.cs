@@ -10,6 +10,7 @@ namespace WebsiteBuilder.Models
         public string Slug { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public bool ShowInMenu { get; set; } = true;
         public List<PageBlock> Blocks { get; set; } = new List<PageBlock>();
     }
 }

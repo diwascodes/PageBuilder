@@ -35,6 +35,7 @@ async function loadPages() {
 
     currentPageId = pages[0].id;
     renderPageTabs();
+    renderNavMenuManager();
     render();
   } catch (e) { console.error('Failed to load pages', e); }
 }
@@ -62,6 +63,45 @@ const BG_COLORS = ['#1a1a2e', '#5b4fff', '#0F6E56', '#cc3333', '#111', '#2d3a2e'
 const BG_LABELS = ['Dark Navy', 'Violet', 'Forest', 'Red', 'Charcoal', 'Dark Green', 'Brown', 'Navy', 'Purple', 'Brown'];
 
 const TEMPLATES = {
+  heroslider: {
+    label: 'Hero Slider Pro', icon: '◈', table: 'HeroSlider',
+    dataFields: ['items', 'paddingV', 'overlayColor', 'autoplay'],
+    defaultData: {
+      paddingV: 0,
+      overlayColor: 'rgba(26, 43, 85, 0.7)',
+      autoplay: true,
+      items: [
+        { tag: 'SDLC METHODOLOGIES', heading: 'Quality Processes for Full Software Life Cycle', bgImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80' },
+        { tag: 'OUR MISSION', heading: 'Innovative Software Solutions for Your Business', bgImage: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80' }
+      ]
+    },
+    render: (d, id) => {
+      const items = d.items || [];
+      if (items.length === 0) return `<div class="b-hero-slider empty-slider" style="background:#f1f5f9; padding:100px; text-align:center;">Add slides to see the Hero Slider</div>`;
+
+      const slidesHtml = items.map((it, i) => `
+        <div class="h-slide ${i === 0 ? 'active' : ''}" style="background-image:url(${it.bgImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80'});">
+          <div class="h-overlay" style="background:${d.overlayColor || 'rgba(26, 43, 85, 0.7)'}"></div>
+          <div class="h-content">
+            ${it.tag ? `<div class="h-tag">${it.tag}</div>` : ''}
+            <div class="h-title-box">
+              <h2>${it.heading || 'Your Main Heading Here'}</h2>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="b-hero-slider" id="slider-${id}" style="padding-top:${d.paddingV || 0}px; padding-bottom:${d.paddingV || 0}px; height:600px; position:relative; overflow:hidden;">
+          <div class="h-track" style="height:100%; width:100%">${slidesHtml}</div>
+          <button class="h-nav prev" onclick="moveSlider(${id},-1)">❮</button>
+          <button class="h-nav next" onclick="moveSlider(${id},1)">❯</button>
+          <div class="h-dots">${items.map((_, i) => `<div class="h-dot ${i === 0 ? 'active' : ''}" onclick="jumpSlider(${id},${i})"></div>`).join('')}</div>
+        </div>
+        <script>setTimeout(() => { if(typeof initSliders === 'function') initSliders(); }, 100);</script>
+      `;
+    }
+  },
   topbar: {
     label: 'Top Bar', icon: '▔', table: 'TopBar',
     dataFields: ['tickerText', 'isScrolling', 'email', 'phone', 'bg', 'accentBg', 'textColor'],
@@ -98,7 +138,7 @@ const TEMPLATES = {
       const linkStyle = `color:${d.linksColor || '#777777'}; font-size:${d.linksSize || 14}px; font-weight:${d.linksBold ? 'bold' : 'normal'}; font-style:${d.linksItalic ? 'italic' : 'normal'}; text-decoration:none;`;
       let linksHtml = `<span style="${linkStyle}">Home</span><span style="${linkStyle}">About</span><span style="${linkStyle}">Services</span>`;
       if (typeof pages !== 'undefined' && pages.length > 0) {
-        linksHtml = pages.map(p => `<span style="${linkStyle}">${p.name}</span>`).join('');
+        linksHtml = pages.filter(p => p.showInMenu !== false).map(p => `<span style="${linkStyle}">${p.name}</span>`).join('');
       }
       const logoHtml = d.logoImage ? `<img src="${d.logoImage}" alt="${d.logo}" style="max-height:40px">` : `<span style="color:${d.logoColor || '#111111'}">${d.logo}</span>`;
       return `
@@ -305,7 +345,20 @@ const TEMPLATES = {
     label: 'Contact Form', icon: '⬜', table: 'ContactForm',
     dataFields: ['heading', 'btnText'],
     defaultData: { heading: 'Get in touch', btnText: 'Send message' },
-    render: d => `<div class="b-form"><h2>${d.heading}</h2><div class="form-row"><div class="form-field"><label>First name</label><input type="text" placeholder="Jane"></div><div class="form-field"><label>Last name</label><input type="text" placeholder="Smith"></div></div><div class="form-field" style="margin-bottom:10px"><label>Email</label><input type="email" placeholder="jane@company.com"></div><div class="form-field" style="margin-bottom:10px"><label>Message</label><textarea rows="3" placeholder="How can we help?" style="resize:none;font-family:var(--sans)"></textarea></div><button class="submit-btn">${d.btnText}</button></div>`
+    render: d => `<div class="b-form">
+      <h2>${d.heading}</h2>
+      <div class="form-row">
+        <div class="form-field"><label>First name</label><input type="text" class="cf-fname" placeholder="Jane"></div>
+        <div class="form-field"><label>Last name</label><input type="text" class="cf-lname" placeholder="Smith"></div>
+      </div>
+      <div class="form-field" style="margin-bottom:10px">
+        <label>Email</label><input type="email" class="cf-email" placeholder="jane@company.com">
+      </div>
+      <div class="form-field" style="margin-bottom:10px">
+        <label>Message</label><textarea class="cf-message" rows="3" placeholder="How can we help?" style="resize:none;font-family:var(--sans)"></textarea>
+      </div>
+      <button class="submit-btn" style="width:200px" onclick="submitContactForm(this)">${d.btnText}</button>
+    </div>`
   },
   footer: {
     label: 'Footer', icon: '▬', table: 'Footer',
@@ -332,7 +385,7 @@ const TEMPLATES = {
       const logoHtml = (d.showLogo && d.logoImage) ? `<img src="${d.logoImage}" alt="Logo" style="max-height:30px; object-fit:contain;">` : '';
       const brandHtml = d.showBrand ? `<div class="footer-brand" style="margin-bottom:0; font-size:18px;">${d.brand}</div>` : '';
       const linksHtml = d.showItems ? `<div class="footer-links" style="margin-bottom:0; gap:25px; display:flex;">${itemsHtml}</div>` : '';
-      
+
       const linkPos = d.linkPosition || 'center';
       // Logic: Links Center -> Copy Right; Links Left -> Copy Center
       const copyPos = linkPos === 'center' ? 'right' : 'center';
@@ -378,10 +431,10 @@ const TEMPLATES = {
       phone: '+1 (800) 000-0000',
       colLayout: '4',
       quickLinks: [
-        { label: 'About Us', slug: 'about' },
-        { label: 'Services', slug: 'services' },
-        { label: 'Contact', slug: 'contact' },
-        { label: 'Privacy Policy', slug: 'privacy' },
+        { label: 'About Us', slug: 'about', colName: 'QUICK LINKS', colOrder: 1 },
+        { label: 'Services', slug: 'services', colName: 'QUICK LINKS', colOrder: 1 },
+        { label: 'Contact', slug: 'contact', colName: 'QUICK LINKS', colOrder: 1 },
+        { label: 'Privacy Policy', slug: 'privacy', colName: 'QUICK LINKS', colOrder: 1 },
       ],
       contactLinks: [
         { label: 'REGISTERED OFFICE', address: '3-6-663/203, L.K.R. Arcade, Street #9, Hyderabad-500 029', email: 'office@essi-software.com', phone: '+91 40 2763 2269' },
@@ -399,9 +452,25 @@ const TEMPLATES = {
         ? `<img src="${d.logoImage}" alt="${d.brand}" style="max-height:48px;width:auto;object-fit:contain;margin-bottom:14px;display:block">`
         : `<div class="f2-brand" style="color:${textColor}">${d.brand}</div>`;
 
-      const quickLinksHtml = (d.quickLinks || []).map(l =>
-        `<li><a href="/page/${l.slug}" style="color:${textColor}80;text-decoration:none" class="f2-link">${l.label}</a></li>`
-      ).join('');
+      // Group link columns dynamically
+      const groupedQuickLinks = {};
+      (d.quickLinks || []).forEach(l => {
+        const col = l.colName || 'QUICK LINKS';
+        if (!groupedQuickLinks[col]) {
+          groupedQuickLinks[col] = { title: col, order: l.colOrder || 1, links: [] };
+        }
+        groupedQuickLinks[col].links.push(l);
+      });
+      const sortedQuickLinkGroups = Object.values(groupedQuickLinks).sort((a, b) => a.order - b.order);
+
+      const quickLinksHtml = sortedQuickLinkGroups.map(g => `
+        <div class="f2-col">
+          <div class="f2-col-title" style="color:${textColor};border-color:${accent}">${g.title}</div>
+          <ul class="f2-links-list">
+            ${g.links.map(l => `<li><a href="/page/${l.slug}" style="color:${textColor}80;text-decoration:none" class="f2-link">${l.label}</a></li>`).join('')}
+          </ul>
+        </div>
+      `).join('');
 
       const contactColsHtml = (d.contactLinks || []).map(c => `
         <div class="f2-contact-col">
@@ -430,10 +499,7 @@ const TEMPLATES = {
                 ${logoHtml}
                 <p style="color:${textColor}80;font-size:13px;line-height:1.7;max-width:240px">${d.tagline}</p>
               </div>
-              <div class="f2-col">
-                <div class="f2-col-title" style="color:${textColor};border-color:${accent}">QUICK LINKS</div>
-                <ul class="f2-links-list">${quickLinksHtml}</ul>
-              </div>
+              ${quickLinksHtml}
               <div class="f2-col">${contactColsHtml}</div>
               ${newsletterHtml}
             </div>
@@ -600,9 +666,9 @@ const TEMPLATES = {
         <div class="cs-item" style="min-width:0; flex: 0 0 ${isSlider ? `calc((100% - (${cols} - 1) * 30px) / ${cols})` : 'auto'};">
           <div class="cs-logo-card" style="background:#fff; height:140px; display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; border-radius:16px; border:1px solid #f1f5f9; overflow:hidden;">
             ${it.imgSrc
-              ? `<img src="${it.imgSrc}" alt="Client" style="max-width:100%; max-height:100%; object-fit:contain;">`
-              : `<div class="cs-logo-placeholder" style="background:#f8fafc;width:100%;height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="color:#cbd5e0"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>`
-            }
+          ? `<img src="${it.imgSrc}" alt="Client" style="max-width:100%; max-height:100%; object-fit:contain;">`
+          : `<div class="cs-logo-placeholder" style="background:#f8fafc;width:100%;height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="color:#cbd5e0"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>`
+        }
           </div>
         </div>
       `).join('');
@@ -633,12 +699,219 @@ const TEMPLATES = {
         <script>setTimeout(() => { if(typeof initSliders === 'function') initSliders(); }, 100);</script>
       `;
     }
+  },
+  locations: {
+    label: 'Locations', icon: '📍', table: 'Locations',
+    dataFields: ['heading', 'items', 'paddingV', 'bg', 'accentColor'],
+    defaultData: {
+      heading: 'Our Locations',
+      paddingV: 80,
+      bg: '#ffffff',
+      accentColor: '#a6111f',
+      items: [
+        {
+          title: 'Maryland Headquarters',
+          address: '7337 Hanover Pkwy, Suite# A, Greenbelt, MD 20770',
+          mapEmbed: 'https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=7337+Hanover+Pkwy+STE+A+Greenbelt+MD+20770',
+          phone: '301-982-9700',
+          fax: '301-982-0500',
+          tollFree: '1-888-810-3661',
+          email: 'info@issi-software.com'
+        }
+      ]
+    },
+    render: (d, id) => {
+      const itemsHtml = (d.items || []).map((it, i) => `
+        <div class="loc-item ${i === 0 ? 'active' : ''}" id="loc-${id}-${i}">
+          <div class="loc-header" onclick="this.parentElement.classList.toggle('active')">
+            <h3>${it.title}</h3>
+            <div class="loc-toggle-icon">▼</div>
+          </div>
+          <div class="loc-content">
+            <div class="loc-flex">
+              <div class="loc-map">
+                ${it.mapEmbed ? `<iframe src="${it.mapEmbed}" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>` : `<div class="loc-map-placeholder">Map URL needed</div>`}
+              </div>
+              <div class="loc-details">
+                <h3>${it.title}</h3>
+                <div class="loc-detail-row">
+                  <span class="loc-icon" style="color:${d.accentColor}">📍</span>
+                  <span>${it.address}</span>
+                </div>
+                ${it.phone ? `<div class="loc-detail-group"><div class="loc-detail-label">Phone Number</div><div class="loc-detail-row"><span class="loc-icon" style="color:${d.accentColor}">📞</span><span>: ${it.phone}</span></div></div>` : ''}
+                ${it.fax ? `<div class="loc-detail-group"><div class="loc-detail-label">Fax</div><div class="loc-detail-row"><span class="loc-icon" style="color:${d.accentColor}">📠</span><span>: ${it.fax}</span></div></div>` : ''}
+                ${it.tollFree ? `<div class="loc-detail-group"><div class="loc-detail-label">Toll Free</div><div class="loc-detail-row"><span class="loc-icon" style="color:${d.accentColor}">📞</span><span>: ${it.tollFree}</span></div></div>` : ''}
+                ${it.email ? `<div class="loc-detail-group"><div class="loc-detail-label">Email</div><div class="loc-detail-row"><span class="loc-icon" style="color:${d.accentColor}">✉</span><a href="mailto:${it.email}" style="color:inherit;text-decoration:none">: ${it.email}</a></div></div>` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="b-locations" style="background:${d.bg || '#ffffff'}; padding-top:${d.paddingV || 80}px; padding-bottom:${d.paddingV || 80}px">
+          <div class="loc-inner">
+            <h1 class="loc-main-heading" style="color:${d.accentColor}">${d.heading}</h1>
+            <div class="loc-list">${itemsHtml}</div>
+          </div>
+        </div>`;
+    }
   }
 };
 
 function isLight(hex) {
   const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
   return (r * 299 + g * 587 + b * 114) / 1000 > 128;
+}
+
+// ──────────────────────────────────────────────────
+//  IMAGE UPLOAD HELPERS
+// ──────────────────────────────────────────────────
+let _uploadCounter = 0;
+
+async function handleImageUpload(inputEl, callback) {
+  const file = inputEl.files[0];
+  if (!file) return;
+  const wrapper = inputEl.closest('.img-upload-wrap');
+  const statusEl = wrapper ? wrapper.querySelector('.upload-status') : null;
+  if (statusEl) { statusEl.textContent = 'Uploading…'; statusEl.className = 'upload-status uploading'; }
+
+  const form = new FormData();
+  form.append('file', file);
+  try {
+    const res = await fetch('/api/upload', { method: 'POST', body: form });
+    if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Upload failed'); }
+    const { url } = await res.json();
+    if (statusEl) { statusEl.textContent = 'Uploaded ✓'; statusEl.className = 'upload-status success'; }
+    // Update preview thumbnail
+    const thumb = wrapper ? wrapper.querySelector('.upload-thumb') : null;
+    if (thumb) thumb.innerHTML = `<img src="${url}" alt="preview">`;
+    callback(url);
+  } catch (e) {
+    console.error(e);
+    if (statusEl) { statusEl.textContent = e.message; statusEl.className = 'upload-status error'; }
+  }
+}
+
+function renderUploadBtn(currentValue, onUploadFn, label) {
+  const uid = 'upload-' + (++_uploadCounter);
+  const thumbHtml = currentValue
+    ? `<img src="${currentValue}" alt="preview">`
+    : `<span class="upload-placeholder">📷</span>`;
+  return `<div class="img-upload-wrap">
+    <div class="upload-row">
+      <div class="upload-thumb" id="thumb-${uid}">${thumbHtml}</div>
+      <div class="upload-actions">
+        <label class="upload-btn" for="${uid}">↑ Upload ${label || 'Image'}</label>
+        <input type="file" id="${uid}" accept="image/*" style="display:none" onchange="${onUploadFn}">
+        <span class="upload-status">${currentValue ? 'Uploaded ✓' : ''}</span>
+      </div>
+    </div>
+    ${currentValue ? `<button class="upload-remove-btn" onclick="${onUploadFn.replace(/handleImageUpload\(this.*$/, '').replace('this.files[0]', '')}" style="display:none">✕ Remove</button>` : ''}
+  </div>`;
+}
+
+// Helper for properties panel image upload
+function propImageUpload(blockId, key, inputEl) {
+  handleImageUpload(inputEl, (url) => {
+    updateProp(blockId, key, url, false);
+  });
+}
+
+// Helper for modal list item image upload
+function modalListImageUpload(type, idx, key, inputEl) {
+  handleImageUpload(inputEl, (url) => {
+    updateListItem(type, idx, key, url);
+    renderModalBody();
+  });
+}
+
+// Helper for modal-level prop image upload  
+function modalPropImageUpload(key, inputEl) {
+  handleImageUpload(inputEl, (url) => {
+    modalUpdateProp(key, url, false);
+  });
+}
+
+// Remove image helper for props panel
+function propImageRemove(blockId, key) {
+  updateProp(blockId, key, '', false);
+}
+
+// Remove image helper for modal list items
+function modalListImageRemove(type, idx, key) {
+  updateListItem(type, idx, key, '');
+  renderModalBody();
+}
+
+// Remove image helper for modal-level props
+function modalPropImageRemove(key) {
+  modalUpdateProp(key, '', false);
+}
+
+// Generates the upload UI HTML for property panel fields
+function propUploadField(blockId, key, currentValue, label) {
+  const uid = 'prop-upload-' + (++_uploadCounter);
+  const thumbHtml = currentValue
+    ? `<img src="${currentValue}" alt="preview">`
+    : `<span class="upload-placeholder">📷</span>`;
+  return `<div class="prop-group">
+    <span class="prop-label">${label}</span>
+    <div class="img-upload-wrap">
+      <div class="upload-row">
+        <div class="upload-thumb">${thumbHtml}</div>
+        <div class="upload-actions">
+          <label class="upload-btn" for="${uid}">↑ Upload</label>
+          <input type="file" id="${uid}" accept="image/*" style="display:none" onchange="propImageUpload(${blockId},'${key}',this)">
+          <span class="upload-status">${currentValue ? 'Uploaded ✓' : ''}</span>
+        </div>
+      </div>
+      ${currentValue ? `<button class="upload-remove-btn" onclick="propImageRemove(${blockId},'${key}')">✕ Remove</button>` : ''}
+    </div>
+  </div>`;
+}
+
+// Generates the upload UI HTML for modal fields
+function modalUploadField(key, currentValue, label) {
+  const uid = 'modal-upload-' + (++_uploadCounter);
+  const thumbHtml = currentValue
+    ? `<img src="${currentValue}" alt="preview">`
+    : `<span class="upload-placeholder">📷</span>`;
+  return `<div class="m-field">
+    <div class="m-label">${label}</div>
+    <div class="img-upload-wrap">
+      <div class="upload-row">
+        <div class="upload-thumb">${thumbHtml}</div>
+        <div class="upload-actions">
+          <label class="upload-btn" for="${uid}">↑ Upload</label>
+          <input type="file" id="${uid}" accept="image/*" style="display:none" onchange="modalPropImageUpload('${key}',this)">
+          <span class="upload-status">${currentValue ? 'Uploaded ✓' : ''}</span>
+        </div>
+      </div>
+      ${currentValue ? `<button class="upload-remove-btn" onclick="modalPropImageRemove('${key}')">✕ Remove</button>` : ''}
+    </div>
+  </div>`;
+}
+
+// Generates the inline upload UI for list item image fields in modals
+function listItemUploadField(type, idx, key, currentValue, label) {
+  const uid = 'li-upload-' + (++_uploadCounter);
+  const thumbHtml = currentValue
+    ? `<img src="${currentValue}" alt="preview">`
+    : `<span class="upload-placeholder">📷</span>`;
+  return `<div class="list-img-upload" style="grid-column:span 2">
+    <div class="img-upload-wrap compact">
+      <div class="upload-row">
+        <div class="upload-thumb small">${thumbHtml}</div>
+        <div class="upload-actions">
+          <label class="upload-btn small" for="${uid}">↑ ${label || 'Upload Image'}</label>
+          <input type="file" id="${uid}" accept="image/*" style="display:none" onchange="modalListImageUpload('${type}',${idx},'${key}',this)">
+          <span class="upload-status">${currentValue ? '✓' : ''}</span>
+        </div>
+      </div>
+      ${currentValue ? `<button class="upload-remove-btn small" onclick="modalListImageRemove('${type}',${idx},'${key}')">✕</button>` : ''}
+    </div>
+  </div>`;
 }
 
 // ──────────────────────────────────────────────────
@@ -654,6 +927,7 @@ function switchPage(id) {
   selectedId = null;
   currentPageId = id;
   renderPageTabs();
+  renderNavMenuManager();
   render();
   document.getElementById('props-body').innerHTML = '<p class="empty">Select a block to edit its properties.</p>';
 }
@@ -807,13 +1081,22 @@ function renderProps(block) {
     paddingV: 'Vertical Size'
   };
 
+  // Image field keys that should render as upload buttons
+  const IMAGE_FIELDS = ['logoImage', 'imgSrc'];
+
   // Loop through dataFields defined in the template
   (tpl.dataFields || []).forEach(k => {
     // Skip fields that have custom complex UI below
-    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'imgPosition', 'imgLayout', 'imgBg', 'paddingV', 'leftBg', 'rightBg', 'textColorLeft', 'textColorRight', 'btnBg', 'btnTextColor', 'iconColor', 'colWidth', 'alignItems', 'navType', 'showRole', 'italicQuote'].includes(k)) return;
+    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'imgPosition', 'imgLayout', 'imgBg', 'paddingV', 'leftBg', 'rightBg', 'textColorLeft', 'textColorRight', 'btnBg', 'btnTextColor', 'iconColor', 'colWidth', 'alignItems', 'navType', 'showRole', 'italicQuote', 'showNewsletter'].includes(k)) return;
 
     const label = FIELD_LABELS[k] || (k.charAt(0).toUpperCase() + k.slice(1));
     const value = d[k] !== undefined ? String(d[k]).replace(/"/g, '&quot;') : '';
+
+    // Render image fields as upload buttons instead of text inputs
+    if (IMAGE_FIELDS.includes(k)) {
+      html += propUploadField(block.id, k, d[k] || '', label);
+      return;
+    }
 
     html += `<div class="prop-group">
       <span class="prop-label">${label}</span>
@@ -946,7 +1229,7 @@ function renderProps(block) {
   }
 
   // data connect button for list types
-  if (['gridimgtext', 'gridimgtextrow', 'features', 'footer', 'abouthighlights', 'servicegrid', 'logoslider', 'clientslider', 'footer2', 'testimonial'].includes(block.type)) {
+  if (['gridimgtext', 'gridimgtextrow', 'features', 'footer', 'abouthighlights', 'servicegrid', 'logoslider', 'clientslider', 'footer2', 'testimonial', 'locations'].includes(block.type)) {
     html += `<div class="prop-section">Advanced Data</div>`;
     html += `<button class="data-connect-btn" onclick="openModal(${block.id})">⊞ Manage list items</button>`;
   }
@@ -973,6 +1256,17 @@ function renderProps(block) {
         <option value="both" ${(d.navType || 'both') === 'both' ? 'selected' : ''}>Both (Arrows &amp; Dots)</option>
         <option value="dots" ${d.navType === 'dots' ? 'selected' : ''}>Dots Only</option>
         <option value="arrows" ${d.navType === 'arrows' ? 'selected' : ''}>Arrows Only</option>
+      </select>
+    </div>`;
+  }
+
+  // Footer2-specific sidebar controls
+  if (block.type === 'footer2') {
+    html += `<div class="prop-section">Display Options</div>`;
+    html += `<div class="prop-group"><span class="prop-label">Show Newsletter</span>
+      <select class="prop-input" onchange="updateProp(${block.id},'showNewsletter', this.value === 'true')">
+        <option value="true" ${d.showNewsletter !== false ? 'selected' : ''}>Yes</option>
+        <option value="false" ${d.showNewsletter === false ? 'selected' : ''}>No</option>
       </select>
     </div>`;
   }
@@ -1047,6 +1341,10 @@ function renderModalBody() {
       body.innerHTML = tabs + renderTestimonialSliderForm(d);
     } else if (type === 'clientslider') {
       body.innerHTML = tabs + renderClientSliderForm(d);
+    } else if (type === 'heroslider') {
+      body.innerHTML = tabs + renderHeroSliderForm(d);
+    } else if (type === 'locations') {
+      body.innerHTML = tabs + renderLocationsForm(d);
     } else {
       body.innerHTML = tabs + '<p style="color:var(--text2);font-size:13px">Use the properties panel on the right to edit this block\'s content.</p>';
     }
@@ -1073,7 +1371,7 @@ function renderGridItemsForm(d) {
         <input placeholder="Title" value="${it.title || ''}" oninput="updateListItem('gridimgtext',${i},'title',this.value)">
         <input placeholder="Tag (e.g. Design)" value="${it.tag || ''}" oninput="updateListItem('gridimgtext',${i},'tag',this.value)">
         <input placeholder="Description" value="${it.desc || ''}" oninput="updateListItem('gridimgtext',${i},'desc',this.value)" style="grid-column:span 2">
-        <input placeholder="Image URL (optional)" value="${it.imgSrc || ''}" oninput="updateListItem('gridimgtext',${i},'imgSrc',this.value);updateImgPreview(this,${i})" style="grid-column:span 2">
+        ${listItemUploadField('gridimgtext', i, 'imgSrc', it.imgSrc, 'Card Image')}
       </div>
       <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
     </div>`;
@@ -1098,7 +1396,7 @@ function renderGridImgTextRowForm(d) {
         <input placeholder="Description" value="${it.desc || ''}" oninput="updateListItem('gridimgtextrow',${i},'desc',this.value)" style="grid-column:span 2">
         <input placeholder="Button label" value="${it.btnText || 'Learn more'}" oninput="updateListItem('gridimgtextrow',${i},'btnText',this.value)">
         <input placeholder="Button URL (Slug or link)" value="${it.btnLink || '#'}" oninput="updateListItem('gridimgtextrow',${i},'btnLink',this.value)">
-        <input placeholder="Image URL" value="${it.imgSrc || ''}" oninput="updateListItem('gridimgtextrow',${i},'imgSrc',this.value);updateImgPreview(this,${i})">
+        ${listItemUploadField('gridimgtextrow', i, 'imgSrc', it.imgSrc, 'Card Image')}
       </div>
       <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">&#x2715;</button>
     </div>`;
@@ -1127,7 +1425,7 @@ function renderFeatItemsForm(d) {
 
 function renderFooterLinksForm(d) {
   let html = `<div class="m-field"><div class="m-label">Brand Name</div><input class="m-input" id="m-brand" value="${d.brand}" oninput="modalUpdateProp('brand',this.value)"></div>`;
-  html += `<div class="m-field"><div class="m-label">Logo Image URL</div><input class="m-input" value="${d.logoImage || ''}" oninput="modalUpdateProp('logoImage',this.value)"></div>`;
+  html += modalUploadField('logoImage', d.logoImage || '', 'Logo Image');
   html += `<div class="m-field"><div class="m-label">Copyright Text</div><input class="m-input" id="m-copy" value="${d.copy}" oninput="modalUpdateProp('copy',this.value)"></div>`;
 
   html += `<div class="m-field"><div class="m-label">Link Position</div>
@@ -1179,7 +1477,7 @@ function renderFooter2Form(d) {
   // Brand & copy
   html += `<div class="m-row2">
     <div class="m-field"><div class="m-label">Brand Name</div><input class="m-input" value="${d.brand || ''}" oninput="modalUpdateProp('brand',this.value)"></div>
-    <div class="m-field"><div class="m-label">Logo Image URL</div><input class="m-input" value="${d.logoImage || ''}" placeholder="Leave blank to use text" oninput="modalUpdateProp('logoImage',this.value)"></div>
+    ${modalUploadField('logoImage', d.logoImage || '', 'Logo Image')}
   </div>`;
   html += `<div class="m-field"><div class="m-label">Tagline / Description</div><textarea class="m-input" rows="2" oninput="modalUpdateProp('tagline',this.value)" style="resize:vertical">${d.tagline || ''}</textarea></div>`;
   html += `<div class="m-field"><div class="m-label">Copyright Text</div><input class="m-input" value="${d.copy || ''}" oninput="modalUpdateProp('copy',this.value)"></div>`;
@@ -1190,6 +1488,13 @@ function renderFooter2Form(d) {
       <button class="pos-btn${(d.colLayout || '4') === '4' ? ' active' : ''}" onclick="modalUpdateProp('colLayout','4')" style="padding:6px 16px">4 Columns</button>
       <button class="pos-btn${d.colLayout === '3' ? ' active' : ''}" onclick="modalUpdateProp('colLayout','3')" style="padding:6px 16px">3 Columns</button>
     </div>
+  </div>`;
+
+  html += `<div class="m-field"><div class="m-label">Show Newsletter</div>
+    <select class="m-select" onchange="modalUpdateProp('showNewsletter', this.value === 'yes')">
+      <option value="yes" ${d.showNewsletter !== false ? 'selected' : ''}>Yes</option>
+      <option value="no" ${d.showNewsletter === false ? 'selected' : ''}>No</option>
+    </select>
   </div>`;
 
   // Contact Sections
@@ -1210,14 +1515,17 @@ function renderFooter2Form(d) {
   html += `</div><button class="m-add-btn" onclick="addFooter2Contact()">+ Add contact section</button>`;
 
   // Quick Links list
-  html += `<div class="m-label" style="margin:18px 0 8px">Quick Links <span class="m-badge">list</span></div>`;
+  html += `<div class="m-label" style="margin:18px 0 8px">Footer Links & Columns <span class="m-badge">list</span></div>`;
+  html += `<p style="font-size:11px;color:var(--text3);margin-bottom:10px">Links with the same <b>Column Name</b> will be grouped together visually.</p>`;
   html += `<div class="m-list" id="m-f2-links">`;
   (d.quickLinks || []).forEach((it, i) => {
     html += `<div class="m-list-item">
       <div class="item-num">${i + 1}</div>
       <div class="item-inputs">
-        <input placeholder="Label" value="${it.label || ''}" oninput="updateFooter2QuickLink(${i},'label',this.value)">
+        <input placeholder="Link Label" value="${it.label || ''}" oninput="updateFooter2QuickLink(${i},'label',this.value)">
         <input placeholder="Slug or URL" value="${it.slug || ''}" oninput="updateFooter2QuickLink(${i},'slug',this.value)">
+        <input placeholder="Column Name (Group)" value="${it.colName || 'QUICK LINKS'}" oninput="updateFooter2QuickLink(${i},'colName',this.value)">
+        <input type="number" placeholder="Col Order" value="${it.colOrder || 1}" oninput="updateFooter2QuickLink(${i},'colOrder',parseInt(this.value))">
       </div>
       <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeFooter2QuickLink(${i})">✕</button>
     </div>`;
@@ -1249,7 +1557,7 @@ function updateFooter2Contact(i, key, value) {
 function addFooter2QuickLink() {
   if (!activeModalBlock) return;
   activeModalBlock.data.quickLinks = activeModalBlock.data.quickLinks || [];
-  activeModalBlock.data.quickLinks.push({ label: 'New Link', slug: '#' });
+  activeModalBlock.data.quickLinks.push({ label: 'New Link', slug: '#', colName: 'QUICK LINKS', colOrder: 1 });
   rebuildBlock(activeModalBlock); render();
   renderModalBody();
 }
@@ -1326,8 +1634,8 @@ function renderLogoSliderForm(d) {
       <div class="item-img">${it.imgSrc ? `<img src="${it.imgSrc}">` : '🖼'}</div>
       <div class="item-inputs">
         <input placeholder="Name" value="${it.name || ''}" oninput="updateListItem('logoslider',${i},'name',this.value)">
-        <input placeholder="Logo URL" value="${it.imgSrc || ''}" oninput="updateListItem('logoslider',${i},'imgSrc',this.value);updateImgPreview(this,${i})">
-        <input placeholder="Link" value="${it.link || '#'}" oninput="updateListItem('logoslider',${i},'link',this.value)" style="grid-column:span 2">
+        <input placeholder="Link" value="${it.link || '#'}" oninput="updateListItem('logoslider',${i},'link',this.value)">
+        ${listItemUploadField('logoslider', i, 'imgSrc', it.imgSrc, 'Logo')}
       </div>
       <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
     </div>`;
@@ -1360,8 +1668,8 @@ function renderTestimonialSliderForm(d) {
           </select>
         </div>
         <div class="m-field" style="margin:0">
-          <div class="m-label">Image URL</div>
-          <input class="m-input" placeholder="https://..." value="${it.imgSrc || ''}" oninput="updateListItem('testimonial',${i},'imgSrc',this.value);updateImgPreview(this,${i})">
+          <div class="m-label">Author Photo</div>
+          ${listItemUploadField('testimonial', i, 'imgSrc', it.imgSrc, 'Photo')}
         </div>
         <div class="m-field" style="margin:0;grid-column:span 2">
           <div class="m-label">Quote / Message</div>
@@ -1400,12 +1708,35 @@ function renderClientSliderForm(d) {
       <div class="item-num">${i + 1}</div>
       <div class="item-img">${it.imgSrc ? `<img src="${it.imgSrc}">` : '🖼'}</div>
       <div class="item-inputs">
-        <input placeholder="Logo URL" value="${it.imgSrc || ''}" oninput="updateListItem('clientslider',${i},'imgSrc',this.value);updateImgPreview(this,${i})" style="grid-column:span 2">
+        ${listItemUploadField('clientslider', i, 'imgSrc', it.imgSrc, 'Client Logo')}
       </div>
       <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
     </div>`;
   });
   html += `</div><button class="m-add-btn" onclick="addListItem('clientslider')">+ Add client</button>`;
+  return html;
+}
+
+function renderHeroSliderForm(d) {
+  let html = `<div class="m-row">
+    <div class="m-field"><div class="m-label">Overlay Color</div><input type="text" class="m-input" value="${d.overlayColor || 'rgba(26, 43, 85, 0.7)'}" oninput="modalUpdateProp('overlayColor',this.value)"></div>
+    <div class="m-field"><div class="m-label">Vertical Padding</div><input type="range" min="0" max="200" step="10" value="${d.paddingV || 0}" oninput="modalUpdateProp('paddingV',parseInt(this.value));this.nextElementSibling.innerText=this.value+'px'"><span>${d.paddingV || 0}px</span></div>
+  </div>`;
+  html += `<div class="m-label" style="margin-bottom:8px">Slides <span class="m-badge">list</span></div>`;
+  html += `<div class="m-list" id="m-items-list">`;
+  (d.items || []).forEach((it, i) => {
+    html += `<div class="m-list-item">
+      <div class="item-num">${i + 1}</div>
+      <div class="item-img">${it.bgImage ? `<img src="${it.bgImage}">` : '🖼'}</div>
+      <div class="item-inputs">
+        <input placeholder="Tag (e.g. MISSION)" value="${it.tag || ''}" oninput="updateListItem('heroslider',${i},'tag',this.value)">
+        <input placeholder="Slide Heading" value="${it.heading || ''}" oninput="updateListItem('heroslider',${i},'heading',this.value)" style="grid-column:span 2">
+        ${listItemUploadField('heroslider', i, 'bgImage', it.bgImage, 'Background')}
+      </div>
+      <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div><button class="m-add-btn" onclick="addListItem('heroslider')">+ Add slide</button>`;
   return html;
 }
 
@@ -1415,7 +1746,7 @@ function renderClientSliderForm(d) {
 let sliderStates = {};
 
 function initSliders() {
-  document.querySelectorAll('.b-logoslider, .b-testimonial-slider, .b-client-slider').forEach(slider => {
+  document.querySelectorAll('.b-logoslider, .b-testimonial-slider, .b-client-slider, .b-hero-slider').forEach(slider => {
     const id = slider.id.replace('slider-', '');
     if (!sliderStates[id]) {
       sliderStates[id] = { current: 0, interval: null, count: 0 };
@@ -1523,7 +1854,7 @@ window.addEventListener('resize', () => {
 
 function renderNavbarForm(d) {
   let html = `<div class="m-field"><div class="m-label">Text Logo</div><input class="m-input" id="m-logo" value="${d.logo}" oninput="modalUpdateProp('logo',this.value)"></div>`;
-  html += `<div class="m-field"><div class="m-label">Image Logo URL (replaces text if set)</div><input class="m-input" id="m-logoImage" value="${d.logoImage || ''}" oninput="modalUpdateProp('logoImage',this.value)"></div>`;
+  html += modalUploadField('logoImage', d.logoImage || '', 'Logo Image (replaces text if set)');
   html += `<div class="m-field"><div class="m-label">Links Position</div>
     <select class="m-select" id="m-linksPos" onchange="modalUpdateProp('linksPos',this.value)">
       <option value="left"${d.linksPos === 'left' ? ' selected' : ''}>Left (Next to Logo)</option>
@@ -1892,6 +2223,7 @@ function addListItem(type) {
   else if (type === 'logoslider') { if (!activeModalBlock.data.items) activeModalBlock.data.items = []; activeModalBlock.data.items.push({ name: 'New Partner', imgSrc: 'https://via.placeholder.com/150x80?text=Logo', link: '#' }); }
   else if (type === 'testimonial') { if (!activeModalBlock.data.items) activeModalBlock.data.items = []; activeModalBlock.data.items.push({ author: 'New Author', role: 'Customer', quote: 'Great service!', rating: 5, imgSrc: '' }); }
   else if (type === 'clientslider') { if (!activeModalBlock.data.items) activeModalBlock.data.items = []; activeModalBlock.data.items.push({ imgSrc: '' }); }
+  else if (type === 'locations') { if (!activeModalBlock.data.items) activeModalBlock.data.items = []; activeModalBlock.data.items.push({ title: 'New Location', address: '', mapEmbed: '', phone: '', email: '' }); }
   rebuildBlock(activeModalBlock); render(); renderModalBody();
 }
 
@@ -1990,3 +2322,62 @@ document.getElementById('pm-name-input').addEventListener('keydown', e => { if (
 document.getElementById('modal-overlay').addEventListener('click', e => { if (e.target === document.getElementById('modal-overlay')) closeModal(); });
 document.getElementById('page-modal').addEventListener('click', e => { if (e.target === document.getElementById('page-modal')) document.getElementById('page-modal').classList.remove('open'); });
 
+function renderLocationsForm(d) {
+  let html = `<div class="m-field"><div class="m-label">Section Heading</div><input class="m-input" id="m-heading" value="${d.heading}" oninput="modalUpdateProp('heading',this.value)"></div>`;
+  html += `<div class="m-label" style="margin-bottom:8px">Locations <span class="m-badge">list</span></div>`;
+  html += `<div class="m-list" id="m-locations-list">`;
+  (d.items || []).forEach((it, i) => {
+    html += `<div class="m-list-item">
+      <div class="item-num">${i + 1}</div>
+      <div class="item-inputs">
+        <input placeholder="Location Title" value="${it.title || ''}" oninput="updateListItem('locations',${i},'title',this.value)" style="grid-column:span 2">
+        <input placeholder="Full Address" value="${it.address || ''}" oninput="updateListItem('locations',${i},'address',this.value)" style="grid-column:span 2">
+        <input placeholder="Google Maps Embed URL (iframe src)" value="${it.mapEmbed || ''}" oninput="updateListItem('locations',${i},'mapEmbed',this.value)" style="grid-column:span 2">
+        <input placeholder="Phone" value="${it.phone || ''}" oninput="updateListItem('locations',${i},'phone',this.value)">
+        <input placeholder="Email" value="${it.email || ''}" oninput="updateListItem('locations',${i},'email',this.value)">
+        <input placeholder="Fax" value="${it.fax || ''}" oninput="updateListItem('locations',${i},'fax',this.value)">
+        <input placeholder="Toll Free" value="${it.tollFree || ''}" oninput="updateListItem('locations',${i},'tollFree',this.value)">
+      </div>
+      <button style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" onclick="removeListItem(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div><button class="m-add-btn" onclick="addListItem('locations')">+ Add location</button>`;
+  return html;
+}
+
+// ──────────────────────────────────────────────────
+//  NAV MENU MANAGER
+// ──────────────────────────────────────────────────
+function renderNavMenuManager() {
+  const container = document.getElementById('nav-items-list');
+  if (!container) return;
+
+  container.innerHTML = pages.map(p => `
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:4px 0; border-bottom:1px solid #f1f5f9;">
+      <span style="font-size:12px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">${p.name}</span>
+      <input type="checkbox" ${p.showInMenu !== false ? 'checked' : ''} 
+             onchange="togglePageInMenu(${p.id}, this.checked)"
+             style="cursor:pointer;">
+    </div>
+  `).join('');
+}
+
+async function togglePageInMenu(pageId, show) {
+  try {
+    const res = await fetch(`/api/pages/${pageId}/toggle-nav`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(show)
+    });
+
+    if (res.ok) {
+      const page = pages.find(p => p.id === pageId);
+      if (page) page.showInMenu = show;
+      render(); // Refresh navbar in canvas
+    } else {
+      alert("Failed to update navigation menu.");
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}

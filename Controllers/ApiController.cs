@@ -28,6 +28,7 @@ namespace WebsiteBuilder.Controllers
                 id = p.Id,
                 name = p.Name,
                 slug = p.Slug,
+                showInMenu = p.ShowInMenu,
                 blocks = p.Blocks.OrderBy(b => b.ComponentOrder).Select(b => new
                 {
                     id = b.Id,
@@ -85,6 +86,19 @@ namespace WebsiteBuilder.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpPut("{id}/toggle-nav")]
+        public async Task<IActionResult> ToggleNavigation(int id, [FromBody] bool showInMenu)
+        {
+            var page = await _context.Pages.FindAsync(id);
+            if (page == null) return NotFound();
+
+            page.ShowInMenu = showInMenu;
+            page.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return Ok(new { success = true });
         }
 
         [HttpPut("{id}/blocks")]

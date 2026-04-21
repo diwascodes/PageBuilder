@@ -149,7 +149,6 @@ C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\scopedcss\b
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\scopedcss\projectbundle\WebsiteBuilder.bundle.scp.css
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\qw32q5dazv-{0}-b9sayid5wm-b9sayid5wm.gz
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\phi7dx5zgi-{0}-61n19gt1b8-61n19gt1b8.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\gsw37hpha2-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\f9zw1h2un2-{0}-bqjiyaj88i-bqjiyaj88i.gz
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\g6337cfpo3-{0}-c2jlpeoesf-c2jlpeoesf.gz
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8ri2d7uyey-{0}-erw9l3u2r3-erw9l3u2r3.gz
@@ -535,7 +534,8 @@ C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.A
 C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.AspNetCore.Razor.Language.dll
 C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.CodeAnalysis.Razor.dll
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\WebsiteBuilder.MvcApplicationPartsAssemblyInfo.cs
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\gsw37hpha2-{0}-dgo1x9mltn-dgo1x9mltn.gz
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\7670ky8twn-{0}-cxss87j688-cxss87j688.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8gcogbppib-{0}-bq3kwb5wt6-bq3kwb5wt6.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-ydm82va0u0-ydm82va0u0.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\7670ky8twn-{0}-ikh3h0y6ph-ikh3h0y6ph.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8gcogbppib-{0}-r54ta0x9zs-r54ta0x9zs.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-zbkkrvp5l0-zbkkrvp5l0.gz

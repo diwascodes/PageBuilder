@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "WebsiteBuilder.Controllers.ContactController",
+    "Method": "Submit",
+    "RelativePath": "api/contact/submit",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "WebsiteBuilder.Models.ContactFormModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "WebsiteBuilder.Controllers.PagesController",
     "Method": "GetPages",
     "RelativePath": "api/Pages",
@@ -99,6 +115,43 @@
         "Name": "blocks",
         "Type": "System.Collections.Generic.List\u00601[[WebsiteBuilder.Controllers.PageBlockDto, WebsiteBuilder, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebsiteBuilder.Controllers.PagesController",
+    "Method": "ToggleNavigation",
+    "RelativePath": "api/Pages/{id}/toggle-nav",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "showInMenu",
+        "Type": "System.Boolean",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebsiteBuilder.Controllers.UploadController",
+    "Method": "Upload",
+    "RelativePath": "api/upload",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

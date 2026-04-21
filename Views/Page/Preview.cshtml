@@ -99,8 +99,8 @@
             </div>
             <button class="nav-toggle" onclick="this.parentElement.querySelector('.nav-links').classList.toggle('active')">☰</button>
             <div class="nav-links">
-                @if(allPages.Any()) {
-                    foreach(var p in allPages) {
+                @if(allPages.Any(p => p.ShowInMenu)) {
+                    foreach(var p in allPages.Where(p => p.ShowInMenu)) {
                         <a href="/page/@(p.Slug)" style="color:inherit; text-decoration:none; @(linkStyle)">@(p.Name)</a>
                     }
                 } else {
@@ -464,12 +464,12 @@
         <div class="b-form">
             <h2>@heading</h2>
             <div class="form-row">
-                <div class="form-field"><label>First name</label><input type="text" placeholder="Jane"></div>
-                <div class="form-field"><label>Last name</label><input type="text" placeholder="Smith"></div>
+                <div class="form-field"><label>First name</label><input type="text" class="cf-fname" placeholder="Jane"></div>
+                <div class="form-field"><label>Last name</label><input type="text" class="cf-lname" placeholder="Smith"></div>
             </div>
-            <div class="form-field" style="margin-bottom:20px"><label>Email</label><input type="email" placeholder="jane@company.com"></div>
-            <div class="form-field" style="margin-bottom:20px"><label>Message</label><textarea rows="4" placeholder="How can we help?"></textarea></div>
-            <button class="submit-btn">@btnText</button>
+            <div class="form-field" style="margin-bottom:20px"><label>Email</label><input type="email" class="cf-email" placeholder="jane@company.com"></div>
+            <div class="form-field" style="margin-bottom:20px"><label>Message</label><textarea class="cf-message" rows="4" placeholder="How can we help?"></textarea></div>
+            <button class="submit-btn" onclick="submitContactForm(this)">@btnText</button>
         </div>
     }
     else if (block.BlockType == "footer")
@@ -733,6 +733,86 @@
             </div>
         </div>
     }
+    else if (block.BlockType == "locations")
+    {
+        string heading = d.TryGetProperty("heading", out var h) ? h.GetString() : "Our Locations";
+        string bg = d.TryGetProperty("bg", out var bgColor) ? bgColor.GetString() : "#ffffff";
+        string accent = d.TryGetProperty("accentColor", out var acc) ? acc.GetString() : "#a6111f";
+        string paddingVStr = d.TryGetProperty("paddingV", out var pv) ? pv.ToString() : "80";
+        int paddingV = 80; int.TryParse(paddingVStr, out paddingV);
+
+        <div class="b-locations" style="background:@bg; padding-top:@(paddingV)px; padding-bottom:@(paddingV)px">
+            <div class="loc-inner">
+                <h1 class="loc-main-heading" style="color:@accent">@heading</h1>
+                <div class="loc-list">
+                    @if (d.TryGetProperty("items", out var locItems) && locItems.ValueKind == JsonValueKind.Array)
+                    {
+                        int index = 0;
+                        foreach (var item in locItems.EnumerateArray())
+                        {
+                            string title = item.TryGetProperty("title", out var it) ? it.GetString() : "";
+                            string address = item.TryGetProperty("address", out var iaddr) ? iaddr.GetString() : "";
+                            string mapEmbed = item.TryGetProperty("mapEmbed", out var m) ? m.GetString() : "";
+                            string phone = item.TryGetProperty("phone", out var p) ? p.GetString() : "";
+                            string email = item.TryGetProperty("email", out var e) ? e.GetString() : "";
+                            string fax = item.TryGetProperty("fax", out var f) ? f.GetString() : "";
+                            string tollFree = item.TryGetProperty("tollFree", out var tf) ? tf.GetString() : "";
+
+                            <div class="loc-item @(index == 0 ? "active" : "")">
+                                <div class="loc-header" onclick="this.parentElement.classList.toggle('active')">
+                                    <h3>@title</h3>
+                                    <div class="loc-toggle-icon">▼</div>
+                                </div>
+                                <div class="loc-content">
+                                    <div class="loc-flex">
+                                        <div class="loc-map">
+                                            @if(!string.IsNullOrEmpty(mapEmbed)) {
+                                                <iframe src="@mapEmbed" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                                            } else {
+                                                <div class="loc-map-placeholder">Map URL needed</div>
+                                            }
+                                        </div>
+                                        <div class="loc-details">
+                                            <h3>@title</h3>
+                                            <div class="loc-detail-row">
+                                                <span class="loc-icon" style="color:@accent">📍</span>
+                                                <span>@address</span>
+                                            </div>
+                                            @if(!string.IsNullOrEmpty(phone)) {
+                                                <div class="loc-detail-group">
+                                                    <div class="loc-detail-label">Phone Number</div>
+                                                    <div class="loc-detail-row"><span class="loc-icon" style="color:@accent">📞</span><span>: @phone</span></div>
+                                                </div>
+                                            }
+                                            @if(!string.IsNullOrEmpty(fax)) {
+                                                <div class="loc-detail-group">
+                                                    <div class="loc-detail-label">Fax</div>
+                                                    <div class="loc-detail-row"><span class="loc-icon" style="color:@accent">📠</span><span>: @fax</span></div>
+                                                </div>
+                                            }
+                                            @if(!string.IsNullOrEmpty(tollFree)) {
+                                                <div class="loc-detail-group">
+                                                    <div class="loc-detail-label">Toll Free</div>
+                                                    <div class="loc-detail-row"><span class="loc-icon" style="color:@accent">📞</span><span>: @tollFree</span></div>
+                                                </div>
+                                            }
+                                            @if(!string.IsNullOrEmpty(email)) {
+                                                <div class="loc-detail-group">
+                                                    <div class="loc-detail-label">Email</div>
+                                                    <div class="loc-detail-row"><span class="loc-icon" style="color:@accent">✉</span><a href="mailto:@email" style="color:inherit;text-decoration:none">: @email</a></div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            index++;
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
 }
 
 <script>
@@ -846,5 +926,6 @@
     document.addEventListener('DOMContentLoaded', initSliders);
 </script>
 
+<script src="~/js/site.js"></script>
 </body>
 </html>

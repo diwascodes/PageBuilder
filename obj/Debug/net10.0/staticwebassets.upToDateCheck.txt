@@ -1,4 +1,3 @@
-wwwroot\css\builder.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\js\site.js
@@ -62,9 +61,14 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\uploads\35e18f7c2f764ee5a9d4f2142ab3bc57.png
+wwwroot\uploads\654786db848d48d2bf8fb9bf28149cf0.png
+wwwroot\uploads\6e24a7452e754e479690432ca7ff9d47.png
+wwwroot\uploads\c700a28111f44f8bb0dd1aaf3075453c.png
+wwwroot\uploads\e18a6a0ae5be4ce2832a1b0dcbd24f58.jpg
+wwwroot\css\builder.css
 wwwroot\css\preview.css
 wwwroot\js\builder.js
-C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\builder.css
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\site.css
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\favicon.ico
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\js\site.js
@@ -127,5 +131,6 @@ C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquer
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquery.slim.min.js
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquery.slim.min.map
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\LICENSE.txt
+C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\builder.css
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\preview.css
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\js\builder.js
