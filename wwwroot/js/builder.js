@@ -47,6 +47,7 @@ let idCounter = 0;
 let pageIdCounter = 1;
 let activeModalBlock = null;
 let activeModalTab = 'content';
+let dropHintEl = null;
 
 function currentPage() {
   return pages.find(p => p.id === currentPageId) || null;
@@ -78,7 +79,6 @@ const TEMPLATES = {
     render: (d, id) => {
       const items = d.items || [];
       if (items.length === 0) return `<div class="b-hero-slider empty-slider" style="background:#f1f5f9; padding:100px; text-align:center;">Add slides to see the Hero Slider</div>`;
-
       const slidesHtml = items.map((it, i) => `
         <div class="h-slide ${i === 0 ? 'active' : ''}" style="background-image:url(${it.bgImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80'});">
           <div class="h-overlay" style="background:${d.overlayColor || 'rgba(26, 43, 85, 0.7)'}"></div>
@@ -90,7 +90,6 @@ const TEMPLATES = {
           </div>
         </div>
       `).join('');
-
       return `
         <div class="b-hero-slider" id="slider-${id}" style="padding-top:${d.paddingV || 0}px; padding-bottom:${d.paddingV || 0}px; height:600px; position:relative; overflow:hidden;">
           <div class="h-track" style="height:100%; width:100%">${slidesHtml}</div>
@@ -100,6 +99,30 @@ const TEMPLATES = {
         </div>
         <script>setTimeout(() => { if(typeof initSliders === 'function') initSliders(); }, 100);</script>
       `;
+    }
+  },
+  heroslider: {
+    label: 'Hero Pro Slider', icon: '◈', table: 'HeroProSlider',
+    dataFields: ['items', 'paddingV', 'overlayColor', 'autoplay', 'textColor', 'textAlign', 'contentPos', 'headingSize'],
+    defaultData: { paddingV: 0, overlayColor: 'rgba(0, 0, 0, 0.4)', autoplay: true, textColor: '#ffffff', textAlign: 'center', contentPos: 'center', headingSize: 64, items: [{ tagTop: 'SDLC METHODOLOGIES', tag: 'QUALITY FOCUSED', heading: 'Quality Processes for Full Software Life Cycle', subtext: 'Empowering businesses with cutting-edge software solutions.', bgImage: 'https://alkuwaiti.com/wp-content/uploads/2020/05/Hero-Banner-Placeholder-Dark-1024x480.png' }, { tagTop: 'INNOVATION', tag: 'FUTURE READY', heading: 'Innovative Software Solutions for Your Business', subtext: 'We transform complex problems into elegant digital experiences.', bgImage: 'https://alkuwaiti.com/wp-content/uploads/2020/05/Hero-Banner-Placeholder-Dark-1024x480.png' }] },
+    render: (d, id) => {
+      const items = d.items || [];
+      const slidesHtml = items.map((it, i) => `
+        <div class="hp-slide valign-${d.contentPos || 'center'} pos-${d.textAlign || 'center'}" 
+             style="flex:0 0 100%; height:100%; background-image:url('${it.bgImage || ''}'); background-size:cover; background-position:center; position:relative; display:flex; padding:0 40px; box-sizing:border-box;">
+          <div class="hp-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:${d.overlayColor || 'rgba(0,0,0,0.5)'}"></div>
+          <div class="hp-content-wrap" style="position:relative; z-index:2; width:100%; max-width:800px; color:${d.textColor || '#fff'}">
+            ${it.tagTop ? `<div class="hp-tag-top" style="font-size:14px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:15px; opacity:0.9;">${it.tagTop}</div>` : ''}
+            <div class="hp-title-box"><h2 style="font-size:${d.headingSize || 64}px; font-weight:800; line-height:1.1; margin-bottom:20px; letter-spacing:-0.02em; color:inherit;">${it.heading || ''}</h2></div>
+            ${it.tag ? `<div class="hp-tag" style="display:inline-block; font-size:12px; font-weight:700; padding:6px 16px; background:rgba(255,255,255,0.15); border-radius:4px; margin-bottom:20px; text-transform:uppercase;">${it.tag}</div>` : ''}
+            ${it.subtext ? `<div class="hp-subtext" style="font-size:20px; line-height:1.6; opacity:0.85; max-width:600px; margin:0 auto;">${it.subtext}</div>` : ''}
+          </div>
+        </div>`).join('');
+      return `<div class="b-heropro" id="slider-${id}" style="width:100%; height:700px; position:relative; overflow:hidden; background:#111;" data-autoscroll="${d.autoplay}">
+        <div class="hp-track" style="display:flex; height:100%; transition:transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);">${slidesHtml}</div>
+        <button class="hp-nav prev" style="position:absolute; top:50%; left:20px; transform:translateY(-50%); z-index:10; background:rgba(255,255,255,0.1); border:none; color:#fff; width:40px; height:40px; border-radius:50%; cursor:pointer;" onclick="moveSlider(${id},-1)">❮</button>
+        <button class="hp-nav next" style="position:absolute; top:50%; right:20px; transform:translateY(-50%); z-index:10; background:rgba(255,255,255,0.1); border:none; color:#fff; width:40px; height:40px; border-radius:50%; cursor:pointer;" onclick="moveSlider(${id},1)">❯</button>
+      </div><script>setTimeout(() => { if(typeof initSliders === 'function') initSliders(); }, 100);</script>`;
     }
   },
   topbar: {
@@ -151,13 +174,13 @@ const TEMPLATES = {
   },
   hero: {
     label: 'Hero', icon: '★', table: 'Hero',
-    dataFields: ['heading', 'subtext', 'btnText', 'btnLink', 'bg', 'paddingV'],
-    defaultData: { heading: 'Build something great', subtext: 'The fastest way to launch your next idea into the world.', btnText: 'Get started free', btnLink: '#', bg: '#1a1a2e', paddingV: 80 },
-    render: d => `<div class="b-hero" style="background:${d.bg}; padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px"><h1>${d.heading}</h1><p>${d.subtext}</p><a href="${d.btnLink || '#'}" class="hero-btn-link" style="text-decoration:none"><button class="hero-btn">${d.btnText}</button></a></div>`
+    dataFields: ['heading', 'subtext', 'btnText', 'btnLink', 'bg', 'paddingV', 'headerColor', 'btnColor', 'btnTextColor'],
+    defaultData: { heading: 'Build something great', subtext: 'The fastest way to launch your next idea into the world.', btnText: 'Get started free', btnLink: '#', bg: '#1a1a2e', paddingV: 80, headerColor: '#ffffff', btnColor: '#5b4fff', btnTextColor: '#ffffff' },
+    render: d => `<div class="b-hero" style="background:${d.bg}; padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px"><h1 style="color:${d.headerColor || '#ffffff'}">${d.heading}</h1><p>${d.subtext}</p><a href="${d.btnLink || '#'}" class="hero-btn-link" style="text-decoration:none"><button class="hero-btn" style="background:${d.btnColor || '#5b4fff'}; color:${d.btnTextColor || '#ffffff'}">${d.btnText}</button></a></div>`
   },
   herosplit: {
     label: 'Hero Split', icon: '◨', table: 'HeroSplit',
-    dataFields: ['heading', 'subtext', 'btnText', 'btnLink', 'imgSrc', 'bg', 'paddingV'],
+    dataFields: ['heading', 'subtext', 'btnText', 'btnLink', 'imgSrc', 'bg', 'paddingV', 'headerColor', 'btnColor', 'btnTextColor'],
     defaultData: {
       heading: 'Build something great',
       subtext: 'The fastest way to launch your next idea into the world.',
@@ -165,7 +188,10 @@ const TEMPLATES = {
       btnLink: '#',
       imgSrc: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1470',
       bg: '#0d252a',
-      paddingV: 100
+      paddingV: 100,
+      headerColor: '#ffffff',
+      btnColor: '#ffffff',
+      btnTextColor: '#0d252a'
     },
     render: d => {
       const bgStyle = d.imgSrc ? `background-image:linear-gradient(rgba(13,37,42,0.3), rgba(13,37,42,0.3)), url(${d.imgSrc}); background-size:cover; background-position:center` : `background:${d.bg}`;
@@ -173,10 +199,10 @@ const TEMPLATES = {
         <div class="b-herosplit" style="background:${d.bg}">
             <div class="herosplit-visual" style="${bgStyle}"></div>
             <div class="herosplit-content" style="padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px">
-                <h1>${d.heading}</h1>
+                <h1 style="color:${d.headerColor || '#ffffff'}">${d.heading}</h1>
                 <p>${d.subtext}</p>
                 <a href="${d.btnLink || '#'}" style="text-decoration:none">
-                    <button class="hero-btn">${d.btnText}</button>
+                    <button class="hero-btn" style="background:${d.btnColor || '#ffffff'}; color:${d.btnTextColor || '#0d252a'}">${d.btnText}</button>
                 </a>
             </div>
         </div>`;
@@ -184,34 +210,34 @@ const TEMPLATES = {
   },
   textbanner: {
     label: 'Text Banner', icon: '◈', table: 'TextBanner',
-    dataFields: ['heading', 'subtext', 'btnPrimary', 'btnLink', 'btnSecondary', 'bg'],
-    defaultData: { heading: 'We build better products', subtext: 'Focused on quality, speed, and real impact for the teams that use us.', btnPrimary: 'Start free', btnLink: '#', btnSecondary: 'Learn more', bg: '#5b4fff' },
-    render: d => `<div class="b-textbanner" style="background:${d.bg};color:${isLight(d.bg) ? '#111' : '#fff'}"><h2>${d.heading}</h2><p>${d.subtext}</p><div class="tb-actions"><a href="${d.btnLink || '#'}" style="text-decoration:none"><button class="btn-primary">${d.btnPrimary}</button></a><button class="btn-secondary" style="color:${isLight(d.bg) ? '#111' : '#fff'}">${d.btnSecondary}</button></div></div>`
+    dataFields: ['heading', 'subtext', 'btnPrimary', 'btnLink', 'btnSecondary', 'bg', 'headerColor', 'btnColor'],
+    defaultData: { heading: 'We build better products', subtext: 'Focused on quality, speed, and real impact for the teams that use us.', btnPrimary: 'Start free', btnLink: '#', btnSecondary: 'Learn more', bg: '#5b4fff', headerColor: '#ffffff', btnColor: '#ffffff' },
+    render: d => `<div class="b-textbanner" style="background:${d.bg};color:${isLight(d.bg) ? '#111' : '#fff'}"><h2 style="color:${d.headerColor || (isLight(d.bg) ? '#111' : '#fff')}">${d.heading}</h2><p>${d.subtext}</p><div class="tb-actions"><a href="${d.btnLink || '#'}" style="text-decoration:none"><button class="btn-primary" style="background:${d.btnColor || '#fff'}; color:${d.bg}">${d.btnPrimary}</button></a><button class="btn-secondary" style="color:${isLight(d.bg) ? '#111' : '#fff'}">${d.btnSecondary}</button></div></div>`
   },
   text: {
     label: 'Text Block', icon: '¶', table: 'TextBlock',
-    dataFields: ['heading', 'body'],
-    defaultData: { heading: 'About us', body: 'We are a team of passionate designers and engineers building tools that help teams ship faster without sacrificing quality or creativity.' },
-    render: d => `<div class="b-text"><h2>${d.heading}</h2><p>${d.body}</p></div>`
+    dataFields: ['heading', 'body', 'headerColor', 'textColor'],
+    defaultData: { heading: 'About us', body: 'We are a team of passionate designers and engineers building tools that help teams ship faster without sacrificing quality or creativity.', headerColor: '#1a1a2e', textColor: '#444444' },
+    render: d => `<div class="b-text"><h2 style="color:${d.headerColor || '#1a1a2e'}">${d.heading}</h2><p style="color:${d.textColor || '#444444'}">${d.body}</p></div>`
   },
   imgtext: {
     label: 'Image + Text', icon: '⬛', table: 'ImageText',
-    dataFields: ['tag', 'heading', 'body', 'btnText', 'btnLink', 'imgSrc', 'imgAlt', 'layout', 'imgPosition', 'textAlign', 'bg'],
-    defaultData: { tag: 'Featured', heading: 'A picture is worth a thousand words', body: 'Pair rich visuals with compelling copy. Adjust image placement, text alignment, and colors to match your brand perfectly.', btnText: 'Learn more', btnLink: '#', imgSrc: '', imgAlt: 'Feature image', layout: 'left', imgPosition: 'center', textAlign: 'left', bg: '#ffffff' },
+    dataFields: ['tag', 'heading', 'body', 'btnText', 'btnLink', 'imgSrc', 'imgAlt', 'layout', 'imgPosition', 'textAlign', 'bg', 'headerColor', 'btnColor', 'btnTextColor', 'textColor'],
+    defaultData: { tag: 'Featured', heading: 'A picture is worth a thousand words', body: 'Pair rich visuals with compelling copy. Adjust image placement, text alignment, and colors to match your brand perfectly.', btnText: 'Learn more', btnLink: '#', imgSrc: '', imgAlt: 'Feature image', layout: 'left', imgPosition: 'center', textAlign: 'left', bg: '#ffffff', headerColor: '#1a1a2e', btnColor: '#111111', btnTextColor: '#ffffff', textColor: '#666666' },
     render: d => {
       const img = d.imgSrc
         ? `<img src="${d.imgSrc}" alt="${d.imgAlt}" style="width:100%;height:100%;object-fit:cover;object-position:${d.imgPosition}">`
         : `<div class="imgtext-img placeholder"><div class="ph-icon">🖼</div><div>600 × 400</div></div>`;
       const imgWrap = d.imgSrc ? `<div class="imgtext-img" style="overflow:hidden">${img}</div>` : img;
-      return `<div class="b-imgtext img-${d.layout}" style="background:${d.bg}"><div class="imgtext-img" style="flex:0 0 45%;background:#f0ede8;min-height:180px;overflow:hidden">${d.imgSrc ? `<img src="${d.imgSrc}" alt="${d.imgAlt}" style="width:100%;height:100%;object-fit:cover;object-position:${d.imgPosition}">` : `<div class="imgtext-img placeholder" style="height:100%;min-height:180px"><div class="ph-icon">🖼</div><div style="font-size:11px">Click to set image</div></div>`}</div><div class="imgtext-body" style="text-align:${d.textAlign}"><div class="it-tag">${d.tag}</div><h2>${d.heading}</h2><p>${d.body}</p><a href="${d.btnLink || '#'}" style="text-decoration:none"><button class="it-btn">${d.btnText}</button></a></div></div>`;
+      return `<div class="b-imgtext img-${d.layout}" style="background:${d.bg}"><div class="imgtext-img" style="flex:0 0 45%;background:#f0ede8;min-height:180px;overflow:hidden">${d.imgSrc ? `<img src="${d.imgSrc}" alt="${d.imgAlt}" style="width:100%;height:100%;object-fit:cover;object-position:${d.imgPosition}">` : `<div class="imgtext-img placeholder" style="height:100%;min-height:180px"><div class="ph-icon">🖼</div><div style="font-size:11px">Click to set image</div></div>`}</div><div class="imgtext-body" style="text-align:${d.textAlign}"><div class="it-tag">${d.tag}</div><h2 style="color:${d.headerColor || '#1a1a2e'}">${d.heading}</h2><p style="color:${d.textColor || '#666666'}">${d.body}</p><a href="${d.btnLink || '#'}" style="text-decoration:none"><button class="it-btn" style="background:${d.btnColor || '#111111'}; color:${d.btnTextColor || '#ffffff'}">${d.btnText}</button></a></div></div>`;
     }
   },
   gridimgtext: {
     label: 'Grid Cards', icon: '⊞', table: 'GridImageText',
-    dataFields: ['heading', 'subtext', 'cols', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'textAlign', 'imgPosition'],
+    dataFields: ['heading', 'subtext', 'cols', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'textAlign', 'imgPosition', 'headerColor'],
     defaultData: {
       heading: 'Our work', subtext: 'A selection of recent projects and case studies.', cols: '3', cardBg: '#ffffff', headerBg: '#f0ede8',
-      titleColor: '#111111', descColor: '#666666', tagColor: '#888888', textAlign: 'left', imgPosition: 'center',
+      titleColor: '#111111', descColor: '#666666', tagColor: '#888888', textAlign: 'left', imgPosition: 'center', headerColor: '#111111',
       items: [
         { title: 'Project Alpha', desc: 'A modern SaaS product for enterprise teams.', tag: 'Product', imgSrc: '' },
         { title: 'Brand Identity', desc: 'Full visual identity system for a fintech startup.', tag: 'Design', imgSrc: '' },
@@ -228,16 +254,16 @@ const TEMPLATES = {
         const imgHtml = it.imgSrc ? `<img src="${it.imgSrc}" alt="${it.title || ''}" style="width:100%;height:100%;object-fit:cover;object-position:${imgPos}">` : `<span style="font-size:24px;color:#bbb">🖼</span>`;
         return `<div class="git-card" style="background:${d.cardBg}"><div class="git-card-img" style="background:${d.headerBg}">${imgHtml}</div><div class="git-card-body" style="text-align:${textAlign}"><span class="git-tag" style="color:${tagColor};background:${tagColor}18">${it.tag || ''}</span><h3 style="color:${titleColor}">${it.title}</h3><p style="color:${descColor}">${it.desc}</p></div></div>`;
       }).join('');
-      return `<div class="b-gridimgtext"><div class="git-header"><h2>${d.heading}</h2><p>${d.subtext}</p></div><div class="git-grid cols-${d.cols}">${cards}</div></div>`;
+      return `<div class="b-gridimgtext"><div class="git-header"><h2 style="color:${d.headerColor || '#111'}">${d.heading}</h2><p>${d.subtext}</p></div><div class="git-grid cols-${d.cols}">${cards}</div></div>`;
     }
   },
   gridimgtextrow: {
     label: 'Grid Image+Text', icon: '▤', table: 'GridImgTextRow',
-    dataFields: ['heading', 'subtext', 'cols', 'items', 'cardBg', 'imgBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'textAlign', 'imgPosition', 'imgLayout'],
+    dataFields: ['heading', 'subtext', 'cols', 'items', 'cardBg', 'imgBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'textAlign', 'imgPosition', 'imgLayout', 'headerColor'],
     defaultData: {
       heading: 'What we offer', subtext: 'Each card pairs a visual with focused copy.', cols: '2',
       cardBg: '#ffffff', imgBg: '#f0ede8',
-      titleColor: '#111111', descColor: '#666666', tagColor: '#5b4fff', btnColor: '#111111',
+      titleColor: '#111111', descColor: '#666666', tagColor: '#5b4fff', btnColor: '#111111', headerColor: '#111111',
       textAlign: 'left', imgPosition: 'center', imgLayout: 'left',
       items: [
         { title: 'Design Systems', desc: 'Scalable, consistent UI components built for your brand.', tag: 'Design', btnText: 'Learn more', btnLink: '#', imgSrc: '' },
@@ -260,29 +286,31 @@ const TEMPLATES = {
           : `<span style="font-size:22px;color:#bbb">&#128444;</span>`;
         return `<div class="gitrow-card img-${imgLayout}" style="background:${d.cardBg}"><div class="gitrow-card-img" style="background:${d.imgBg}">${imgHtml}</div><div class="gitrow-card-body" style="text-align:${textAlign}"><span class="gr-tag" style="color:${tagColor};background:${tagColor}18">${it.tag || ''}</span><h3 style="color:${titleColor}">${it.title || ''}</h3><p style="color:${descColor}">${it.desc || ''}</p><a href="${it.btnLink || '#'}" style="text-decoration:none"><button class="gr-btn" style="background:${btnColor}">${it.btnText || 'Learn more'}</button></a></div></div>`;
       }).join('');
-      return `<div class="b-gridimgtextrow"><div class="gitrow-header"><h2>${d.heading}</h2><p>${d.subtext}</p></div><div class="gitrow-grid cols-${d.cols}">${cards}</div></div>`;
+      return `<div class="b-gridimgtextrow"><div class="gitrow-header"><h2 style="color:${d.headerColor || '#111'}">${d.heading}</h2><p>${d.subtext}</p></div><div class="gitrow-grid cols-${d.cols}">${cards}</div></div>`;
     }
   },
   features: {
     label: 'Features', icon: '⊡', table: 'Features',
-    dataFields: ['heading', 'items'],
-    defaultData: { heading: 'Why choose us', items: [{ icon: '⚡', title: 'Fast', desc: 'Blazing fast performance.' }, { icon: '🔒', title: 'Secure', desc: 'Enterprise-grade security.' }, { icon: '🎨', title: 'Beautiful', desc: 'Pixel-perfect designs.' }] },
+    dataFields: ['heading', 'items', 'headerColor'],
+    defaultData: { heading: 'Why choose us', items: [{ icon: '⚡', title: 'Fast', desc: 'Blazing fast performance.' }, { icon: '🔒', title: 'Secure', desc: 'Enterprise-grade security.' }, { icon: '🎨', title: 'Beautiful', desc: 'Pixel-perfect designs.' }], headerColor: '#1a1a2e' },
     render: d => {
       const cards = (d.items || []).map(it => `<div class="feat-card"><div class="feat-icon">${it.icon}</div><h3>${it.title}</h3><p>${it.desc}</p></div>`).join('');
-      return `<div class="b-features"><h2>${d.heading}</h2><div class="feat-grid">${cards}</div></div>`;
+      return `<div class="b-features"><h2 style="color:${d.headerColor || '#1a1a2e'}">${d.heading}</h2><div class="feat-grid">${cards}</div></div>`;
     }
   },
   cta: {
     label: 'CTA Banner', icon: '▶', table: 'CTABanner',
-    dataFields: ['heading', 'subtext', 'btnText', 'btnLink', 'bg'],
-    defaultData: { heading: 'Ready to get started?', subtext: 'Join thousands of teams already using our platform.', btnText: 'Start for free', btnLink: '#', bg: '#5b4fff' },
-    render: d => `<div class="b-cta" style="background:${d.bg}"><h2>${d.heading}</h2><p>${d.subtext}</p><a href="${d.btnLink || '#'}" style="text-decoration:none"><button style="color:${d.bg}">${d.btnText}</button></a></div>`
+    dataFields: ['heading', 'subtext', 'btnText', 'btnLink', 'bg', 'headerColor', 'btnColor', 'btnTextColor', 'textColor'],
+    defaultData: { heading: 'Ready to get started?', subtext: 'Join thousands of teams already using our platform.', btnText: 'Start for free', btnLink: '#', bg: '#5b4fff', headerColor: '#ffffff', btnColor: '#ffffff', btnTextColor: '#5b4fff', textColor: '#ffffff' },
+    render: d => `<div class="b-cta" style="background:${d.bg}"><h2 style="color:${d.headerColor || '#ffffff'}">${d.heading}</h2><p style="color:${d.textColor || '#ffffff'}">${d.subtext}</p><a href="${d.btnLink || '#'}" style="text-decoration:none"><button style="background:${d.btnColor || '#ffffff'}; color:${d.btnTextColor || d.bg}">${d.btnText}</button></a></div>`
   },
   testimonial: {
     label: 'Testimonial Slider', icon: '❝', table: 'Testimonial',
-    dataFields: ['heading', 'items', 'paddingV', 'bg', 'navType', 'showRole', 'italicQuote'],
+    dataFields: ['heading', 'items', 'paddingV', 'bg', 'navType', 'showRole', 'italicQuote', 'headerColor', 'textColor'],
     defaultData: {
       heading: 'Testimonials',
+      headerColor: '#1a1a2e',
+      textColor: '#666666',
       paddingV: 80,
       bg: '#f0f7ff',
       navType: 'both',
@@ -325,9 +353,9 @@ const TEMPLATES = {
       return `
         <div class="b-testimonial-slider" id="slider-${id}" style="background:${d.bg || '#f0f7ff'}; padding-top:${d.paddingV || 80}px; padding-bottom:${d.paddingV || 80}px">
           <div class="ts-header">
-            <div class="ts-line"></div>
-            <h2>${d.heading}</h2>
-            <div class="ts-line"></div>
+            <div class="ts-line" style="background:${d.headerColor || '#a6111f'}"></div>
+            <h2 style="color:${d.headerColor || '#1a1a2e'}">${d.heading}</h2>
+            <div class="ts-line" style="background:${d.headerColor || '#a6111f'}"></div>
           </div>
           <div class="ts-viewport">
             <div class="ts-track">${itemsHtml}</div>
@@ -343,10 +371,10 @@ const TEMPLATES = {
   },
   form: {
     label: 'Contact Form', icon: '⬜', table: 'ContactForm',
-    dataFields: ['heading', 'btnText'],
-    defaultData: { heading: 'Get in touch', btnText: 'Send message' },
+    dataFields: ['heading', 'btnText', 'headerColor', 'btnColor', 'btnTextColor'],
+    defaultData: { heading: 'Get in touch', btnText: 'Send message', headerColor: '#1a1a2e', btnColor: '#a6111f', btnTextColor: '#ffffff' },
     render: d => `<div class="b-form">
-      <h2>${d.heading}</h2>
+      <h2 style="color:${d.headerColor || '#1a1a2e'}">${d.heading}</h2>
       <div class="form-row">
         <div class="form-field"><label>First name</label><input type="text" class="cf-fname" placeholder="Jane"></div>
         <div class="form-field"><label>Last name</label><input type="text" class="cf-lname" placeholder="Smith"></div>
@@ -357,12 +385,13 @@ const TEMPLATES = {
       <div class="form-field" style="margin-bottom:10px">
         <label>Message</label><textarea class="cf-message" rows="3" placeholder="How can we help?" style="resize:none;font-family:var(--sans)"></textarea>
       </div>
-      <button class="submit-btn" style="width:200px" onclick="submitContactForm(this)">${d.btnText}</button>
+      <button class="submit-btn" style="width:200px; background:${d.btnColor || '#a6111f'}; color:${d.btnTextColor || '#ffffff'}" onclick="submitContactForm(this)">${d.btnText}</button>
+      <div class="cf-status" style="display:none"></div>
     </div>`
   },
   footer: {
     label: 'Footer', icon: '▬', table: 'Footer',
-    dataFields: ['brand', 'logoImage', 'copy', 'items', 'paddingV', 'bg', 'textColor', 'showBrand', 'showLogo', 'showItems', 'linkPosition'],
+    dataFields: ['brand', 'logoImage', 'copy', 'items', 'paddingV', 'bg', 'textColor', 'showBrand', 'showLogo', 'showItems', 'linkPosition', 'headerColor'],
     defaultData: {
       brand: 'Brand Name',
       logoImage: '',
@@ -383,7 +412,7 @@ const TEMPLATES = {
     render: d => {
       const itemsHtml = (d.items || []).map(it => `<span class="footer-link-item">${it.label}</span>`).join('');
       const logoHtml = (d.showLogo && d.logoImage) ? `<img src="${d.logoImage}" alt="Logo" style="max-height:30px; object-fit:contain;">` : '';
-      const brandHtml = d.showBrand ? `<div class="footer-brand" style="margin-bottom:0; font-size:18px;">${d.brand}</div>` : '';
+      const brandHtml = d.showBrand ? `<div class="footer-brand" style="margin-bottom:0; font-size:18px; color:${d.headerColor || d.textColor || '#666666'}">${d.brand}</div>` : '';
       const linksHtml = d.showItems ? `<div class="footer-links" style="margin-bottom:0; gap:25px; display:flex;">${itemsHtml}</div>` : '';
 
       const linkPos = d.linkPosition || 'center';
@@ -413,7 +442,7 @@ const TEMPLATES = {
   },
   footer2: {
     label: 'Footer Pro', icon: '▬', table: 'Footer2',
-    dataFields: ['brand', 'tagline', 'logoImage', 'copy', 'bg', 'textColor', 'accentColor', 'showNewsletter', 'newsletterPlaceholder', 'newsletterBtnText', 'address1', 'address2', 'email', 'phone', 'colLayout', 'quickLinks', 'contactLinks'],
+    dataFields: ['brand', 'tagline', 'logoImage', 'copy', 'bg', 'textColor', 'accentColor', 'showNewsletter', 'newsletterPlaceholder', 'newsletterBtnText', 'address1', 'address2', 'email', 'phone', 'colLayout', 'quickLinks', 'contactLinks', 'headerColor', 'btnColor', 'btnTextColor'],
     defaultData: {
       brand: 'YourBrand',
       tagline: 'Building great digital experiences since 2020.',
@@ -450,7 +479,7 @@ const TEMPLATES = {
 
       const logoHtml = d.logoImage
         ? `<img src="${d.logoImage}" alt="${d.brand}" style="max-height:48px;width:auto;object-fit:contain;margin-bottom:14px;display:block">`
-        : `<div class="f2-brand" style="color:${textColor}">${d.brand}</div>`;
+        : `<div class="f2-brand" style="color:${d.headerColor || textColor}">${d.brand}</div>`;
 
       // Group link columns dynamically
       const groupedQuickLinks = {};
@@ -465,7 +494,7 @@ const TEMPLATES = {
 
       const quickLinksHtml = sortedQuickLinkGroups.map(g => `
         <div class="f2-col">
-          <div class="f2-col-title" style="color:${textColor};border-color:${accent}">${g.title}</div>
+          <div class="f2-col-title" style="color:${d.headerColor || textColor};border-color:${accent}">${g.title}</div>
           <ul class="f2-links-list">
             ${g.links.map(l => `<li><a href="/page/${l.slug}" style="color:${textColor}80;text-decoration:none" class="f2-link">${l.label}</a></li>`).join('')}
           </ul>
@@ -474,7 +503,7 @@ const TEMPLATES = {
 
       const contactColsHtml = (d.contactLinks || []).map(c => `
         <div class="f2-contact-col">
-          <div class="f2-col-title" style="color:${textColor};border-color:${accent}">${c.label || 'CONTACT US'}</div>
+          <div class="f2-col-title" style="color:${d.headerColor || textColor};border-color:${accent}">${c.label || 'CONTACT US'}</div>
           ${c.address ? `<div class="f2-contact-row"><span class="f2-contact-icon" style="color:${accent}">📍</span><span style="color:${textColor}80">${c.address}</span></div>` : ''}
           ${c.email ? `<div class="f2-contact-row"><span class="f2-contact-icon" style="color:${accent}">✉</span><a href="mailto:${c.email}" style="color:${accent};text-decoration:none">${c.email}</a></div>` : ''}
           ${c.phone ? `<div class="f2-contact-row"><span class="f2-contact-icon" style="color:${accent}">📞</span><span style="color:${textColor}80">${c.phone}</span></div>` : ''}
@@ -483,11 +512,11 @@ const TEMPLATES = {
 
       const newsletterHtml = d.showNewsletter ? `
         <div class="f2-col">
-          <div class="f2-col-title" style="color:${textColor};border-color:${accent}">NEWSLETTER</div>
+          <div class="f2-col-title" style="color:${d.headerColor || textColor};border-color:${accent}">NEWSLETTER</div>
           <p style="color:${textColor}80;font-size:13px;line-height:1.6;margin-bottom:16px">Stay updated with our latest news and insights.</p>
           <div class="f2-newsletter-row">
             <input type="email" placeholder="${d.newsletterPlaceholder || 'Email Address'}" class="f2-newsletter-input" style="background:${bg === '#ffffff' ? '#f4f4f2' : 'rgba(255,255,255,0.07)'};color:${textColor};border-color:rgba(255,255,255,0.12)">
-            <button class="f2-newsletter-btn" style="background:${accent}">${d.newsletterBtnText || 'Join'}</button>
+            <button class="f2-newsletter-btn" style="background:${d.btnColor || accent}; color:${d.btnTextColor || '#ffffff'}">${d.newsletterBtnText || 'Join'}</button>
           </div>
         </div>` : '';
 
@@ -550,11 +579,11 @@ const TEMPLATES = {
       return `
           <div class="b-abouthighlights" style="display:flex; flex-wrap:wrap; min-height:300px; padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px; align-items:${d.alignItems === 'center' ? 'center' : 'flex-start'}">
             <div class="ah-left" style="flex: 0 0 ${leftW}; background:${d.leftBg}; color:${d.textColorLeft}; padding:60px 40px">
-              <h1 style="color:${d.textColorLeft}; margin-bottom:15px; font-size:32px">${d.heading}</h1>
+              <h1 style="color:${d.headerColor || d.textColorLeft}; margin-bottom:15px; font-size:32px">${d.heading}</h1>
               <h3 style="color:${d.textColorLeft}; margin-bottom:20px; font-size:18px">${d.subheading}</h3>
               <p style="margin-bottom:30px; line-height:1.6; font-size:14px; color:#444">${d.body}</p>
               <a href="${d.btnLink || '#'}" style="text-decoration:none">
-                <button class="ah-btn" style="background:${d.btnBg}; color:${d.btnTextColor}; border:none; padding:12px 30px; border-radius:30px; cursor:pointer; font-weight:500">${d.btnText}</button>
+                <button class="ah-btn" style="background:${d.btnColor || d.btnBg}; color:${d.btnTextColor}; border:none; padding:12px 30px; border-radius:30px; cursor:pointer; font-weight:500">${d.btnText}</button>
               </a>
             </div>
             <div class="ah-right" style="flex: 0 0 ${rightW}; background:${d.rightBg}; color:${d.textColorRight}; padding:60px 40px">
@@ -595,21 +624,24 @@ const TEMPLATES = {
       `).join('');
       return `
         <div class="b-servicegrid" style="background:${d.bg || '#ffffff'}; padding-top:${d.paddingV || 80}px; padding-bottom:${d.paddingV || 80}px">
-          <div class="wwo-header"><h2 style="color:${d.titleColor || '#1a1a2e'}">${d.heading}<span style="background:${d.headerColor || '#a6111f'}; display:block; width:60px; height:3px; margin:10px auto 0"></span></h2></div>
+          <div class="wwo-header"><h2 style="color:${d.headerColor || d.titleColor || '#1a1a2e'}">${d.heading}<span style="background:${d.headerColor || '#a6111f'}; display:block; width:60px; height:3px; margin:10px auto 0"></span></h2></div>
           <div class="wwo-grid">${cards}</div>
-          <button class="wwo-btn" style="background:${d.accentColor || '#a6111f'}">${d.btnText}</button>
+          <button class="wwo-btn" style="background:${d.btnColor || d.accentColor || '#a6111f'}; color:${d.btnTextColor || '#ffffff'}">${d.btnText}</button>
         </div>`;
     }
   },
   logoslider: {
     label: 'Logo Slider', icon: '▤', table: 'LogoSlider',
-    dataFields: ['heading', 'btnText', 'btnLink', 'items', 'paddingV', 'bg'],
+    dataFields: ['heading', 'btnText', 'btnLink', 'items', 'paddingV', 'bg', 'headerColor', 'btnColor', 'btnTextColor'],
     defaultData: {
       heading: 'Our Trusted Partners',
       btnText: 'View All Partners',
       btnLink: '#',
       paddingV: 80,
       bg: '#ffffff',
+      headerColor: '#1a1a2e',
+      btnColor: '#a6111f',
+      btnTextColor: '#ffffff',
       items: [
         { name: 'Google', imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg', link: '#' },
         { name: 'Microsoft', imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg', link: '#' },
@@ -638,7 +670,7 @@ const TEMPLATES = {
           </div>
           <div class="ls-dots">${dotsHtml}</div>
           <a href="${d.btnLink || '#'}" style="text-decoration:none">
-            <button class="ls-more-btn">${d.btnText}</button>
+            <button class="ls-more-btn" style="background:${d.btnColor || '#a6111f'}; color:${d.btnTextColor || '#ffffff'}">${d.btnText}</button>
           </a>
         </div>`;
     }
@@ -1007,10 +1039,16 @@ function addBlock(type, afterId = null, navType = null) {
 function render() {
   const blocks = get_blocks();
   const inner = document.getElementById('canvas-inner');
-  const hint = document.getElementById('drop-hint');
+  if (!dropHintEl) dropHintEl = document.getElementById('drop-hint');
   const countBtn = document.getElementById('block-count-btn');
-  if (blocks.length === 0) { inner.innerHTML = ''; inner.appendChild(hint); countBtn.textContent = '0 blocks'; return; }
-  if (hint) hint.remove(); inner.innerHTML = '';
+  if (blocks.length === 0) { 
+    inner.innerHTML = ''; 
+    if (dropHintEl) inner.appendChild(dropHintEl); 
+    countBtn.textContent = '0 blocks'; 
+    return; 
+  }
+  if (dropHintEl) dropHintEl.remove(); 
+  inner.innerHTML = '';
   blocks.forEach(block => {
     const tpl = TEMPLATES[block.type];
     if (block.type === 'navbar' && tpl) block.html = tpl.render(block.data);
@@ -1087,7 +1125,7 @@ function renderProps(block) {
   // Loop through dataFields defined in the template
   (tpl.dataFields || []).forEach(k => {
     // Skip fields that have custom complex UI below
-    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'imgPosition', 'imgLayout', 'imgBg', 'paddingV', 'leftBg', 'rightBg', 'textColorLeft', 'textColorRight', 'btnBg', 'btnTextColor', 'iconColor', 'colWidth', 'alignItems', 'navType', 'showRole', 'italicQuote', 'showNewsletter'].includes(k)) return;
+    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'headerColor', 'textColor', 'btnTextColor', 'imgPosition', 'imgLayout', 'imgBg', 'paddingV', 'leftBg', 'rightBg', 'textColorLeft', 'textColorRight', 'btnBg', 'btnTextColor', 'iconColor', 'colWidth', 'alignItems', 'navType', 'showRole', 'italicQuote', 'showNewsletter', 'contentPos', 'autoplay'].includes(k)) return;
 
     const label = FIELD_LABELS[k] || (k.charAt(0).toUpperCase() + k.slice(1));
     const value = d[k] !== undefined ? String(d[k]).replace(/"/g, '&quot;') : '';
@@ -1126,10 +1164,24 @@ function renderProps(block) {
       ${['left', 'center', 'right'].map(v => `<button class="pos-btn${d.textAlign === v ? ' active' : ''}" onclick="updateProp(${block.id},'textAlign','${v}')">${v.charAt(0).toUpperCase() + v.slice(1)}</button>`).join('')}
     </div></div>`;
   }
+  if (d.contentPos !== undefined) {
+    html += `<div class="prop-group"><span class="prop-label">Vertical align</span><div class="pos-grid">
+      ${['top', 'center', 'bottom'].map(v => `<button class="pos-btn${d.contentPos === v ? ' active' : ''}" onclick="updateProp(${block.id},'contentPos','${v}')">${v.charAt(0).toUpperCase() + v.slice(1)}</button>`).join('')}
+    </div></div>`;
+  }
   if (d.cols !== undefined) {
     html += `<div class="prop-group"><span class="prop-label">Grid columns</span><div class="pos-grid">
       ${['2', '3', '4'].map(v => `<button class="pos-btn${d.cols === v ? ' active' : ''}" onclick="updateProp(${block.id},'cols','${v}')">${v} cols</button>`).join('')}
     </div></div>`;
+  }
+  if (d.autoplay !== undefined) {
+    html += `<div class="prop-group">
+      <span class="prop-label">Autoplay</span>
+      <select class="prop-input" onchange="updateProp(${block.id},'autoplay', this.value === 'true')">
+        <option value="true" ${d.autoplay !== false ? 'selected' : ''}>Yes (Enabled)</option>
+        <option value="false" ${d.autoplay === false ? 'selected' : ''}>No (Disabled)</option>
+      </select>
+    </div>`;
   }
 
   if (block.type === 'topbar') {
@@ -1220,6 +1272,31 @@ function renderProps(block) {
     </div>`;
   }
 
+  // Global Color Overrides
+  if (d.headerColor !== undefined || d.textColor !== undefined || d.btnColor !== undefined || d.btnTextColor !== undefined) {
+    html += `<div class="prop-section">Text & button colors</div>`;
+    if (d.headerColor !== undefined) {
+      html += `<div class="prop-group"><span class="prop-label">Header text color</span>
+        <input type="color" value="${d.headerColor}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'headerColor',this.value)">
+      </div>`;
+    }
+    if (d.textColor !== undefined) {
+      html += `<div class="prop-group"><span class="prop-label">Body text color</span>
+        <input type="color" value="${d.textColor}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'textColor',this.value)">
+      </div>`;
+    }
+    if (d.btnColor !== undefined) {
+      html += `<div class="prop-group"><span class="prop-label">Button background</span>
+        <input type="color" value="${d.btnColor}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'btnColor',this.value)">
+      </div>`;
+    }
+    if (d.btnTextColor !== undefined) {
+      html += `<div class="prop-group"><span class="prop-label">Button text color</span>
+        <input type="color" value="${d.btnTextColor}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px" onchange="updateProp(${block.id},'btnTextColor',this.value)">
+      </div>`;
+    }
+  }
+
   // Background color
   if (d.bg !== undefined) {
     html += `<div class="prop-group"><span class="prop-label">Background color</span><div class="bg-grid">
@@ -1229,7 +1306,7 @@ function renderProps(block) {
   }
 
   // data connect button for list types
-  if (['gridimgtext', 'gridimgtextrow', 'features', 'footer', 'abouthighlights', 'servicegrid', 'logoslider', 'clientslider', 'footer2', 'testimonial', 'locations'].includes(block.type)) {
+  if (['gridimgtext', 'gridimgtextrow', 'features', 'footer', 'abouthighlights', 'servicegrid', 'logoslider', 'clientslider', 'footer2', 'testimonial', 'locations', 'heroslider'].includes(block.type)) {
     html += `<div class="prop-section">Advanced Data</div>`;
     html += `<button class="data-connect-btn" onclick="openModal(${block.id})">⊞ Manage list items</button>`;
   }
@@ -1746,7 +1823,7 @@ function renderHeroSliderForm(d) {
 let sliderStates = {};
 
 function initSliders() {
-  document.querySelectorAll('.b-logoslider, .b-testimonial-slider, .b-client-slider, .b-hero-slider').forEach(slider => {
+  document.querySelectorAll('.b-logoslider, .b-testimonial-slider, .b-client-slider, .b-hero-slider, .b-heropro').forEach(slider => {
     const id = slider.id.replace('slider-', '');
     if (!sliderStates[id]) {
       sliderStates[id] = { current: 0, interval: null, count: 0 };
@@ -1794,16 +1871,19 @@ function updateSliderView(id) {
   if (!slider) return;
   const isTestimonial = slider.classList.contains('b-testimonial-slider');
   const isClient = slider.classList.contains('b-client-slider');
-  const prefix = isClient ? 'cs' : (isTestimonial ? 'ts' : 'ls');
+  const isHero = slider.classList.contains('b-hero-slider');
+  const isHeroPro = slider.classList.contains('b-heropro');
+
+  const prefix = isHeroPro ? 'hp' : (isHero ? 'h' : (isClient ? 'cs' : (isTestimonial ? 'ts' : 'ls')));
 
   const track = slider.querySelector(`.${prefix}-track`);
   const dots = slider.querySelectorAll(`.${prefix}-dot`);
   const state = sliderStates[id];
 
-  const item = track.querySelector(`.${prefix}-item`);
+  const item = track.querySelector(`.${prefix}-item, .${prefix}-slide`);
   if (!item) return;
 
-  const gap = 30; // Standardized gap for all sliders
+  const gap = (isHero || isHeroPro) ? 0 : 30;
   const itemWidth = item.offsetWidth;
   const moveX = state.current * (itemWidth + gap);
 
@@ -1826,6 +1906,7 @@ function stopSliderAuto(id) {
 }
 
 function getVisibleCount(type) {
+  if (type === 'heroslider' || type === 'heropro') return 1;
   const w = window.innerWidth;
   if (type === 'testimonial') {
     if (w > 992) return 2;
@@ -2224,6 +2305,7 @@ function addListItem(type) {
   else if (type === 'testimonial') { if (!activeModalBlock.data.items) activeModalBlock.data.items = []; activeModalBlock.data.items.push({ author: 'New Author', role: 'Customer', quote: 'Great service!', rating: 5, imgSrc: '' }); }
   else if (type === 'clientslider') { if (!activeModalBlock.data.items) activeModalBlock.data.items = []; activeModalBlock.data.items.push({ imgSrc: '' }); }
   else if (type === 'locations') { if (!activeModalBlock.data.items) activeModalBlock.data.items = []; activeModalBlock.data.items.push({ title: 'New Location', address: '', mapEmbed: '', phone: '', email: '' }); }
+  else if (type === 'heroslider') { if (!activeModalBlock.data.items) activeModalBlock.data.items = []; activeModalBlock.data.items.push({ tagTop: 'NEW TAG', tag: 'NEW', heading: 'New Hero Heading', subtext: 'Description goes here.', bgImage: 'https://alkuwaiti.com/wp-content/uploads/2020/05/Hero-Banner-Placeholder-Dark-1024x480.png' }); }
   rebuildBlock(activeModalBlock); render(); renderModalBody();
 }
 
@@ -2380,4 +2462,39 @@ async function togglePageInMenu(pageId, show) {
   } catch (e) {
     console.error(e);
   }
+}
+
+function renderHeroSliderForm(d) {
+  let html = '<div class="m-items-list">';
+  (d.items || []).forEach((it, i) => {
+    html += `<div class="m-list-item" style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:15px; margin-bottom:15px; position:relative;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div style="grid-column: span 2">
+            <label style="font-size:11px; color:var(--text3); display:block; margin-bottom:4px;">Background Image URL</label>
+            <div style="display:flex; gap:8px;">
+                <input class="m-input" placeholder="Background Image URL" value="${it.bgImage || ''}" oninput="updateListItem('heroslider',${i},'bgImage',this.value)" style="flex:1">
+            </div>
+        </div>
+        <div style="grid-column: span 2">
+            <label style="font-size:11px; color:var(--text3); display:block; margin-bottom:4px;">Main Heading</label>
+            <input class="m-input" placeholder="Main Heading" value="${(it.heading || '').replace(/"/g, '&quot;')}" oninput="updateListItem('heroslider',${i},'heading',this.value)">
+        </div>
+        <div>
+            <label style="font-size:11px; color:var(--text3); display:block; margin-bottom:4px;">Top Tag (Above Title)</label>
+            <input class="m-input" placeholder="Top Tag" value="${it.tagTop || ''}" oninput="updateListItem('heroslider',${i},'tagTop',this.value)">
+        </div>
+        <div>
+            <label style="font-size:11px; color:var(--text3); display:block; margin-bottom:4px;">Small Tag (Below Title)</label>
+            <input class="m-input" placeholder="Small Tag" value="${it.tag || ''}" oninput="updateListItem('heroslider',${i},'tag',this.value)">
+        </div>
+        <div style="grid-column: span 2">
+            <label style="font-size:11px; color:var(--text3); display:block; margin-bottom:4px;">Description / Subtext</label>
+            <textarea class="m-input" placeholder="Description / Subtext" oninput="updateListItem('heroslider',${i},'subtext',this.value)" style="height:60px; font-size:13px">${it.subtext || ''}</textarea>
+        </div>
+      </div>
+      <button style="position:absolute; top:10px; right:10px; border:none; background:rgba(255,0,0,0.1); color:var(--red); cursor:pointer; width:22px; height:22px; border-radius:4px; font-size:12px;" onclick="removeListItem(${i})">✕</button>
+    </div>`;
+  });
+  html += `</div><button class="m-add-btn" onclick="addListItem('heroslider')">+ Add new slide</button>`;
+  return html;
 }

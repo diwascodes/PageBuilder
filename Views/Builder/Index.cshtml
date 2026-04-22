@@ -24,6 +24,8 @@
   <button class="tb-btn" onclick="clearCanvas()">Clear</button>
   <button class="tb-btn" onclick="previewPage()">Preview ↗</button>
   <button class="tb-btn primary" onclick="savePageData()">Save to database</button>
+  <div class="tb-sep"></div>
+  <a href="/Account/Logout" class="tb-btn" style="color:var(--text3);text-decoration:none">Logout</a>
 </div>
 
 <!-- ── Sidebar ──────────────────────── -->
@@ -134,8 +136,8 @@
 </div>
 </div>
 
-<script src="~/js/site.js"></script>
-<script src="~/js/builder.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/builder.js" asp-append-version="true"></script>
 </body>
 </html>
 

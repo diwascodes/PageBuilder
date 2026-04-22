@@ -534,8 +534,9 @@ C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.A
 C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.AspNetCore.Razor.Language.dll
 C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.CodeAnalysis.Razor.dll
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\WebsiteBuilder.MvcApplicationPartsAssemblyInfo.cs
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\gsw37hpha2-{0}-dgo1x9mltn-dgo1x9mltn.gz
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\7670ky8twn-{0}-ikh3h0y6ph-ikh3h0y6ph.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8gcogbppib-{0}-r54ta0x9zs-r54ta0x9zs.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-zbkkrvp5l0-zbkkrvp5l0.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\gsw37hpha2-{0}-kdwd0kotot-kdwd0kotot.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8gcogbppib-{0}-bd2slyhry8-bd2slyhry8.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\7670ky8twn-{0}-98fugdhlfx-98fugdhlfx.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-7dzdut48r6-7dzdut48r6.gz
+C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

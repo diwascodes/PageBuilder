@@ -3,36 +3,64 @@
   "WorkspaceRootPath": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\page\\preview.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\page\\preview.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\models\\page.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:models\\page.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\migrations\\20260406190737_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:migrations\\20260406190737_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\controllers\\apicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:controllers\\apicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\wwwroot\\css\\preview.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:wwwroot\\css\\preview.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\wwwroot\\js\\builder.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:wwwroot\\js\\builder.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\controllers\\buildercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:controllers\\buildercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\controllers\\uploadcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:controllers\\uploadcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\wwwroot\\js\\builder.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}|",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:wwwroot\\js\\builder.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\page\\preview.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\page\\preview.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\controllers\\pagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:controllers\\pagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\wwwroot\\js\\site.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:wwwroot\\js\\site.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\controllers\\contactcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:controllers\\contactcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\models\\page.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:models\\page.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\wwwroot\\css\\preview.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:wwwroot\\css\\preview.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\scratch\\templates_fix.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -66,34 +94,46 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 10,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Builder\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Builder\\Index.cshtml",
               "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Builder\\Index.cshtml",
               "RelativeToolTip": "Views\\Builder\\Index.cshtml",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAADsAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAACMAAABNAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-07T16:40:19.304Z",
-              "IsPinned": true,
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-22T20:59:41.131Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "builder.js",
-              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\wwwroot\\js\\builder.js",
-              "RelativeDocumentMoniker": "wwwroot\\js\\builder.js",
-              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\wwwroot\\js\\builder.js",
-              "RelativeToolTip": "wwwroot\\js\\builder.js",
-              "ViewState": "AgIAAE4BAAAAAAAAAAAlwG4BAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2026-04-09T18:24:46.085Z",
-              "IsPinned": true
+              "DocumentIndex": 1,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "Controllers\\AccountController.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAwwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T20:59:35.875Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -109,7 +149,57 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
+              "Title": "builder.js",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\wwwroot\\js\\builder.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\builder.js",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\wwwroot\\js\\builder.js",
+              "RelativeToolTip": "wwwroot\\js\\builder.js",
+              "ViewState": "AgIAAAsEAAAAAAAAAAAswBoEAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-21T20:01:29.91Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BuilderController.cs",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\BuilderController.cs",
+              "RelativeDocumentMoniker": "Controllers\\BuilderController.cs",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\BuilderController.cs",
+              "RelativeToolTip": "Controllers\\BuilderController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-21T19:46:12.664Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ContactController.cs",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\ContactController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ContactController.cs",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\ContactController.cs",
+              "RelativeToolTip": "Controllers\\ContactController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-21T18:33:10.917Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "site.js",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\wwwroot\\js\\site.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\site.js",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\wwwroot\\js\\site.js",
+              "RelativeToolTip": "wwwroot\\js\\site.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-21T18:27:02.482Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "Page.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Models\\Page.cs",
               "RelativeDocumentMoniker": "Models\\Page.cs",
@@ -117,37 +207,85 @@
               "RelativeToolTip": "Models\\Page.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAA1wAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T16:51:41.172Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-21T16:51:41.172Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "20260406190737_InitialCreate.cs",
-              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Migrations\\20260406190737_InitialCreate.cs",
-              "RelativeDocumentMoniker": "Migrations\\20260406190737_InitialCreate.cs",
-              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Migrations\\20260406190737_InitialCreate.cs",
-              "RelativeToolTip": "Migrations\\20260406190737_InitialCreate.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAUwCcAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T19:20:12.444Z",
-              "EditorCaption": ""
+              "DocumentIndex": 6,
+              "Title": "Preview.cshtml",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Page\\Preview.cshtml",
+              "RelativeDocumentMoniker": "Views\\Page\\Preview.cshtml",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Page\\Preview.cshtml",
+              "RelativeToolTip": "Views\\Page\\Preview.cshtml",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAswKYAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-09T18:41:21.442Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
+              "Title": "PageController.cs",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\PageController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PageController.cs",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\PageController.cs",
+              "RelativeToolTip": "Controllers\\PageController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-21T19:46:28.417Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "UploadController.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\UploadController.cs",
               "RelativeDocumentMoniker": "Controllers\\UploadController.cs",
               "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\UploadController.cs",
               "RelativeToolTip": "Controllers\\UploadController.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAgwB8AAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwB8AAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T17:57:09.093Z"
+              "WhenOpened": "2026-04-20T17:57:09.093Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ApiController.cs",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\ApiController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ApiController.cs",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\ApiController.cs",
+              "RelativeToolTip": "Controllers\\ApiController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T16:43:59.742Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-21T19:46:08.298Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACEAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-21T19:46:19.385Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
               "Title": "templates_fix.js",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\scratch\\templates_fix.js",
               "RelativeDocumentMoniker": "scratch\\templates_fix.js",
@@ -159,7 +297,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 16,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
@@ -171,20 +309,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Preview.cshtml",
-              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Page\\Preview.cshtml",
-              "RelativeDocumentMoniker": "Views\\Page\\Preview.cshtml",
-              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Page\\Preview.cshtml",
-              "RelativeToolTip": "Views\\Page\\Preview.cshtml",
-              "ViewState": "AgIAAN8CAAAAAAAAAAAtwPcCAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-09T18:41:21.442Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 17,
               "Title": ".gitignore",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\.gitignore",
               "RelativeDocumentMoniker": ".gitignore",
@@ -196,7 +321,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 18,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
@@ -208,7 +333,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 20,
               "Title": "Privacy.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Home\\Privacy.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Privacy.cshtml",
@@ -220,20 +345,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ApiController.cs",
-              "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\ApiController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ApiController.cs",
-              "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\ApiController.cs",
-              "RelativeToolTip": "Controllers\\ApiController.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAYwBUAAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-07T16:43:59.742Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 14,
               "Title": "preview.css",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\wwwroot\\css\\preview.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\preview.css",
@@ -245,7 +357,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 19,
               "Title": "PageBlock.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Models\\PageBlock.cs",
               "RelativeDocumentMoniker": "Models\\PageBlock.cs",

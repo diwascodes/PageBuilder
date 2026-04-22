@@ -11,6 +11,7 @@ namespace WebsiteBuilder.Data
 
         public DbSet<Page> Pages { get; set; }
         public DbSet<PageBlock> PageBlocks { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

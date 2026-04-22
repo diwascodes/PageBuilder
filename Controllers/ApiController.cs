@@ -3,10 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using WebsiteBuilder.Data;
 using WebsiteBuilder.Models;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace WebsiteBuilder.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PagesController : ControllerBase
     {
         private readonly AppDbContext _context;

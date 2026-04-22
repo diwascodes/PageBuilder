@@ -17,6 +17,13 @@
             return (r * 299 + g * 587 + b * 114) / 1000 > 128;
         } catch { return true; }
     }
+
+    // Find a "Global" topbar if one exists on ANY page
+    var allTopBars = DbContext.PageBlocks
+        .Where(b => b.BlockType == "topbar")
+        .ToList();
+    var globalTopbar = allTopBars.OrderByDescending(b => b.Id).FirstOrDefault();
+    bool hasLocalTopbar = Model.Blocks.Any(b => b.BlockType == "topbar");
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -34,8 +41,47 @@
 {
     var d = JsonDocument.Parse(block.DataJson).RootElement;
     
+    // If we have a global topbar and this page DOESN'T have one, render the global one at the very top
+    if (block == Model.Blocks.First() && !hasLocalTopbar && globalTopbar != null)
+    {
+        var gd = JsonDocument.Parse(globalTopbar.DataJson).RootElement;
+        string gTickerText = gd.TryGetProperty("tickerText", out var gtt) ? gtt.GetString() : "";
+        bool gIsScrolling = false;
+        if (gd.TryGetProperty("isScrolling", out var gs))
+        {
+            if (gs.ValueKind == JsonValueKind.String)
+            {
+                bool.TryParse(gs.GetString(), out gIsScrolling);
+                if (!gIsScrolling) gIsScrolling = gs.GetString() == "1";
+            }
+            else if (gs.ValueKind == JsonValueKind.True || gs.ValueKind == JsonValueKind.False)
+            {
+                gIsScrolling = gs.GetBoolean();
+            }
+        }
+        string gEmail = gd.TryGetProperty("email", out var gem) ? gem.GetString() : "";
+        string gPhone = gd.TryGetProperty("phone", out var gph) ? gph.GetString() : "";
+        string gBg = gd.TryGetProperty("bg", out var gbgc) ? gbgc.GetString() : "#a6111f";
+        string gAccentBg = gd.TryGetProperty("accentBg", out var gabg) ? gabg.GetString() : "#800d18";
+        string gTextColor = gd.TryGetProperty("textColor", out var gtc) ? gtc.GetString() : "#ffffff";
+        string gScrollClass = gIsScrolling ? "is-scrolling" : "";
+
+        <div class="b-topbar" style="background:@gBg; color:@gTextColor">
+            <div class="topbar-left @gScrollClass">
+                <div class="topbar-ticker">@gTickerText</div>
+            </div>
+            <div class="topbar-right" style="background:@gAccentBg">
+                <div class="topbar-contact">
+                    <span>✉ @gEmail</span>
+                    <span>📞 @gPhone</span>
+                </div>
+            </div>
+        </div>
+    }
+
     if (block.BlockType == "topbar")
     {
+        // If we are on the page that actually HAS the topbar, we just render it normally here.
         string tickerText = d.TryGetProperty("tickerText", out var tt) ? tt.GetString() : "";
            bool isScrolling = false;
 
@@ -109,67 +155,123 @@
             </div>
         </div>
     }
+    else if (block.BlockType == "heroslider")
+    {
+        var itemsRes = d.TryGetProperty("items", out var its) ? its : default(JsonElement);
+        string overlayColor = d.TryGetProperty("overlayColor", out var oc) ? oc.GetString() : "rgba(26, 43, 85, 0.7)";
+        string textColorPro = d.TryGetProperty("textColor", out var tcPro) ? tcPro.GetString() : "#ffffff";
+        string textAlign = d.TryGetProperty("textAlign", out var ta) ? ta.GetString() : "center";
+        string contentPos = d.TryGetProperty("contentPos", out var cp) ? cp.GetString() : "center";
+            int headingSize = d.TryGetProperty("headingSize", out var hs)
+            ? hs.ValueKind switch
+            {
+                JsonValueKind.Number => hs.GetInt32(),
+                JsonValueKind.String when int.TryParse(hs.GetString(), out var v) => v,
+                _ => 64
+            }
+            : 64;
+            bool autoplay = !d.TryGetProperty("autoplay", out var ap) || ap.GetBoolean();
+        int blockId = block.Id;
+
+        <div class="b-heropro" id="slider-@blockId" style="height:700px;" data-autoscroll="@(autoplay ? "true" : "false")">
+            <div class="hp-track">
+                @if (itemsRes.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var item in itemsRes.EnumerateArray())
+                    {
+                        string bgImage = item.TryGetProperty("bgImage", out var bg) ? bg.GetString() : "";
+                        string tagTop = item.TryGetProperty("tagTop", out var tt) ? tt.GetString() : "";
+                        string tag = item.TryGetProperty("tag", out var t) ? t.GetString() : "";
+                        string heading = item.TryGetProperty("heading", out var h) ? h.GetString() : "";
+                        string subtext = item.TryGetProperty("subtext", out var st) ? st.GetString() : "";
+
+                        <div class="hp-slide valign-@contentPos pos-@textAlign" 
+                             style="flex:0 0 100%; height:100%; background-image:url('@bgImage'); background-size:cover; background-position:center; position:relative; display:flex; padding:0 80px; box-sizing:border-box;">
+                            <div class="hp-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; background:@overlayColor"></div>
+                            <div class="hp-content-wrap" style="position:relative; z-index:2; width:100%; max-width:900px; color:@textColorPro">
+                                @if(!string.IsNullOrEmpty(tagTop)) { <div class="hp-tag-top" style="font-size:14px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:20px; opacity:0.9;">@tagTop</div> }
+                                <div class="hp-title-box"><h2 style="font-size:@(headingSize)px; font-weight:800; line-height:1.1; margin-bottom:30px; letter-spacing:-0.02em; color:inherit;">@heading</h2></div>
+                                @if(!string.IsNullOrEmpty(tag)) { <div class="hp-tag" style="display:inline-block; font-size:12px; font-weight:700; padding:6px 16px; background:rgba(255,255,255,0.15); border-radius:4px; margin-bottom:25px; text-transform:uppercase;">@tag</div> }
+                                @if(!string.IsNullOrEmpty(subtext)) { <div class="hp-subtext" style="font-size:20px; line-height:1.6; opacity:0.85; max-width:600px; @(textAlign == "center" ? "margin:0 auto;" : "")">@subtext</div> }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <button class="hp-nav prev" onclick="moveSlider(@blockId, -1)">❮</button>
+            <button class="hp-nav next" onclick="moveSlider(@blockId, 1)">❯</button>
+            <div class="hp-dots">
+                @if (itemsRes.ValueKind == JsonValueKind.Array)
+                {
+                    for (int i = 0; i < itemsRes.GetArrayLength(); i++)
+                    {
+                        <div class="hp-dot @(i == 0 ? "active" : "")" data-index="@i" onclick="jumpSlider(@blockId, @i)"></div>
+                    }
+                }
+            </div>
+        </div>
+    }
     else if (block.BlockType == "hero")
     {
-        string bg = d.TryGetProperty("bg", out var el) ? el.GetString() : "#1a1a2e";
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#ffffff";
+        string btnColor = d.TryGetProperty("btnColor", out var bc) ? bc.GetString() : "#5b4fff";
+        string btnTextColor = d.TryGetProperty("btnTextColor", out var btc) ? btc.GetString() : "#ffffff";
         string paddingVStr = d.TryGetProperty("paddingV", out var pv) ? pv.ToString() : "80";
-        int paddingV = 80; int.TryParse(paddingVStr, out paddingV);
+        int.TryParse(paddingVStr, out int paddingV);
 
-        <div class="b-hero" style="background:@(bg); padding-top:@(paddingV)px; padding-bottom:@(paddingV)px">
-            <h1>@(d.GetProperty("heading").GetString())</h1>
-            <p>@(d.GetProperty("subtext").GetString())</p>
-            @{
-                string btnLink = d.TryGetProperty("btnLink", out var bl) ? bl.GetString() : "#";
-                string btnUrl = (btnLink.StartsWith("http") || btnLink.StartsWith("/") || btnLink == "#") ? btnLink : $"/page/{btnLink}";
-            }
-            <a href="@btnUrl" style="text-decoration:none"><button class="hero-btn">@(d.GetProperty("btnText").GetString())</button></a>
+        <div class="b-hero" style="background:@(d.TryGetProperty("bg", out var bgColor) ? bgColor.GetString() : "#1a1a2e"); padding-top:@(paddingV)px; padding-bottom:@(paddingV)px">
+            <h1 style="color:@(headerColor)">@(d.TryGetProperty("heading", out var h) ? h.GetString() : "")</h1>
+            <p>@(d.TryGetProperty("subtext", out var s) ? s.GetString() : "")</p>
+            <a href="@(d.TryGetProperty("btnLink", out var bl) ? bl.GetString() : "#")" class="hero-btn-link" style="text-decoration:none">
+                <button class="hero-btn" style="background:@(btnColor); color:@(btnTextColor)">@(d.TryGetProperty("btnText", out var bt) ? bt.GetString() : "")</button>
+            </a>
         </div>
     }
     else if (block.BlockType == "herosplit")
     {
-        string bg = d.TryGetProperty("bg", out var el) ? el.GetString() : "#0d252a";
-        string imgSrc = d.TryGetProperty("imgSrc", out var isrc) ? isrc.GetString() : "";
-        string btnLink = d.TryGetProperty("btnLink", out var bl) ? bl.GetString() : "#";
-        string btnUrl = (btnLink.StartsWith("http") || btnLink.StartsWith("/") || btnLink == "#") ? btnLink : $"/page/{btnLink}";
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#ffffff";
+        string btnColor = d.TryGetProperty("btnColor", out var bc) ? bc.GetString() : "#ffffff";
+        string btnTextColor = d.TryGetProperty("btnTextColor", out var btc) ? btc.GetString() : "#0d252a";
+        string bg = d.TryGetProperty("bg", out var bgColor) ? bgColor.GetString() : "#0d252a";
         string paddingVStr = d.TryGetProperty("paddingV", out var pv) ? pv.ToString() : "100";
-        int paddingV = 100; int.TryParse(paddingVStr, out paddingV);
+        int.TryParse(paddingVStr, out int paddingV);
+        string imgSrc = d.TryGetProperty("imgSrc", out var isrc) ? isrc.GetString() : "";
 
-        <div class="b-herosplit" style="background:@(bg)">
-            <div class="herosplit-visual" style="@(!string.IsNullOrEmpty(imgSrc) ? $"background-image:linear-gradient(rgba(13,37,42,0.3), rgba(13,37,42,0.3)), url('{imgSrc}');" : "")"></div>
+        <div class="b-herosplit" style="background:@bg">
+            <div class="herosplit-visual" style="@(!string.IsNullOrEmpty(imgSrc) ? $"background-image:linear-gradient(rgba(13,37,42,0.3), rgba(13,37,42,0.3)), url({imgSrc}); background-size:cover; background-position:center;" : $"background:{bg}")"></div>
             <div class="herosplit-content" style="padding-top:@(paddingV)px; padding-bottom:@(paddingV)px">
-                <h1>@(d.GetProperty("heading").GetString())</h1>
-                <p>@(d.GetProperty("subtext").GetString())</p>
-                <a href="@(btnUrl)" style="text-decoration:none">
-                    <button class="hero-btn">@(d.GetProperty("btnText").GetString())</button>
+                <h1 style="color:@(headerColor)">@(d.TryGetProperty("heading", out var h) ? h.GetString() : "")</h1>
+                <p>@(d.TryGetProperty("subtext", out var s) ? s.GetString() : "")</p>
+                <a href="@(d.TryGetProperty("btnLink", out var bl) ? bl.GetString() : "#")" style="text-decoration:none">
+                    <button class="hero-btn" style="background:@(btnColor); color:@(btnTextColor)">@(d.TryGetProperty("btnText", out var bt) ? bt.GetString() : "")</button>
                 </a>
             </div>
         </div>
     }
-    else if (block.BlockType == "textbanner") // Text Banner
+    else if (block.BlockType == "textbanner")
     {
-        string bg = d.TryGetProperty("bg", out var el) ? el.GetString() : "#5b4fff";
-        bool isLight = IsLight(bg);
-        string color = isLight ? "#111" : "#fff";
-        <div class="b-textbanner" style="background:@bg;color:@color">
-            <h2>@(d.GetProperty("heading").GetString())</h2>
-            <p>@(d.GetProperty("subtext").GetString())</p>
+        string bg = d.TryGetProperty("bg", out var bgColor) ? bgColor.GetString() : "#5b4fff";
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#ffffff";
+        string btnColor = d.TryGetProperty("btnColor", out var bc) ? bc.GetString() : "#ffffff";
+        
+        <div class="b-textbanner" style="background:@bg">
+            <h2 style="color:@(headerColor)">@(d.TryGetProperty("heading", out var h) ? h.GetString() : "")</h2>
+            <p>@(d.TryGetProperty("subtext", out var s) ? s.GetString() : "")</p>
             <div class="tb-actions">
-                @{
-                    string btnPrimaryLink = d.TryGetProperty("btnLink", out var bl1) ? bl1.GetString() : "#";
-                    string btnPrimaryUrl = (btnPrimaryLink.StartsWith("http") || btnPrimaryLink.StartsWith("/") || btnPrimaryLink == "#") ? btnPrimaryLink : $"/page/{btnPrimaryLink}";
-                }
-                <a href="@btnPrimaryUrl" style="text-decoration:none">
-                    <button class="btn-primary" style="color:@color; border-color:@(isLight ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.4)")">@(d.TryGetProperty("btnPrimary", out var b1) ? b1.GetString() : "Start free")</button>
+                <a href="@(d.TryGetProperty("btnLink", out var bl) ? bl.GetString() : "#")" style="text-decoration:none">
+                    <button class="btn-primary" style="background:@(btnColor); color:@bg">@(d.TryGetProperty("btnPrimary", out var bp) ? bp.GetString() : "")</button>
                 </a>
-                <button class="btn-secondary" style="color:@color; border-color:@(isLight ? "rgba(0,0,0,0.15)" : "transparent")">@(d.TryGetProperty("btnSecondary", out var b2) ? b2.GetString() : "Learn more")</button>
+                <button class="btn-secondary">@(d.TryGetProperty("btnSecondary", out var bs) ? bs.GetString() : "")</button>
             </div>
         </div>
     }
     else if (block.BlockType == "text")
     {
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#1a1a2e";
+        string textColor = d.TryGetProperty("textColor", out var tc) ? tc.GetString() : "#444444";
         <div class="b-text">
-            <h2>@(d.GetProperty("heading").GetString())</h2>
-            <p>@(d.GetProperty("body").GetString())</p>
+            <h2 style="color:@(headerColor)">@(d.TryGetProperty("heading", out var h) ? h.GetString() : "")</h2>
+            <p style="color:@(textColor)">@(d.TryGetProperty("body", out var b) ? b.GetString() : "")</p>
         </div>
     }
     else if (block.BlockType == "imgtext")
@@ -179,6 +281,10 @@
         string textAlign = d.TryGetProperty("textAlign", out var alignEl) ? alignEl.GetString() : "left";
         string imgPos = d.TryGetProperty("imgPosition", out var posEl) ? posEl.GetString() : "center";
         string imgSrc = d.TryGetProperty("imgSrc", out var srcEl) ? srcEl.GetString() : "";
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#1a1a2e";
+        string textColor = d.TryGetProperty("textColor", out var tc) ? tc.GetString() : "#666666";
+        string btnColor = d.TryGetProperty("btnColor", out var bc) ? bc.GetString() : "#111111";
+        string btnTextColor = d.TryGetProperty("btnTextColor", out var btc) ? btc.GetString() : "#ffffff";
         
         <div class="b-imgtext img-@layout" style="background:@bg">
             <div class="imgtext-img">
@@ -190,21 +296,19 @@
             </div>
             <div class="imgtext-body" style="text-align:@textAlign">
                 <div class="it-tag">@(d.TryGetProperty("tag", out var tEl) ? tEl.GetString() : "Featured")</div>
-                <h2>@(d.GetProperty("heading").GetString())</h2>
-                <p>@(d.GetProperty("body").GetString())</p>
+                <h2 style="color:@(headerColor)">@(d.TryGetProperty("heading", out var h) ? h.GetString() : "")</h2>
+                <p style="color:@(textColor)">@(d.TryGetProperty("body", out var b) ? b.GetString() : "")</p>
                 @{
                     string itBtnLink = d.TryGetProperty("btnLink", out var bl2) ? bl2.GetString() : "#";
                     string itBtnUrl = (itBtnLink.StartsWith("http") || itBtnLink.StartsWith("/") || itBtnLink == "#") ? itBtnLink : $"/page/{itBtnLink}";
                 }
-                <a href="@itBtnUrl" style="text-decoration:none"><button class="it-btn">@(d.GetProperty("btnText").GetString())</button></a>
+                <a href="@itBtnUrl" style="text-decoration:none"><button class="it-btn" style="background:@(btnColor); color:@(btnTextColor)">@(d.TryGetProperty("btnText", out var bt) ? bt.GetString() : "")</button></a>
             </div>
         </div>
     }
     else if (block.BlockType == "gridimgtext" || block.BlockType == "gridimgtextrow")
     {
-        // Both grid types are very similar, we can reuse logic here
         bool isRow = block.BlockType == "gridimgtextrow";
-        
         string cols = d.TryGetProperty("cols", out var colsEl) ? colsEl.GetString() : "3";
         string bg = isRow && d.TryGetProperty("cardBg", out var bgEl) ? bgEl.GetString() : (d.TryGetProperty("cardBg", out var cg) ? cg.GetString() : "#fff");
         string titleColor = d.TryGetProperty("titleColor", out var tc) ? tc.GetString() : "#111";
@@ -213,11 +317,12 @@
         string textAlign = d.TryGetProperty("textAlign", out var ta) ? ta.GetString() : "left";
         string layout = d.TryGetProperty("imgLayout", out var il) ? il.GetString() : "top";
         string imgPos = d.TryGetProperty("imgPosition", out var ip) ? ip.GetString() : "center";
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#111";
         
         <div class="@(isRow ? "b-gridimgtextrow" : "b-gridimgtext")">
             <div class="git-header">
-                <h2>@(d.GetProperty("heading").GetString())</h2>
-                <p>@(d.GetProperty("subtext").GetString())</p>
+                <h2 style="color:@(headerColor)">@(d.TryGetProperty("heading", out var h) ? h.GetString() : "")</h2>
+                <p>@(d.TryGetProperty("subtext", out var s) ? s.GetString() : "")</p>
             </div>
             <div class="@(isRow ? "gitrow-grid" : "git-grid") cols-@cols">
                 @if(d.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
@@ -249,8 +354,9 @@
     }
     else if (block.BlockType == "features")
     {
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#1a1a2e";
         <div class="b-features">
-            <h2>@(d.GetProperty("heading").GetString())</h2>
+            <h2 style="color:@(headerColor)">@(d.TryGetProperty("heading", out var h) ? h.GetString() : "")</h2>
             <div class="feat-grid">
                 @if(d.TryGetProperty("items", out var feats) && feats.ValueKind == JsonValueKind.Array){
                     foreach(var f in feats.EnumerateArray()){
@@ -266,30 +372,41 @@
     }
     else if (block.BlockType == "cta")
     {
-        string bg = d.TryGetProperty("bg", out var el) ? el.GetString() : "#5b4fff";
+        string bg = d.TryGetProperty("bg", out var cbg) ? cbg.GetString() : "#5b4fff";
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#ffffff";
+        string textColor = d.TryGetProperty("textColor", out var tc) ? tc.GetString() : "#ffffff";
+        string btnColor = d.TryGetProperty("btnColor", out var bc) ? bc.GetString() : "#ffffff";
+        string btnTextColor = d.TryGetProperty("btnTextColor", out var btc) ? btc.GetString() : bg;
+        
         <div class="b-cta" style="background:@bg">
-            <h2>@(d.GetProperty("heading").GetString())</h2>
-            <p>@(d.GetProperty("subtext").GetString())</p>
+            <h2 style="color:@(headerColor)">@(d.TryGetProperty("heading", out var h) ? h.GetString() : "")</h2>
+            <p style="color:@(textColor)">@(d.TryGetProperty("subtext", out var s) ? s.GetString() : "")</p>
             @{
                 string ctaLink = d.TryGetProperty("btnLink", out var bl4) ? bl4.GetString() : "#";
                 string ctaUrl = (ctaLink.StartsWith("http") || ctaLink.StartsWith("/") || ctaLink == "#") ? ctaLink : $"/page/{ctaLink}";
             }
-            <a href="@ctaUrl" style="text-decoration:none"><button style="color:@bg">@(d.GetProperty("btnText").GetString())</button></a>
+            <a href="@ctaUrl" style="text-decoration:none">
+                <button style="background:@(btnColor); color:@(btnTextColor)">@(d.TryGetProperty("btnText", out var bt) ? bt.GetString() : "")</button>
+            </a>
         </div>
     }
     else if (block.BlockType == "testimonial")
     {
-        string heading = d.TryGetProperty("heading", out var h) ? h.GetString() : "Testimonials";
-        string bg = d.TryGetProperty("bg", out var b) ? b.GetString() : "#f0f7ff";
-        string paddingVStr = d.TryGetProperty("paddingV", out var pv) ? pv.ToString() : "80";
-        int.TryParse(paddingVStr, out int paddingV);
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#1a1a2e";
         int blockId = block.Id;
+        string bg = d.TryGetProperty("bg", out var b) ? b.GetString() : "#f0f7ff";
+        string navType = d.TryGetProperty("navType", out var nt) ? nt.GetString() : "both";
+        bool showRole = !d.TryGetProperty("showRole", out var sr) || sr.GetBoolean();
+        bool italicQuote = !d.TryGetProperty("italicQuote", out var iq) || iq.GetBoolean();
+
+        string paddingVStr = d.TryGetProperty("paddingV", out var pv) ? pv.ToString() : "80";
+        int paddingV = 80; int.TryParse(paddingVStr, out paddingV);
 
         <div class="b-testimonial-slider" id="slider-@(blockId)" style="background:@bg; padding-top:@(paddingV)px; padding-bottom:@(paddingV)px">
             <div class="ts-header">
-                <div class="ts-line"></div>
-                <h2>@heading</h2>
-                <div class="ts-line"></div>
+                <div class="ts-line" style="background:@(headerColor)"></div>
+                <h2 style="color:@(headerColor)">@(d.TryGetProperty("heading", out var h) ? h.GetString() : "")</h2>
+                <div class="ts-line" style="background:@(headerColor)"></div>
             </div>
             <div class="ts-viewport">
                 <div class="ts-track">
@@ -304,15 +421,6 @@
                             int rating = item.TryGetProperty("rating", out var rate) ? rate.GetInt32() : 5;
                             string initials = string.Join("", author.Split(' ').Select(s => s.FirstOrDefault())).ToUpper();
                             if (initials.Length > 2) initials = initials.Substring(0, 2);
-
-                            bool showRole = true;
-                            if (d.TryGetProperty("showRole", out var sr) && sr.ValueKind != JsonValueKind.Null) {
-                                showRole = sr.ValueKind == JsonValueKind.String ? sr.GetString() != "false" : sr.GetBoolean();
-                            }
-                            bool italicQuote = true;
-                            if (d.TryGetProperty("italicQuote", out var iq) && iq.ValueKind != JsonValueKind.Null) {
-                                italicQuote = iq.ValueKind == JsonValueKind.String ? iq.GetString() != "false" : iq.GetBoolean();
-                            }
 
                             <div class="ts-item">
                                 <div class="ts-card">
@@ -338,7 +446,7 @@
                                     </div>
                                     <div class="ts-quote-box">
                                         <span class="ts-quote-icon">“</span>
-                                        <p class="ts-quote-text" style="@(italicQuote ? "font-style:italic" : "")">@quote</p>
+                                        <p class="ts-quote-text" style="@(italicQuote ? "font-style:italic" : ""); color:@(d.TryGetProperty("textColor", out var tc) ? tc.GetString() : "#666666")">@quote</p>
                                         <span class="ts-quote-icon ts-quote-end">”</span>
                                     </div>
                                 </div>
@@ -348,9 +456,9 @@
                 </div>
             </div>
             @{
-                string navType = d.TryGetProperty("navType", out var nt) ? nt.GetString() : "both";
-                bool showArrows = navType != "dots";
-                bool showDots = navType != "arrows";
+                string navType2 = d.TryGetProperty("navType", out var nt2) ? nt2.GetString() : "both";
+                bool showArrows = navType2 != "dots";
+                bool showDots = navType2 != "arrows";
             }
             @if (showArrows) {
                 <div class="ts-nav">
@@ -370,6 +478,55 @@
                     }
                 </div>
             }
+        </div>
+    }
+    else if (block.BlockType == "logoslider")
+    {
+        string heading = d.TryGetProperty("heading", out var h) ? h.GetString() : "Our Trusted Partners";
+        string btnText = d.TryGetProperty("btnText", out var bt) ? bt.GetString() : "View All Partners";
+        string btnLink = d.TryGetProperty("btnLink", out var bl) ? bl.GetString() : "#";
+        string btnUrl = (btnLink.StartsWith("http") || btnLink.StartsWith("/") || btnLink == "#") ? btnLink : $"/page/{btnLink}";
+        int blockId = block.Id;
+        string bg = d.TryGetProperty("bg", out var b) ? b.GetString() : "#ffffff";
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#1a1a2e";
+        string btnColor = d.TryGetProperty("btnColor", out var bc) ? bc.GetString() : "#a6111f";
+        string btnTextColor = d.TryGetProperty("btnTextColor", out var btc) ? btc.GetString() : "#ffffff";
+        
+        string paddingVStr = d.TryGetProperty("paddingV", out var pv) ? pv.ToString() : "80";
+        int.TryParse(paddingVStr, out int paddingV);
+
+        <div class="b-logoslider" id="slider-@(blockId)" style="background:@bg; padding-top:@(paddingV)px; padding-bottom:@(paddingV)px">
+            <div class="ls-header"><h2 style="color:@headerColor">@heading</h2></div>
+            <div class="ls-viewport">
+                <button class="ls-ctrl ls-prev" onclick="moveSlider(@blockId, -1)">‹</button>
+                <div class="ls-track">
+                    @if (d.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (var item in items.EnumerateArray())
+                        {
+                            string iName = item.TryGetProperty("name", out var iname) ? iname.GetString() : "";
+                            string iSrc = item.TryGetProperty("imgSrc", out var isrc) ? isrc.GetString() : "";
+                            <div class="ls-item">
+                                <img src="@iSrc" alt="@iName">
+                                <span>@iName</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <button class="ls-ctrl ls-next" onclick="moveSlider(@blockId, 1)">›</button>
+            </div>
+            <div class="ls-dots">
+                @if (d.TryGetProperty("items", out var dots) && dots.ValueKind == JsonValueKind.Array)
+                {
+                    for (int i = 0; i < dots.GetArrayLength(); i++)
+                    {
+                        <div class="ls-dot @(i == 0 ? "active" : "")" data-index="@i" onclick="jumpSlider(@blockId, @i)"></div>
+                    }
+                }
+            </div>
+            <a href="@btnUrl" style="text-decoration:none">
+                <button class="ls-more-btn" style="background:@btnColor; color:@btnTextColor">@btnText</button>
+            </a>
         </div>
     }
     else if (block.BlockType == "clientslider")
@@ -396,10 +553,10 @@
             <div class="cg-inner">
                 <div class="cg-header" style="text-align:center; width:100%; margin-bottom:60px;">
                     <h2 style="color:@textColor">@heading</h2>
-                    <div class="cg-divider" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-                        <span class="cg-line" style="width:60px; height:1px; background:#e2e8f0;"></span>
-                        <div class="cg-diamond" style="width:10px; height:10px; background:#a6111f; transform:rotate(45deg);"></div>
-                        <span class="cg-line" style="width:60px; height:1px; background:#e2e8f0;"></span>
+                    <div class="cg-divider" style="display:flex; align-items:center; justify-content:center; gap:15px; margin-top:15px;">
+                        <span class="cg-line" style="width:60px; height:2px; background:@(d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#a6111f");"></span>
+                        <div class="cg-diamond" style="width:10px; height:10px; background:@(d.TryGetProperty("headerColor", out var dc) ? dc.GetString() : "#a6111f"); transform:rotate(45deg);"></div>
+                        <span class="cg-line" style="width:60px; height:2px; background:@(d.TryGetProperty("headerColor", out var lc) ? lc.GetString() : "#a6111f");"></span>
                     </div>
                 </div>
 
@@ -460,16 +617,20 @@
     {
         string heading = d.TryGetProperty("heading", out var h) ? h.GetString() : "Get in touch";
         string btnText = d.TryGetProperty("btnText", out var bt) ? bt.GetString() : "Send message";
+        string headerColor = d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : "#1a1a2e";
+        string btnColor = d.TryGetProperty("btnColor", out var bc) ? bc.GetString() : "#a6111f";
+        string btnTextColor = d.TryGetProperty("btnTextColor", out var btc) ? btc.GetString() : "#ffffff";
         
         <div class="b-form">
-            <h2>@heading</h2>
+            <h2 style="color:@(headerColor)">@heading</h2>
             <div class="form-row">
                 <div class="form-field"><label>First name</label><input type="text" class="cf-fname" placeholder="Jane"></div>
                 <div class="form-field"><label>Last name</label><input type="text" class="cf-lname" placeholder="Smith"></div>
             </div>
             <div class="form-field" style="margin-bottom:20px"><label>Email</label><input type="email" class="cf-email" placeholder="jane@company.com"></div>
             <div class="form-field" style="margin-bottom:20px"><label>Message</label><textarea class="cf-message" rows="4" placeholder="How can we help?"></textarea></div>
-            <button class="submit-btn" onclick="submitContactForm(this)">@btnText</button>
+            <button class="submit-btn" style="background:@(btnColor); color:@(btnTextColor)" onclick="submitContactForm(this)">@btnText</button>
+            <div class="cf-status" style="display:none"></div>
         </div>
     }
     else if (block.BlockType == "footer")
@@ -498,7 +659,7 @@
                        <img src="@logoImage" alt="Logo" style="max-height:30px; object-fit:contain;">
                    }
                    @if (showBrand) {
-                       <div class="footer-brand" style="margin-bottom:0; font-size:18px;">@brand</div>
+                       <div class="footer-brand" style="margin-bottom:0; font-size:18px; color:@(d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : textColor)">@brand</div>
                    }
                    @if (linkPos == "left" && showItems) {
                        <div class="footer-links" style="margin-bottom:0; gap:25px; display:flex;">
@@ -573,11 +734,11 @@
 
         <div class="b-abouthighlights" style="display:flex; flex-wrap:wrap; min-height:300px; padding-top:@(paddingV)px; padding-bottom:@(paddingV)px; align-items:@(alignItems == "center" ? "center" : "flex-start")">
             <div class="ah-left" style="flex: 0 0 @leftW; background:@leftBg; color:@textColorLeft; padding:80px 60px">
-                <h1 style="color:@textColorLeft; margin-bottom:18px; font-size:42px; font-weight:700; line-height:1.15; letter-spacing:-0.02em">@heading</h1>
+                <h1 style="color:@(d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : textColorLeft); margin-bottom:18px; font-size:42px; font-weight:700; line-height:1.15; letter-spacing:-0.02em">@heading</h1>
                 <h3 style="color:@textColorLeft; margin-bottom:24px; font-size:22px; font-weight:500">@subheading</h3>
                 <p style="margin-bottom:36px; line-height:1.7; font-size:16px; color:#444">@body</p>
                 <a href="@btnUrl" style="text-decoration:none">
-                    <button class="ah-btn" style="background:@btnBg; color:@btnTextColor; border:none; padding:15px 40px; border-radius:32px; cursor:pointer; font-weight:700; font-size:16px; letter-spacing:0.01em">@btnText</button>
+                    <button class="ah-btn" style="background:@(d.TryGetProperty("btnColor", out var bc) ? bc.GetString() : btnBg); color:@(d.TryGetProperty("btnTextColor", out var btc1) ? btc1.GetString() : btnTextColor); border:none; padding:15px 40px; border-radius:32px; cursor:pointer; font-weight:700; font-size:16px; letter-spacing:0.01em">@btnText</button>
                 </a>
             </div>
             <div class="ah-right" style="flex: 0 0 @rightW; background:@rightBg; color:@textColorRight; padding:80px 60px">
@@ -618,7 +779,7 @@
         string headerColor = d.TryGetProperty("headerColor", out var hcl) ? hcl.GetString() : "#a6111f";
 
         <div class="b-servicegrid" style="background:@bg; padding-top:@(paddingV)px; padding-bottom:@(paddingV)px">
-            <div class="wwo-header"><h2 style="color:@titleColor">@heading<span style="background:@headerColor; display:block; width:60px; height:3px; margin:10px auto 0"></span></h2></div>
+            <div class="wwo-header"><h2 style="color:@(d.TryGetProperty("headerColor", out var hc2) ? hc2.GetString() : titleColor)">@heading<span style="background:@headerColor; display:block; width:60px; height:3px; margin:10px auto 0"></span></h2></div>
             <div class="wwo-grid">
                 @if (d.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
                 {
@@ -633,7 +794,7 @@
                     }
                 }
             </div>
-            <a href="@btnUrl" class="wwo-btn" style="background:@accentColor">@btnText</a>
+            <a href="@btnUrl" style="text-decoration:none"><button class="wwo-btn" style="background:@(d.TryGetProperty("btnColor", out var bc) ? bc.GetString() : accentColor); color:@(d.TryGetProperty("btnTextColor", out var btc) ? btc.GetString() : "#ffffff")">@btnText</button></a>
         </div>
     }
     else if (block.BlockType == "footer2")
@@ -658,13 +819,13 @@
                         @if (!string.IsNullOrEmpty(logoImage)) {
                             <img src="@logoImage" alt="@brand" style="max-height:48px; width:auto; object-fit:contain; margin-bottom:14px; display:block">
                         } else {
-                            <div class="f2-brand" style="color:@textColor">@brand</div>
+                            <div class="f2-brand" style="color:@(d.TryGetProperty("headerColor", out var hc) ? hc.GetString() : textColor)">@brand</div>
                         }
                         <p style="color:@(textColor)80; font-size:13px; line-height:1.7; max-width:240px">@tagline</p>
                     </div>
 
                     <div class="f2-col">
-                        <div class="f2-col-title" style="color:@textColor; border-color:@accent">QUICK LINKS</div>
+                        <div class="f2-col-title" style="color:@(d.TryGetProperty("headerColor", out var hc2) ? hc2.GetString() : textColor); border-color:@accent">QUICK LINKS</div>
                         <ul class="f2-links-list">
                             @if (d.TryGetProperty("quickLinks", out var ql) && ql.ValueKind == JsonValueKind.Array)
                             {
@@ -690,7 +851,7 @@
                                 string cPhone = contact.TryGetProperty("phone", out var cph) ? cph.GetString() : "";
 
                                 <div class="f2-contact-col">
-                                    <div class="f2-col-title" style="color:@textColor; border-color:@accent">@cLabel</div>
+                                    <div class="f2-col-title" style="color:@(d.TryGetProperty("headerColor", out var hc3) ? hc3.GetString() : textColor); border-color:@accent">@cLabel</div>
                                     @if (!string.IsNullOrEmpty(cAddress)) {
                                         <div class="f2-contact-row">
                                             <span class="f2-contact-icon" style="color:@accent">📍</span>
@@ -716,13 +877,13 @@
 
                     @if (showNewsletter) {
                         <div class="f2-col">
-                            <div class="f2-col-title" style="color:@textColor; border-color:@accent">NEWSLETTER</div>
+                            <div class="f2-col-title" style="color:@(d.TryGetProperty("headerColor", out var hc4) ? hc4.GetString() : textColor); border-color:@accent">NEWSLETTER</div>
                             <p style="color:@(textColor)80; font-size:13px; line-height:1.6; margin-bottom:16px">Stay updated with our latest news and insights.</p>
                             <div class="f2-newsletter-row">
                                 <input type="email" placeholder="@(d.TryGetProperty("newsletterPlaceholder", out var nlp) ? nlp.GetString() : "Email Address")" 
                                        class="f2-newsletter-input" 
                                        style="background:@(bg == "#ffffff" ? "#f4f4f2" : "rgba(255,255,255,0.07)"); color:@textColor; border-color:rgba(255,255,255,0.12)">
-                                <button class="f2-newsletter-btn" style="background:@accent">@(d.TryGetProperty("newsletterBtnText", out var nbt) ? nbt.GetString() : "Join")</button>
+                                <button class="f2-newsletter-btn" style="background:@(d.TryGetProperty("btnColor", out var bc) ? bc.GetString() : accent); color:@(d.TryGetProperty("btnTextColor", out var btc) ? btc.GetString() : "#ffffff")">@(d.TryGetProperty("newsletterBtnText", out var nbt) ? nbt.GetString() : "Join")</button>
                             </div>
                         </div>
                     }
@@ -819,7 +980,7 @@
     let sliderStates = {};
 
     function initSliders() {
-        document.querySelectorAll('.b-testimonial-slider, .b-client-slider').forEach(slider => {
+        document.querySelectorAll('.b-testimonial-slider, .b-client-slider, .b-heropro').forEach(slider => {
             const id = slider.id.replace('slider-', '');
             if (!sliderStates[id]) {
                 sliderStates[id] = { current: 0, interval: null };
@@ -853,9 +1014,10 @@
         const slider = document.getElementById(`slider-${id}`);
         if (!slider) return;
         const isClient = slider.classList.contains('b-client-slider');
-        const prefix = isClient ? 'cs' : 'ts';
-        const items = slider.querySelectorAll(`.${prefix}-item`);
-        const visibleCount = getVisibleCount(isClient ? 'clientslider' : 'testimonial');
+        const isHero = slider.classList.contains('b-heropro');
+        const prefix = isHero ? 'hp' : (isClient ? 'cs' : 'ts');
+        const items = slider.querySelectorAll(`.${prefix}-item, .${prefix}-slide`);
+        const visibleCount = isHero ? 1 : getVisibleCount(isClient ? 'clientslider' : 'testimonial');
         const max = Math.max(0, items.length - visibleCount);
         
         if (!sliderStates[id]) sliderStates[id] = { current: 0, interval: null };
@@ -871,16 +1033,17 @@
         const slider = document.getElementById(`slider-${id}`);
         if (!slider) return;
         const isClient = slider.classList.contains('b-client-slider');
-        const prefix = isClient ? 'cs' : 'ts';
+        const isHero = slider.classList.contains('b-heropro');
+        const prefix = isHero ? 'hp' : (isClient ? 'cs' : 'ts');
         
         const track = slider.querySelector(`.${prefix}-track`);
         const dots = slider.querySelectorAll(`.${prefix}-dot`);
         const state = sliderStates[id];
         
-        const item = track.querySelector(`.${prefix}-item`);
+        const item = track.querySelector(`.${prefix}-item, .${prefix}-slide`);
         if (!item) return;
         
-        const gap = 30; // Standardized gap for all sliders
+        const gap = isHero ? 0 : 30; // No gap for full-screen hero slider
         const itemWidth = item.offsetWidth;
         const moveX = state.current * (itemWidth + gap);
         

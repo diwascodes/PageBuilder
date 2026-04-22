@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebsiteBuilder.Controllers
 {
     [Route("api/upload")]
     [ApiController]
+    [Authorize]
     public class UploadController : ControllerBase
     {
         private readonly IWebHostEnvironment _env;

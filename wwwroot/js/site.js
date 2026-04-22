@@ -10,7 +10,7 @@ async function submitContactForm(btn) {
     const message = form.querySelector('.cf-message')?.value || "";
 
     if (!firstName || !email || !message) {
-        alert("Please fill in all required fields (First Name, Email, and Message).");
+        showStatus(form, "Please fill in all required fields (First Name, Email, and Message).", "error");
         return;
     }
 
@@ -48,15 +48,40 @@ async function submitContactForm(btn) {
                 </div>
             `;
         } else {
-            alert("Error: " + (result.message || "Something went wrong."));
+            showStatus(form, "Error: " + (result.message || "Something went wrong."), "error");
         }
     } catch (error) {
         console.error("Submission error:", error);
-        alert("Oops! " + error.message);
+        showStatus(form, "Oops! " + error.message, "error");
     } finally {
         if (btn && !btn.parentElement === null) {
             btn.disabled = false;
             btn.innerText = originalText;
         }
     }
+}
+
+function showStatus(form, msg, type) {
+    const statusDiv = form.querySelector('.cf-status');
+    if (!statusDiv) return;
+    
+    statusDiv.innerText = msg;
+    statusDiv.style.display = 'block';
+    statusDiv.style.padding = '12px';
+    statusDiv.style.borderRadius = '8px';
+    statusDiv.style.marginTop = '15px';
+    
+    if (type === 'error') {
+        statusDiv.style.background = '#fee2e2';
+        statusDiv.style.color = '#991b1b';
+        statusDiv.style.border = '1px solid #fecaca';
+    } else {
+        statusDiv.style.background = '#dcfce7';
+        statusDiv.style.color = '#166534';
+        statusDiv.style.border = '1px solid #bbf7d0';
+    }
+    
+    setTimeout(() => {
+        statusDiv.style.display = 'none';
+    }, 3000);
 }
