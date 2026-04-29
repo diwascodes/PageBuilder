@@ -538,5 +538,5 @@ C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\staticwebas
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\gsw37hpha2-{0}-kdwd0kotot-kdwd0kotot.gz
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\8gcogbppib-{0}-bd2slyhry8-bd2slyhry8.gz
 C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\7670ky8twn-{0}-98fugdhlfx-98fugdhlfx.gz
-C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-7dzdut48r6-7dzdut48r6.gz
 C:\Practice Project\Website Builder\WebsiteBuilder\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Practice Project\Website Builder\WebsiteBuilder\obj\Debug\net10.0\compressed\zmkbx0ane0-{0}-cg6rddl0rw-cg6rddl0rw.gz

@@ -2469,12 +2469,7 @@ function renderHeroSliderForm(d) {
   (d.items || []).forEach((it, i) => {
     html += `<div class="m-list-item" style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:15px; margin-bottom:15px; position:relative;">
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-        <div style="grid-column: span 2">
-            <label style="font-size:11px; color:var(--text3); display:block; margin-bottom:4px;">Background Image URL</label>
-            <div style="display:flex; gap:8px;">
-                <input class="m-input" placeholder="Background Image URL" value="${it.bgImage || ''}" oninput="updateListItem('heroslider',${i},'bgImage',this.value)" style="flex:1">
-            </div>
-        </div>
+        ${listItemUploadField('heroslider', i, 'bgImage', it.bgImage, 'Background Image')}
         <div style="grid-column: span 2">
             <label style="font-size:11px; color:var(--text3); display:block; margin-bottom:4px;">Main Heading</label>
             <input class="m-input" placeholder="Main Heading" value="${(it.heading || '').replace(/"/g, '&quot;')}" oninput="updateListItem('heroslider',${i},'heading',this.value)">
