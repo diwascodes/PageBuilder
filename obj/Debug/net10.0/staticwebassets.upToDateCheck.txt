@@ -1,8 +1,8 @@
+wwwroot\js\builder.js
 wwwroot\css\builder.css
-wwwroot\css\preview.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
-wwwroot\js\builder.js
+wwwroot\css\preview.css
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -64,26 +64,28 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\uploads\143a3c7144594f88813309fc14555be1.png
-wwwroot\uploads\2c9c7e86d55643caab6648d6ccf91c00.png
-wwwroot\uploads\35d4460796214148b7c3edd97908c01d.png
 wwwroot\uploads\35e18f7c2f764ee5a9d4f2142ab3bc57.png
-wwwroot\uploads\574900298c0d40ef850a841f1fbea6f6.png
 wwwroot\uploads\654786db848d48d2bf8fb9bf28149cf0.png
 wwwroot\uploads\6e24a7452e754e479690432ca7ff9d47.png
-wwwroot\uploads\7519fb6b411945bbafc82d222fc43819.png
-wwwroot\uploads\785517803ca74365a5e34380575cd7b9.png
-wwwroot\uploads\ad99d2b9ea0641c680a2509a989c2148.jpg
 wwwroot\uploads\c700a28111f44f8bb0dd1aaf3075453c.png
-wwwroot\uploads\d033442dc3ad4159a30c788dc8c68549.png
 wwwroot\uploads\e18a6a0ae5be4ce2832a1b0dcbd24f58.jpg
+wwwroot\uploads\2c9c7e86d55643caab6648d6ccf91c00.png
 wwwroot\uploads\e85e1b6d791e419786c9042830287698.png
+wwwroot\uploads\785517803ca74365a5e34380575cd7b9.png
+wwwroot\uploads\143a3c7144594f88813309fc14555be1.png
+wwwroot\uploads\7519fb6b411945bbafc82d222fc43819.png
+wwwroot\uploads\35d4460796214148b7c3edd97908c01d.png
 wwwroot\uploads\f7e29e2235f349dd816f8aa960d76936.jpg
 wwwroot\uploads\f7ec0e9fef5a4737b0c532224b43ebb8.png
+wwwroot\uploads\ad99d2b9ea0641c680a2509a989c2148.jpg
+wwwroot\uploads\d033442dc3ad4159a30c788dc8c68549.png
+wwwroot\uploads\574900298c0d40ef850a841f1fbea6f6.png
+wwwroot\uploads\66fa4f859a9f43bea6b02f9a9a7caaa0.jpg
+wwwroot\uploads\29ecc57309e749a2bb5b30f777627701.jpg
+wwwroot\uploads\c28da0cf88e34b4993deed89dcd5f415.png
+wwwroot\uploads\ba8fa845e5a94e9a84b17a025a38265e.webp
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\builder.css
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\preview.css
-C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\site.css
-C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\favicon.ico
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\js\site.js
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -141,7 +143,9 @@ C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquer
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquery.min.js
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquery.min.map
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquery.slim.js
-C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquery.slim.min.js
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquery.slim.min.map
+C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\css\site.css
+C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\dist\jquery.slim.min.js
+C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\favicon.ico
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\lib\jquery\LICENSE.txt
 C:\Practice Project\Website Builder\WebsiteBuilder\wwwroot\js\builder.js

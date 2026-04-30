@@ -134,8 +134,22 @@
         string paddingVStr = d.TryGetProperty("paddingV", out var pv) ? pv.ToString() : "18";
         int paddingV = 18; int.TryParse(paddingVStr, out paddingV);
 
+        // Shadow
+        int shadowX = 0, shadowY = 2, shadowBlur = 8, shadowSpread = 0;
+        double shadowOpacity = 0;
+        string shadowColor = "#000000";
+        if (d.TryGetProperty("shadowX", out var sx)) int.TryParse(sx.ToString(), out shadowX);
+        if (d.TryGetProperty("shadowY", out var sy)) int.TryParse(sy.ToString(), out shadowY);
+        if (d.TryGetProperty("shadowBlur", out var sbl)) int.TryParse(sbl.ToString(), out shadowBlur);
+        if (d.TryGetProperty("shadowSpread", out var ssp)) int.TryParse(ssp.ToString(), out shadowSpread);
+        if (d.TryGetProperty("shadowOpacity", out var sop)) double.TryParse(sop.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out shadowOpacity);
+        if (d.TryGetProperty("shadowColor", out var sc)) shadowColor = sc.GetString() ?? "#000000";
+        int shadowAlpha = (int)Math.Round(shadowOpacity * 255);
+        string shadowHex = shadowAlpha.ToString("X2").ToLower();
+        string boxShadow = shadowOpacity > 0 ? $"{shadowX}px {shadowY}px {shadowBlur}px {shadowSpread}px {shadowColor}{shadowHex}" : "none";
+
         <!-- Navbar v2.1 Responsive -->
-        <div class="b-navbar pos-@(linksPos)" style="background:@(bg); padding-top:@(paddingV)px; padding-bottom:@(paddingV)px">
+        <div class="b-navbar pos-@(linksPos)" style="background:@(bg); padding-top:@(paddingV)px; padding-bottom:@(paddingV)px; box-shadow:@boxShadow;">
             <div class="nav-logo">
                 @if(!string.IsNullOrEmpty(logoImage)) {
                     <img src="@logoImage" alt="@logoText" style="max-height:40px">

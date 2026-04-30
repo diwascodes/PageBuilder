@@ -155,8 +155,8 @@ const TEMPLATES = {
   },
   navbar: {
     label: 'Navbar', icon: '☰', table: 'Navbar',
-    dataFields: ['logo', 'logoImage', 'linksPos', 'bg', 'logoColor', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'paddingV'],
-    defaultData: { logo: 'Brand', logoImage: '', linksPos: 'right', bg: '#ffffff', logoColor: '#111111', linksColor: '#777777', linksSize: 14, linksBold: false, linksItalic: false, paddingV: 18 },
+    dataFields: ['logo', 'logoImage', 'linksPos', 'bg', 'logoColor', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'paddingV', 'shadowX', 'shadowY', 'shadowBlur', 'shadowSpread', 'shadowColor', 'shadowOpacity'],
+    defaultData: { logo: 'Brand', logoImage: '', linksPos: 'right', bg: '#ffffff', logoColor: '#111111', linksColor: '#777777', linksSize: 14, linksBold: false, linksItalic: false, paddingV: 18, shadowX: 0, shadowY: 2, shadowBlur: 8, shadowSpread: 0, shadowColor: '#000000', shadowOpacity: 0.12 },
     render: d => {
       const linkStyle = `color:${d.linksColor || '#777777'}; font-size:${d.linksSize || 14}px; font-weight:${d.linksBold ? 'bold' : 'normal'}; font-style:${d.linksItalic ? 'italic' : 'normal'}; text-decoration:none;`;
       let linksHtml = `<span style="${linkStyle}">Home</span><span style="${linkStyle}">About</span><span style="${linkStyle}">Services</span>`;
@@ -165,7 +165,7 @@ const TEMPLATES = {
       }
       const logoHtml = d.logoImage ? `<img src="${d.logoImage}" alt="${d.logo}" style="max-height:40px">` : `<span style="color:${d.logoColor || '#111111'}">${d.logo}</span>`;
       return `
-        <div class="b-navbar pos-${d.linksPos || 'right'}" style="background:${d.bg || '#ffffff'}; padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px">
+        <div class="b-navbar pos-${d.linksPos || 'right'}" style="background:${d.bg || '#ffffff'}; padding-top:${d.paddingV}px; padding-bottom:${d.paddingV}px; box-shadow:${(d.shadowOpacity > 0) ? `${d.shadowX || 0}px ${d.shadowY || 2}px ${d.shadowBlur || 8}px ${d.shadowSpread || 0}px ${d.shadowColor || '#000000'}${Math.round((d.shadowOpacity || 0.12) * 255).toString(16).padStart(2,'0')}` : 'none'};">
           <div class="nav-logo">${logoHtml}</div>
           <button class="nav-toggle" onclick="this.parentElement.querySelector('.nav-links').classList.toggle('active')">☰</button>
           <div class="nav-links">${linksHtml}</div>
@@ -1125,7 +1125,7 @@ function renderProps(block) {
   // Loop through dataFields defined in the template
   (tpl.dataFields || []).forEach(k => {
     // Skip fields that have custom complex UI below
-    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'headerColor', 'textColor', 'btnTextColor', 'imgPosition', 'imgLayout', 'imgBg', 'paddingV', 'leftBg', 'rightBg', 'textColorLeft', 'textColorRight', 'btnBg', 'btnTextColor', 'iconColor', 'colWidth', 'alignItems', 'navType', 'showRole', 'italicQuote', 'showNewsletter', 'contentPos', 'autoplay'].includes(k)) return;
+    if (['bg', 'layout', 'textAlign', 'cols', 'logoColor', 'linksPos', 'linksColor', 'linksSize', 'linksBold', 'linksItalic', 'items', 'cardBg', 'headerBg', 'titleColor', 'descColor', 'tagColor', 'btnColor', 'headerColor', 'textColor', 'btnTextColor', 'imgPosition', 'imgLayout', 'imgBg', 'paddingV', 'leftBg', 'rightBg', 'textColorLeft', 'textColorRight', 'btnBg', 'btnTextColor', 'iconColor', 'colWidth', 'alignItems', 'navType', 'showRole', 'italicQuote', 'showNewsletter', 'contentPos', 'autoplay', 'shadowX', 'shadowY', 'shadowBlur', 'shadowSpread', 'shadowColor', 'shadowOpacity'].includes(k)) return;
 
     const label = FIELD_LABELS[k] || (k.charAt(0).toUpperCase() + k.slice(1));
     const value = d[k] !== undefined ? String(d[k]).replace(/"/g, '&quot;') : '';
@@ -1232,6 +1232,51 @@ function renderProps(block) {
         <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" ${d.linksBold ? 'checked' : ''} onchange="updateProp(${block.id},'linksBold',this.checked)"> B</label>
         <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" ${d.linksItalic ? 'checked' : ''} onchange="updateProp(${block.id},'linksItalic',this.checked)"> I</label>
       </div></div>
+    </div>`;
+
+    // ── Shadow controls ──
+    html += `<div class="prop-section">Box Shadow</div>`;
+
+    // Presets
+    const shadowPresets = [
+      { label: 'None',     x:0, y:0,  blur:0,  spread:0, opacity:0 },
+      { label: 'Subtle',   x:0, y:2,  blur:6,  spread:0, opacity:0.07 },
+      { label: 'Soft',     x:0, y:4,  blur:14, spread:0, opacity:0.12 },
+      { label: 'Elevated', x:0, y:8,  blur:24, spread:-2, opacity:0.18 },
+      { label: 'Bold',     x:0, y:12, blur:32, spread:-4, opacity:0.28 },
+    ];
+    html += `<div class="prop-group"><span class="prop-label">Preset</span><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">`;
+    shadowPresets.forEach(p => {
+      const isActive = d.shadowOpacity === p.opacity && d.shadowBlur === p.blur;
+      html += `<button class="pos-btn${isActive ? ' active' : ''}" style="font-size:11px;padding:4px 8px" onclick="
+        updateProp(${block.id},'shadowX',${p.x});
+        updateProp(${block.id},'shadowY',${p.y});
+        updateProp(${block.id},'shadowBlur',${p.blur});
+        updateProp(${block.id},'shadowSpread',${p.spread});
+        updateProp(${block.id},'shadowOpacity',${p.opacity},true);
+      ">${p.label}</button>`;
+    });
+    html += `</div></div>`;
+
+    // Sliders
+    const sliders = [
+      { label:'Offset X (px)', key:'shadowX',      min:-40, max:40,  step:1,    val: d.shadowX      ?? 0 },
+      { label:'Offset Y (px)', key:'shadowY',      min:-40, max:40,  step:1,    val: d.shadowY      ?? 2 },
+      { label:'Blur (px)',     key:'shadowBlur',   min:0,   max:80,  step:1,    val: d.shadowBlur   ?? 8 },
+      { label:'Spread (px)',   key:'shadowSpread', min:-20, max:20,  step:1,    val: d.shadowSpread ?? 0 },
+      { label:'Opacity',       key:'shadowOpacity',min:0,   max:1,   step:0.01, val: d.shadowOpacity ?? 0.12 },
+    ];
+    sliders.forEach(s => {
+      html += `<div class="prop-group"><span class="prop-label" style="display:flex;justify-content:space-between">${s.label} <b id="nav-shadow-${s.key}-val">${s.val}</b></span>
+        <input type="range" min="${s.min}" max="${s.max}" step="${s.step}" value="${s.val}" style="width:100%;accent-color:var(--accent)"
+          oninput="document.getElementById('nav-shadow-${s.key}-val').textContent=this.value; updateProp(${block.id},'${s.key}',parseFloat(this.value),true)"
+        ></div>`;
+    });
+
+    // Color picker
+    html += `<div class="prop-group"><span class="prop-label">Shadow Color</span>
+      <input type="color" value="${d.shadowColor || '#000000'}" style="width:100%;height:30px;border:1px solid #ddd;padding:2px;cursor:pointer;border-radius:4px"
+        onchange="updateProp(${block.id},'shadowColor',this.value)">
     </div>`;
   }
 
@@ -1376,7 +1421,7 @@ function openModal(blockId) {
   document.getElementById('modal-icon').textContent = tpl.icon;
   document.getElementById('modal-title').textContent = tpl.label + ' — data editor';
   document.getElementById('modal-subtitle').textContent = `PageId: ${currentPageId} · ComponentOrder: ${activeModalBlock.componentOrder} · Table: ${tpl.table}`;
-  document.getElementById('modal-schema-note').textContent = `INSERT INTO ${tpl.table} (pageId, componentOrder, ...) VALUES (...)`;
+  //document.getElementById('modal-schema-note').textContent = `INSERT INTO ${tpl.table} (pageId, componentOrder, ...) VALUES (...)`;
   activeModalTab = 'content';
   renderModalBody();
   document.getElementById('modal-overlay').classList.add('open');
@@ -1392,7 +1437,7 @@ function renderModalBody() {
   const tabs = `<div class="m-tabs">
     <button class="m-tab${activeModalTab === 'content' ? ' active' : ''}" onclick="setModalTab('content')">Content</button>
     <button class="m-tab${activeModalTab === 'style' ? ' active' : ''}" onclick="setModalTab('style')">Style & Layout</button>
-    <button class="m-tab${activeModalTab === 'schema' ? ' active' : ''}" onclick="setModalTab('schema')">DB Schema</button>
+
   </div>`;
 
   if (activeModalTab === 'content') {

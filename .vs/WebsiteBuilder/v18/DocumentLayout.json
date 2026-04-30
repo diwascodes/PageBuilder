@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -51,10 +55,6 @@
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:views\\builder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|c:\\practice project\\website builder\\websitebuilder\\wwwroot\\js\\site.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{2071E99A-4F14-BFAB-AD9A-7D6F990251BE}|WebsiteBuilder.csproj|solutionrelative:wwwroot\\js\\site.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
@@ -98,20 +98,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 0,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Builder\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Builder\\Index.cshtml",
               "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Builder\\Index.cshtml",
               "RelativeToolTip": "Views\\Builder\\Index.cshtml",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAAACMAAABNAAAAAAAAAA==",
+              "ViewState": "AgIAAGwAAAAAAAAAAAAAAG4AAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-07T16:40:19.304Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -151,7 +152,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Preview.cshtml",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Views\\Page\\Preview.cshtml",
               "RelativeDocumentMoniker": "Views\\Page\\Preview.cshtml",
@@ -163,7 +164,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "PageController.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\PageController.cs",
               "RelativeDocumentMoniker": "Controllers\\PageController.cs",
@@ -175,7 +176,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "ApiController.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\ApiController.cs",
               "RelativeDocumentMoniker": "Controllers\\ApiController.cs",
@@ -183,12 +184,11 @@
               "RelativeToolTip": "Controllers\\ApiController.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAQwAoAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-07T16:43:59.742Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-07T16:43:59.742Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "BuilderController.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\BuilderController.cs",
               "RelativeDocumentMoniker": "Controllers\\BuilderController.cs",
@@ -200,7 +200,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "UploadController.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\UploadController.cs",
               "RelativeDocumentMoniker": "Controllers\\UploadController.cs",
@@ -212,20 +212,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAAswE0AAAA5AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T19:46:19.385Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-21T19:46:19.385Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "AccountController.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
@@ -233,12 +232,11 @@
               "RelativeToolTip": "Controllers\\AccountController.cs",
               "ViewState": "AgIAACsAAAAAAAAAAAAiwFEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T20:59:35.875Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-22T20:59:35.875Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ContactController.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\ContactController.cs",
               "RelativeDocumentMoniker": "Controllers\\ContactController.cs",
@@ -246,12 +244,11 @@
               "RelativeToolTip": "Controllers\\ContactController.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAiwBUAAABgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-21T18:33:10.917Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-21T18:33:10.917Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "20260420192052_UpdatePage.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Migrations\\20260420192052_UpdatePage.cs",
               "RelativeDocumentMoniker": "Migrations\\20260420192052_UpdatePage.cs",
@@ -263,7 +260,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -275,7 +272,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "builder.js",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\wwwroot\\js\\builder.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\builder.js",
@@ -287,7 +284,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "HomeController.cs",
               "DocumentMoniker": "C:\\Practice Project\\Website Builder\\WebsiteBuilder\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
